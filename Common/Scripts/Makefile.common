@@ -1,0 +1,23 @@
+# This Makefile contains the targets need to compile and release the tutorials
+
+PDFS = $(TEXFILES:.tex=.pdf)
+
+default: generate_pdfs
+
+generate_pdfs: $(PDFS)
+
+%.pdf: %.tex
+	pdflatex $<
+	pdflatex $<
+
+%.zip: design_files
+	zip -r $@ design_files
+
+release: $(PDFS) $(DESIGNFILESZIP)
+	@echo Release $(PDFS)
+	cp $(PDFS) $(DESIGNFILESZIP) $(TUTROOT)/release/.
+
+clean: 
+	-rm -f *.aux *.log *.out *.toc *.pdf $(DESIGNFILESZIP)
+
+.PHONY: generate_pdfs release clean

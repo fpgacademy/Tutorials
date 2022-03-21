@@ -1,0 +1,1842 @@
+\documentclass[11pt, twoside, pdftex]{article}
+
+% This include all the settings that we should use for the document
+\newcommand{\PDFTitle}{\productNameMed{} Tutorial}
+\newcommand{\commonPath}{../../Common}
+\input{\commonPath/Docs/defaulttext.tex}
+\input{\commonPath/Docs/preamble.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% Add title
+\newcommand{\doctitle}{\productNameMed{} \\ Tutorial for ARM*}
+\newcommand{\dochead}{\productNameMed{} Tutorial for ARM*}
+% Usually no need to change these two lines
+\title{\fontfamily{phv}\selectfont{\doctitle} }
+\chead{ \small{\textsc{\bfseries \dochead} } }
+% Customizations
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% Allows multiple figures per page
+
+\renewcommand\floatpagefraction{.9}
+\renewcommand\topfraction{.9}
+\renewcommand\bottomfraction{.9}
+\renewcommand\textfraction{.1}   
+\setcounter{totalnumber}{50}
+\setcounter{topnumber}{50}
+\setcounter{bottomnumber}{50}
+\widowpenalty 10000
+\clubpenalty 10000
+\raggedbottom
+
+%%%%%%%%%%%%%%%%%%
+%%% DOCUMENT START
+%\begin{document}
+\begin{document}
+\begin{table}
+    \centering
+    \begin{tabular}{p{5cm}p{4cm}}
+        \hspace{-3cm}
+        &
+        \raisebox{1\height}{\parbox[h]{0.5\textwidth}{\Large\fontfamily{phv}\selectfont{\textsf{\doctitle}}}}
+    \end{tabular}
+    \label{tab:logo}
+\end{table}
+
+\colorbox[rgb]{0,0.384,0.816}{\parbox[h]{\textwidth}{\color{white}\textsf{\textit{\textBar}}}}
+
+\thispagestyle{plain}
+ 
+\section{Introduction}
+\label{sec:1}
+
+This tutorial presents an introduction to the \productNameMed{} that can be used to compile, assemble, download and
+debug programs for ARM* Cortex-A9*
+processor, which is a processor implemented as a hardware block
+in Intel's Cyclone\textsuperscript{\textregistered} V SoC 
+FPGA devices.
+The tutorial is intended for a user who wishes to use an ARM-based system on an Intel Development and Education board.
+It gives step-by-step instructions that illustrate
+the features of the Monitor Program.
+In addition to supporting the ARM-based programs, the
+Monitor Program can also be used with the Nios\textsuperscript{\textregistered} II-based
+programs. For this application, consult the tutorial
+{\it \productNameMed{} for Nios\textsuperscript{\textregistered} II}.
+
+The Monitor Program is a software application which runs on a host PC, and communicates with an ARM-based hardware system on an
+FPGA board. It can be used to compile/assemble an ARM
+software application, download the application onto the FPGA
+board, and then debug the running application.  
+It provides features that allow the user to:
+
+\begin{itemize}
+    \item Set up an ARM project that specifies a desired hardware system and software program
+    \item Download the hardware system onto an FPGA board
+    \item Compile software programs, specified in assembly language or C, and download the resulting machine code into the
+hardware system
+    \item Display the machine code stored in memory
+    \item Run the ARM processor, either continuously or by single-stepping instructions
+    \item Examine and modify the contents of processor registers
+    \item Examine and modify the contents of memory, as well as memory-mapped registers in I/O devices
+    \item Set breakpoints that stop the execution of a program at a specified address, or when certain conditions are met
+\end{itemize}
+
+The process of downloading and debugging an ARM program requires
+an FPGA board that contains the ARM 
+{\it hard processor system} (HPS) hardware. In this
+tutorial it is assumed that the reader has access to the DE1-SoC Development and Education board, connected to a computer
+that has Quartus\textsuperscript{\textregistered} Prime 
+and Nios~II Embedded Design Suite (EDS) software installed. Although a reader who does not have access to an FPGA
+board will not be able to execute the Monitor Program commands described in the tutorial, 
+it should still be possible to follow the discussion.
+
+
+\subsection{Who should use the Monitor Program}
+\label{sec:1.1}
+
+The Monitor Program is intended to be used in an educational environment by professors and students. It is not intended for
+commercial use.
+
+\section{Installing the Monitor Program}
+\label{sec:2}
+
+The Monitor Program is released as part of the University Program 
+Design Suite (UPDS). Before the UPDS can be installed on
+a computer, it is necessary to first install the Quartus Prime
+CAD software (either the Lite, Standard or Pro Edition) 
+and the Nios~II Embedded Design Suite (EDS). A particular release
+of the Monitor Program can be used only with a corresponding version of the Quartus Prime software and Nios~II EDS. This software
+can be obtained from the on Intel's website.
+
+Once the Quartus Prime software and Nios~II EDS are installed, the UPDS can be installed.
+
+Note that if the Quartus Prime software is re-installed at some
+future time, then it will be necessary to re-install the Monitor
+Program at that time.
+
+\subsection{Using a Windows Operating System}
+\label{sec:2.1}
+
+When using a Windows operating system, perform the following: 
+
+\begin{enumerate}
+\item Install the Intel UPDS from the University Program section of Intel's \href{https://www.intel.com/content/www/us/en/programmable/support/training/university/materials-software.html}{website}.
+% It can be found by going to {\it {\website}} and choosing
+% {\it MATERIALS} followed by {\it Software} and
+% then {\it \productNameMed{}}. 
+Specify the installed version of Quartus Prime software.
+Then click on the {\it EXE} item in the displayed table, 
+which links to an installation program called 
+{\it intel\_fpga\_upds\_setup.exe}. When prompted to 
+{\sf Run} or {\sf Save} this file, select {\sf Run}.
+		  
+\item The first screen of the installer is shown in Figure~\ref{fig:1}.
+Click on the {\sf Next} button.
+
+ \item The installer will display the License Agreement; if you accept the terms of this agreement, then click {\sf I Agree} to
+continue.
+	
+\item The installer now displays the root directory where the
+{\teamname} Design Suite will be installed.  
+Click {\sf Next}.
+
+\item The next screen, shown in Figure~\ref{fig:2}, lists the components that will be installed, which include the Monitor Program
+software and University Program IP Cores. These IP Cores provide
+a number of I/O device circuits that can be used in hardware
+systems to be implemented on the FPGA board.
+
+\item The installer is now ready to begin copying files. 
+Click {\sf Install} to proceed and then click {\sf Next} after
+the installation has been completed. 
+If you answered {\sf Yes} when prompted about placing a shortcut on your Windows Desktop, then an icon 
+\hbox{\includegraphics[scale=0.65]{images/img_shortcut_sm.png}}
+is provided on the Desktop that can be used to start the Monitor
+Program.
+
+\begin{figure}[H]
+   	\begin{center}
+           \includegraphics[scale=0.7]{screenshots/figure1.png}
+   	\end{center}
+      \caption{Intel UPDS Setup Program.}
+			\label{fig:1}
+\end{figure}
+
+\begin{figure}[H]
+   	\begin{center}
+            \includegraphics[scale=0.7]{screenshots/figure2.png}
+   	\end{center}
+      \caption{The components that will be installed.}
+			\label{fig:2}
+\end{figure}
+~\\
+
+\item Now, the \teamname ~Design Suite is successfully installed on your computer, so click {\sf Finish} to
+finish the installation.
+
+\item Should an error occur during the installation procedure, a pop-up window will suggest the appropriate action. 
+Possible errors include:
+\begin{itemize}
+\item Quartus Prime software is not installed or the Quartus Prime
+version is incorrect.
+\item Nios~II EDS software is not installed or the version is
+incorrect.
+\end{itemize}
+\end{enumerate}
+
+\subsection{Using a Linux* Operating System}
+\label{sec:2.2}
+
+When using a Linux* operating system, perform the following:
+
+\begin{enumerate} 
+\item Install the Intel UPDS from the University Program section of Intel's \href{https://www.intel.com/content/www/us/en/programmable/support/training/university/materials-software.html}{website}.
+%It can be found by going to {\it {\website}} and choosing
+%{\it MATERIALS} followed by {\it Software} and
+%then {\it \productNameMed{}}. 
+Specify the installed version of Quartus Prime software.
+Then click on the {\it TAR} item in the displayed table, 
+which links to an installation tarball called 
+{\it intel\_fpga\_upds\_setup.tar}. 
+Save this file to a directory of your choosing.
+
+\item Using a console, navigate to the directory to which the
+file was saved. Extract the contents of 
+{\it intel\_fpga\_upds\_setup.tar} using the following command: 
+{\bf tar -xf intel\_fpga\_upds\_setup.tar}.
+
+\item Among the extracted files is a shell script named
+{\it install\_intel\_fpga\_upds} which will be used to install the
+UPDS. Ensure that the script is executable by using the following
+command: {\bf chmod +x install\_intel\_fpga\_upds}. 
+
+\item Run the installation script with superuser privileges by
+using the following command: 
+{\bf sudo ./install\_intel\_fpga\_upds}.
+
+\item Follow the instructions displayed by the script to complete
+the installation.
+
+\end{enumerate}
+
+
+\section{Main Features of the Monitor Program}
+\label{sec:3}
+
+Each ARM software application that is developed with the Monitor Program is called a {\it project}. 
+The Monitor Program works on one project at a time and keeps all information for that project in a single directory in the file
+system. The first step is to create a directory to hold the project's files. To store the design files for this tutorial, 
+we will use a directory named {\it Monitor\_Tutorial}. 
+The running example for this tutorial is a simple 
+assembly-language program that controls some lights on a 
+DE1-SoC board.
+
+If you are using a Windows*9 operating system, then
+start the Monitor Program software either by double-clicking its
+icon on the Windows Desktop or by accessing the program in the
+{\sf Windows Start} menu under 
+{\sf Intel > University Program > \productNameMed{}}. 
+You should see a display similar to the one in Figure~\ref{fig:3}.
+
+If you are using a Linux operating system, then
+start the Monitor Program software by running the
+{\it altera-monitor-program} shell script located in
+{\it <path to Intel software>/University Program/Monitor Program/bin}.
+You should see a display similar to the one in Figure~\ref{fig:3}.
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[width=0.7\textwidth]{screenshots/figure3.png}
+   \end{center}
+   \caption{The main Monitor Program display.}
+	 \label{fig:3}
+\end{figure}
+
+This display consists of several windows that provide access to all of the features of the Monitor Program, which the user
+selects with the computer mouse. Most of the commands 
+provided by the Monitor Program can be accessed by using a set of
+menus that are located below the title bar. For example, in
+Figure~\ref{fig:3} clicking the left mouse button on
+the {\sf File} command opens the menu shown in 
+Figure~\ref{fig:4}. Clicking the left mouse 
+button on the entry {\sf Exit} exits from the Monitor Program.  In most cases, whenever the mouse is used to select something,
+the left button is used. Hence we will not normally specify which 
+button to press. 
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=.9]{screenshots/figure4.png}
+   \end{center}
+   \caption{An example of the {\sf File} menu.}
+	 \label{fig:4}
+\end{figure}
+
+For some commands it is necessary to access two or more menus in
+sequence. We use the convention {\sf Menu1 > Menu2 > Item} to
+indicate that to select the desired command 
+the user should first click the mouse button on {\sf Menu1}, 
+then within this menu click on {\sf Menu2}, and then 
+within {\sf Menu2} click on {\sf Item}. For example, 
+{\sf File > Exit} uses the mouse to exit from the Monitor
+Program. Many commands can alternatively be invoked 
+by clicking on an icon displayed in the Monitor Program window. To see the command associated with an icon, position the mouse
+over the icon and a tooltip will appear that displays 
+the command name.
+
+It is possible to modify the organization of the Monitor Program
+display in Figure~\ref{fig:3} in many ways. 
+Section~\ref{sec:8} shows how to move, resize, close, and open windows
+within the Monitor Program display.
+
+\subsection{Creating a Project}
+\label{sec:3.1}
+
+To start working on an ARM software application we first have to create a new project, as follows: 
+\begin{enumerate}
+\item
+Select {\sf File > New Project} to open the
+{\it New Project Wizard}, which leads to the screen 
+in Figure~\ref{fig:5}. The Wizard presents a sequence of screens for
+defining a new project. Each screen includes a number of dialogs, as well as a message area at the bottom of the window.  
+The message area is used to display error and information messages associated with the dialogs in the window. 
+Double-clicking the mouse on an error message moves the cursor
+into the dialog box that contains the source of the error.
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.5]{screenshots/figure5.png}
+   \end{center}
+   \caption{Specifying the project directory and name.}
+	 \label{fig:5}
+\end{figure}
+
+In Figure~\ref{fig:5} we have specified the file system directory
+{\it D:$\backslash$Monitor\_Tutorial} and the project 
+name {\it Monitor\_Tutorial}. 
+For simplicity, we have used a project name that matches the
+directory name, but this is not required.
+
+If the file system directory specified for the project does not
+already exist, a message will be displayed indicating that this
+new directory will be created. To select an existing directory
+by browsing through the file system, click on the {\sf Browse} button. Note that a given directory may contain at most one
+project.
+
+The Monitor Program can be used with either an ARM-based system
+or a Nios II-based system. The choice of a processor is made in
+the window in Figure~\ref{fig:5} in the box labeled Architecture. 
+We have chosen the ARM Cortex-A9 architecture for this tutorial. 
+
+\item
+Click {\sf Next} to advance to the window shown in Figure~\ref{fig:6},
+which is used to specify a particular system.
+A hardware system to be implemented on the FPGA board is usually
+generated by using Quartus's Platform Designer tool.
+Information about creating systems using Platform Designer can be found in the \emph{Introduction to the Intel Platform Designer Tool} tutorial, which is available in the University Program section of
+Intel's website.
+
+A system designed and generated by using Quartus Prime and its Platform Designer
+tool is described in \emph{SOPCInfo} and \emph{SOF} files. The
+former gives a high-level description of the system. 
+The latter represents the FPGA
+circuit that implements the designed system; this file can be downloaded into the FPGA chip on the board that is being used.   
+
+Any system which contains a {\it Hard Processor System} (HPS) component must also specify the preloader to be run immediately following the circuit being downloaded. This preloader is used to configure the components within the HPS with the setting required for the specific board. 
+
+The drop-down list on the {\sf Select a system} pane can be used
+to choose the system to be used in the project. There are several
+possibilities: a prebuilt system based on one of the DE-series boards, a custom
+system created by the user, and a generic 
+{\sf ARM Cortex-A9 System}. Since in this tutorial we assume that the user has access to a
+DE1-SoC board, we will use a system called the DE1-SoC Computer. This computer includes a number of interfaces to 
+input/output devices implemented in the FPGA fabric of the chip.
+It was created using Quartus Prime and its Platform Designer tool.
+It is represented by \emph{.sopcinfo} and \emph{.sof} files
+which are automatically included when this computer is selected.
+The DE1-SoC preloader is also automatically selected.
+
+The user may also design and implement a custom system.
+If the custom system is selected, then the user must manually 
+specify the \emph{.sopcinfo} and \emph{.sof} files that define
+the required system in the {\sf System details} pane. If the custom system contains an HPS, the user must select their board from the preloader dropdown menu.
+
+Another option is to use the generic ARM Cortex-A9 system. 
+In this case no design files are used, and only the resources
+that are directly associated with the HPS part of the FPGA device
+are available. For example, application programs that do not
+involve resources implemented in the FPGA fabric can be run using
+this system. A preloader must be chosen if the ARM Cortex-A9 system
+is chosen.
+
+Lets go back to our DE1-SoC computer. In the top right corner of Figure~\ref{fig:6} there is a 
+{\sf Documentation} button. Clicking on this button opens a user guide that provides all
+information needed for developing ARM programs for the 
+DE1-SoC Computer, such as the memory map for
+addressing all of the I/O devices in the system. This file can also be accessed at a later time by
+using the command {\sf Settings > System Settings} and then clicking on the {\sf Documentation}
+button.
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.55]{screenshots/figure6.png}
+   \end{center}
+   \caption{Specifying the desired hardware system.}
+	 \label{fig:6}
+\end{figure}
+
+\item
+Click {\sf Next} to advance to the screen in Figure~\ref{fig:7},
+which is used to specify the program source files that are associated with the project.
+The {\sf Program Type} drop-down list can be used to select one of the following program types:
+
+\begin{itemize}
+\item {\sf Assembly Program}: allows the Monitor Program to be used with ARM assembly-language code.
+\item {\sf C Program}: allows the Monitor Program to be used with
+C code.
+\item {\sf AXF, ELF or SREC File}: allows the Monitor Program to
+be used with a precompiled program, in AXF, ELF or SREC format.
+\item {\sf No Program}: allows the Monitor Program to connect to the ARM hardware system without first loading a program;
+this can be useful if one wants to examine the current state of
+some I/O devices without running an actual program.
+\end{itemize}
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.65]{screenshots/figure7.png}
+   \end{center}
+   \caption{Selecting a program type and sample program.}
+	 \label{fig:7}
+\end{figure}
+
+For our example, set the program type to {\sf Assembly Program}.
+When the DE1-SoC computer has been selected for the project, 
+it is possible to click on the
+selection {\sf Include a sample program with the project}.  
+As illustrated in Figure~\ref{fig:7}, several sample 
+assembly-language programs are available for this prebuilt
+computer.  For our tutorial select the program named 
+{\it simple\_program}. This is a very simple program which
+continuously reads the state of the slider switches on the
+DE1-SoC board and displays their state on the red LEDs.
+The source code for the program is:
+
+\lstset{style=defaultArmStyle}
+\begin{center}
+\begin{minipage}[t]{16 cm}
+\begin{lstlisting}
+.text
+.equ	LEDs, 0xFF200000
+.equ	SWITCHES, 0xFF200040
+.global _start
+_start:
+		LDR		R1, =LEDs			/* Address of red LEDs. */   
+		LDR		R2, =SWITCHES		/* Address of switches. */
+LOOP:	LDR		R3, [R2]			/* Read the state of switches. */
+		STR		R3, [R1]			/* Display the state on LEDs. */
+		B		LOOP
+.end
+\end{lstlisting}
+\end{minipage}
+\end{center}
+Click {\sf Next} to advance to the screen in Figure~\ref{fig:8}.\\
+
+\begin{figure}[H]
+   \begin{center} \includegraphics[scale=0.65]{screenshots/figure8.png}
+   \end{center}
+   \caption{Specifying source code files.}
+	 \label{fig:8}
+\end{figure}
+
+\newpage 
+When a sample program has been
+selected, the source code file(s) associated with this program
+is listed in the {\sf Source files} box.  In this case, the source file is named {\it simple\_program.s}; this
+file will be copied into the directory used for the project by
+the Monitor Program. 
+If a sample program is not used, then it is necessary to click
+the {\sf Add} button and browse to select the desired source 
+file(s).
+
+Figure~\ref{fig:8} shows that the first instruction is indicated
+by the label {\it \_start}. In the ARM architecture this is not editable.
+
+\item 
+Click {\sf Next} to advance to the window in Figure~\ref{fig:9}.
+This window is used to specify the connection to the FPGA board, the processor that should be used (some hardware systems may
+contain multiple processors), and the terminal device.
+The {\sf Host connection} drop-down list contains the physical
+connection links (such as cables) that exist between the host computer and any FPGA boards connected to it. 
+The ARM processors available in the system are found in the 
+{\sf Processor} drop-down list, and all 
+terminal devices connected to the selected processor are displayed in the {\sf Terminal device} drop-down list. 
+We discuss terminal devices in Section~\ref{sec:5}.
+
+Accept the default choices that are displayed in Figure~\ref{fig:9}. If the Host Connection box is blank, make sure that 
+the DE1-SoC board is connected to the host by a USB cable and
+that its power is turned on. Then, press the {\sf Refresh} button and select the USB Blaster as the desired choice.
+For the DE1-SoC board the required choice is DE-SoC.
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.5]{screenshots/figure9.png}
+   \end{center}
+   \caption{Specifying system settings.}
+	 \label{fig:9}
+\end{figure}
+
+\item 
+Click {\sf Next} to reach the final screen for creating the new
+project, shown in Figure~\ref{fig:10}. This screen is used to specify memory settings that are needed for compiling and linking the
+program.
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.6]{screenshots/figure10.png}
+   \end{center}
+   \caption{Specifying memory settings.} 
+	 \label{fig:10}
+\end{figure}
+
+There are two modes that can be selected. In the {\sf Basic}
+mode, which does not provide explicitly for the use of
+interrupts, the application program starts at memory address
+0x00000000 as shown in the figure. A more general alternative
+is to use the {\sf Interrupts} mode. In this case, a 
+{\it .vectors} section occupies the memory locations 
+0x00000000 to 0x0000003F, as described in Section~\ref{sec:7}.
+This space is used for interrupt
+and exception vectors. The main program in the {\it .text}
+section may start at address 0x00000040. However, it can also
+start at some other address, as may be specified by the user.
+To change the address, double-click on the {\it .text} entry
+and change the address in the pop-up box that appears. 
+ 
+Click {\sf Save} to complete the creation of the new project.  At this point, the Monitor Program displays the prompt shown in
+Figure~\ref{fig:11}. Clicking {\sf Yes} instructs the Monitor Program to
+download the hardware system associated with the project onto 
+the FPGA board. It is also possible to download the system 
+at a later time by using the Monitor Program command
+{\sf Actions > Download System}. 
+If the downloaded system contains more than one processor,
+the Monitor Program will prompt you to halt the processors other
+than the one being used for the current project. 
+It is generally recommended to halt the other processors because
+they can execute without you knowing, resulting in unexpected behavior.
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=1]{screenshots/figure11.png}
+   \end{center}
+   \caption{Download the hardware system.}
+	 \label{fig:11}
+\end{figure}
+
+\end{enumerate}
+
+
+\subsection{Compiling and Loading the Program}
+\label{sec:3.2}
+
+After successfully creating a project, its software files can be compiled/assembled and downloaded onto the FPGA board using the
+following commands:
+
+\begin{itemize}
+\item \textsf{Actions > Compile} menu item or 
+\includegraphics{toolbar/compile.png} icon: compiles the source
+files into an AXF and SREC file. Build warnings and errors
+will show up in the \textsf{Info \& Errors} window.
+The generated AXF and SREC files are placed in the project's directory.
+
+\item \textsf{Actions > Load} menu item or \includegraphics{toolbar/load.png} icon:
+loads the compiled SREC file onto the board and begins a debugging session in the 
+Monitor Program. Loading progress messages are displayed in the \textsf{Info \& Errors} window.
+
+\item \textsf{Actions > Compile~\&~Load} menu item or \includegraphics{toolbar/compile_load.png}
+icon: performs the operations of both compilation and loading.
+\end{itemize}
+
+Our example project has not yet been compiled, so it cannot be
+loaded (the \textsf{Load} option is disabled).  
+Select the \textsf{Actions > Compile~\&~Load} menu item
+or click the \includegraphics{toolbar/compile_load.png} icon to
+begin the compilation and loading process.  
+Throughout the process, messages are displayed in 
+the \textsf{Info \& Errors} window. The messages should resemble
+those shown in Figure~\ref{fig:12}.
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=.65]{screenshots/figure12.png}
+   \end{center}
+   \caption{Compilation and loading messages.}
+	 \label{fig:12}
+\end{figure}
+
+After successfully completing this step, the Monitor Program display should look similar to Figure~\ref{fig:13}. At this point the
+processor is halted at the first instruction of the program that
+has to be executed, which is highlighted in yellow shading.
+The main part of the display in Figure~\ref{fig:13} is called the
+{\it Disassembly} window. 
+It shows the machine code for the assembled program,
+as well as the addresses of memory locations in which the
+instructions are loaded. It also shows the assembly-language
+version of the assembled instructions.
+
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.6]{screenshots/figure13.png}
+   \end{center}
+   \caption{The Monitor Program window after loading the program.} 
+	 \label{fig:13}
+\end{figure}
+
+
+Most instructions in an ARM assembly-language source program are
+assembled into directly-corresponding machine instructions in
+the object code that is loaded into the memory for execution.
+However, this is not the case with all instructions. The ARM
+assembly language provides numerous {\it pseudo-instructions},
+which are often replaced by actual instructions that look
+quite different but have the same effect when executed.
+For instance, the instruction 
+\begin{center}
+LDR~~~R1, =LEDs
+\end{center}
+\noindent
+loads into processor register R1 the memory address of the I/O
+data register that is connected to the LEDs on the board.
+As seen in Figure~\ref{fig:13}, this instruction is replaced with the 
+instruction 
+\begin{center}
+LDR~~~R1, [PC, \#12]
+\end{center}
+\noindent
+in the assembled code. Since Load instructions in the ARM
+processor cannot specify an immediate operand that is 32 bits 
+long, the address 0xFF200000 is placed in the {\it literal pool}
+after the last instruction in the program. Then, the implemented
+LDR instruction uses the {\it Relative} addressing mode (which
+is the {\it Offset} addressing mode that uses the Program Counter
+as the base register) to access the desired address value. Observe that the offset used in this case is 12 bytes.
+The reason is that the ARM processor prefetches two instructions
+to facilitate pipelined execution of the program. 
+When an instruction is prefetched, the Program Counter is
+incremented by four. Thus, in our example, the updated
+PC contents will be 0x08 when the first LDR instruction is
+being executed. Then, the offset of 12 bytes leads to the memory
+location 0x14.
+ 
+Note that in an ARM assembly-language program it is possible to
+use both upper- and lower-case letters to denote register names
+and instruction mnemonics.
+
+Information about the ARM instructions, addressing modes and
+literal pools can be found in the tutorial
+{\it Introduction to the ARM Processor Using Intel Toolchain},
+which is available in the University Program section of Intel's
+website. 
+
+\subsubsection{Compilation Errors}
+\label{sec:3.2.1}
+
+During the process of developing software, it is likely that compilation errors will be 
+encountered. Error messages from the ARM assembler or from the C compiler are displayed in the \textsf{Info \& Errors} window. 
+To see an example of a compiler error message, edit
+the file {\it simple\_program.s}, which is in the project's directory, and replace the mnemonic STR with ST.
+Recompile the project to see the error shown in Figure~\ref{fig:14}. 
+The error message indicates the type of error and it gives the
+line number in the file where the error was detected. Fix the
+error, and then compile and load the program again.
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=1]{screenshots/figure14.png}
+   \end{center}
+   \caption{An example of a compiler error message.} 
+	 \label{fig:14}
+\end{figure}
+
+\subsection{Running the Program}
+\label{sec:3.3}
+
+As mentioned in the previous section, the processor is halted at
+the first instruction after the program has been loaded. 
+To run the program, select the \textsf{Actions > Continue} menu
+item or click the \includegraphics{toolbar/continue.png} icon.  The {\it simple\_program} displays the current values of
+DE1-SoC board's slider switches on the red LEDs.
+The \textsf{Continue} command runs the program indefinitely.
+To force the program to halt,
+select the \textsf{Actions > Stop} command, or click the
+\includegraphics{toolbar/stop.png} icon. This command causes the
+processor to halt at the instruction to be executed next, and
+returns control to the Monitor Program. 
+
+Figure~\ref{fig:15} shows an example of what the display may look like when
+the program is halted by using the {\sf Stop} command. 
+The display highlights in yellow the next program instruction to
+be executed, which is at address \texttt {0x0000000C},
+and highlights in red the values in the processor
+registers that have changed since the last program stoppage.
+Other screens in the Monitor Program are also updated, which will
+be described in later parts of this tutorial.
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.6]{screenshots/figure15.png}
+   \end{center}
+   \caption{The Monitor Program display after the program has been stopped.}
+	 \label{fig:15}
+\end{figure}
+
+
+\subsection{Using the Disassembly Window}
+\label{sec:3.4}
+
+In Figure~\ref{fig:15}, the Disassembly window shows the machine
+instructions for our program.
+The leftmost column in the window gives the memory addresses,
+the middle column displays the machine code at these addresses,
+and the rightmost column shows the corresponding
+assembly-language instructions.
+
+The Disassembly window can be configured to display less information on the screen, such as 
+not showing the assembly-language instructions or not showing the machine encoding of the instructions. These choices can 
+be made by right-clicking on the Disassembly window and selecting
+the appropriate menu item, as indicated in Figure~\ref{fig:16}.
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.8]{screenshots/figure16.png}
+   \end{center}
+   \caption{Display options for the Disassembly window.}
+	 \label{fig:16}
+\end{figure}
+
+
+Different parts of memory can be displayed by scrolling, 
+using either the vertical scrollbar on the right side of the Disassembly window or a mouse scroll wheel.
+It is also possible to go to a different region of memory by 
+using the \textsf{Goto instruction} panel 
+at the top of the Disassembly window, or by using the command \textsf{Actions > Goto instruction}.  The instruction address
+provided for the {\sf Goto} command must be a multiple of four,
+because ARM instructions are word-aligned. 
+
+
+\subsection{Single Stepping Through Program Instructions}
+\label{sec:3.5}
+
+When debugging a program, it is often very useful to be able
+to single step through the program and observe the effect of
+executing each instruction. 
+The Monitor Program has the ability to perform single-step
+operations. Each single step consists of executing a single
+machine instruction and then returning control to the Monitor
+Program. If the source code of the program being debugged is
+written in the C language, then each individual single step will
+still correspond to one assembly-language (machine) instruction
+generated from the C code. 
+
+The single-step operation is invoked by selecting the
+\textsf{Actions > Single step} menu item or by clicking on the \includegraphics{toolbar/singlestep.png} icon. The 
+instruction that is executed by the processor is the
+one highlighted in yellow in the \textsf{Disassembly} window.
+Consider our {\it simple\_program} example. You can go to the
+first instruction of the program, which has the label 
+{\it \_start}, by selecting \textsf{Actions > Restart} 
+menu item or by clicking  
+the \includegraphics{toolbar/restart.png} icon. If the program is
+running, it must first be halted before the restart 
+command can be performed.
+The restart command loads into the Program Counter the address of
+the first instruction, thus causing the execution to start at
+this point in the program.
+Now, single step through the program and observe the displayed 
+changes. Note that the register values are indicated in red when
+they change as a result of executing the last instruction.
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.6]{screenshots/figure17.png}
+   \end{center}
+   \caption{Setting a breakpoint.}
+	 \label{fig:17}
+\end{figure}
+
+\subsection{Using Breakpoints}
+\label{sec:3.6}
+
+An {\it instruction breakpoint} provides a means of stopping the
+execution of a program when it reaches an instruction at a
+specific address.  The procedure for setting a breakpoint is:
+
+\begin{enumerate}
+\item In the Disassembly window, scroll to display the instruction that will have the breakpoint. For example, 
+in the window in Figure~\ref{fig:15} scroll
+to the Branch instruction at address {\texttt 0x00000010}. 
+
+\item Click on the gray bar to the left of the address
+\texttt{00000010}. As illustrated in Figure~\ref{fig:17},
+the Monitor Program displays a red dot next to the address
+to show that a breakpoint has been set. 
+Clicking the same location again removes the breakpoint.
+\end{enumerate}
+
+Once the instruction breakpoint has been set, run the program.
+The breakpoint will trigger when the Program Counter value equals \texttt{0x00000010}. Control then returns to the Monitor Program,
+and the Disassembly window highlights in a yellow color the
+instruction at the breakpoint. A corresponding message is shown
+in the {\sf Info \& Errors} pane.
+
+\subsection{Examining and Changing Register Values}
+\label{sec:3.7}
+
+The \textsf{Registers} window on the right-hand side of the
+Monitor Program display shows the values of processor registers.
+It also allows the user to edit most of the register values. 
+The number format in which the register values are displayed
+can be changed by right-clicking in the \textsf{Registers}
+window and selecting the desired format, as illustrated in 
+Figure~\ref{fig:18}.
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.85]{screenshots/figure18.png}
+   \end{center}
+   \caption{Setting the number format for displaying register values.} 
+	 \label{fig:18}
+\end{figure}
+
+Each time program execution is halted, the Monitor Program
+updates the register values and highlights any changes in red.
+The user can edit the register values while the program is
+halted. Any edits made are visible to the processor when the
+program's execution is resumed.
+
+As an example of editing a register value, set the slider
+switches on the DE1-SoC board to some pattern of 0s and 1s.
+Run the {\it simple\_program} and observe that the LEDs display
+the selected pattern. Next, stop the execution of the program
+and set a breakpoint at the Store instruction
+at address \texttt{0x0000000C}. Run the program and
+after the execution stops at the breakpoint, observe that the
+value in register R3 corresponds to the current setting of the
+slider switches. 
+Now,  as indicated in Figure~\ref{fig:19}, double-click on the contents of
+register R3 and change them to the value FFF.  
+Press \textsf{Enter} on the computer keyboard, or click away from
+the register value to apply the edit. 
+Then, single-step the program to see that all LEDs will be
+turned on. 
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=1]{screenshots/figure19.png}
+   \end{center}
+   \caption{Editing a register value.} 
+	 \label{fig:19}
+\end{figure}
+
+\subsection{Examining and Changing Memory Contents}
+\label{sec:3.8}
+
+The Memory window, depicted in Figure~\ref{fig:20}, displays the contents
+of the system's memory space and allows the user to edit memory
+values. The leftmost column in the window gives a memory address,
+and the numbers at the top of the window represent hexadecimal
+address offsets from that corresponding address. For example, referring to Figure~\ref{fig:20}, the address of the third word in the
+second row is \texttt{0x00000010 + 0x8 = 0x00000018}.
+The displayed contents of this memory location are FF200040,
+which is the address of the slider switches that is placed into
+the {\it literal pool} when the pseudo-instruction
+\begin{center}
+LDR~~~~R2, =SWITCHES
+\end{center}
+\noindent
+is assembled.
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.6]{screenshots/figure20.png}
+   \end{center}
+   \caption{The Memory window.}
+	 \label{fig:20}
+\end{figure}
+
+
+If a program is running, the data values displayed in the
+Memory window are not updated. When the program is stopped,
+the data can be updated by pressing the {\sf Refresh} button. 
+By default, the Memory window shows only the contents of memory
+devices, and does not display any values from memory-mapped I/O devices. To cause the window to display memory-mapped
+I/O locations, click on the check mark beside 
+{\sf Query Devices}, and then click 
+{\sf Refresh}. For example, set the slider switches to some
+pattern and press {\sf Refresh}. Figure~\ref{fig:21} shows the display we
+obtained when choosing the pattern 0x30F.
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=1]{screenshots/figure21.png}
+   \end{center}
+   \caption{Displaying the I/O locations.}
+	 \label{fig:21}
+\end{figure}
+ 
+
+The color of a memory word displayed depends on whether that
+location corresponds to an actual memory device, a memory-mapped
+I/O device, or is not mapped at all in the system. 
+A memory location that corresponds to a memory device will be 
+colored black, as in Figure~\ref{fig:20}. Memory-mapped I/O is shown in
+blue color, and a non-mapped address is
+shown in grey. If a memory location changed value since it was previously displayed, then
+that memory location is shown in a red color, as in Figure~\ref{fig:21}.
+
+Similar to the Disassembly window, it is possible to view
+different memory regions by scrolling using the vertical scroll
+bar on the right, or by using a mouse scroll wheel.
+There is also a \textsf{Goto address} panel, which is
+analogous to the \textsf{Goto instruction} panel discussed in Section~\ref{sec:3.4}. Note that in Figure~\ref{fig:21} we reached the I/O device
+by typing the address \texttt{FF200040} in this panel.
+  
+As an example of editing a memory value, go to address
+\texttt{FF200000} which is the address of LEDs.
+Double-click on the memory word at this address 
+and type the data value FFF. Press \textsf{Enter} on
+the computer keyboard, or click away from the memory word to
+apply the edit. This should cause all LEDs to be turned on. 
+
+When accessing an I/O device, some reads may be destructive.
+Namely, after some register in the I/O interface is read, its
+contents may no longer be valid. Therefore, it is not
+appropriate to read all I/O registers when refreshing the
+information in the Memory window. Instead, it is prudent to read
+only the registers that are of specific interest. This can be
+accomplished  by left-clicking on the address of interest,
+then right-clicking and then selecting {\sf Read Selected Address Range}
+to update the displayed contents. Several consecutive addresses
+can be selected by clicking on the first address and dragging
+across the other addresses. 
+
+It is possible to change the appearance of the Memory window in a
+number of ways, such as displaying data as bytes, half-words or
+words. 
+The Memory window provides additional features that are described
+in more detail in Appendix A of this tutorial.
+
+\section{Working with Project Files}
+\label{sec:4}
+
+Project files store the settings for a particular project, 
+such as the specification of a hardware system and program source
+files. A project file, which has the filename 
+extension {\it .amp}, is stored into a project's directory when
+the project is created. 
+
+The Monitor Program provides the following commands, under the
+{\sf File} menu, for working with project files:
+
+\begin{enumerate}
+    \item {\sf New Project}: Presents a series of screens that are used to create a new project.
+    \item {\sf Open Project}: Displays a dialog to select an
+existing project file and loads the project.
+    \item {\sf Open Recent Project}:  Displays the five most recently used project files, and allows these projects to be
+reopened.
+    \item {\sf Save Project}: Saves the current project's
+settings after they have been modified by using 
+the {\sf Settings} command.
+\end{enumerate}
+
+\subsection{Modifying the Settings of an Existing Project}
+\label{sec:4.1}
+
+After a project has been created, it is possible to modify many
+of its settings, if needed. This can be done by clicking
+on the menu item {\sf File > Edit Project > System Settings} in the Monitor
+Program.
+This action will display the existing system settings for the
+project, and allow them to be changed. Similarly, the program
+settings for the project can be displayed and modified by using
+the command {\sf File > Edit Project > Program Settings}. To change
+these settings, the Monitor Program has to first be disconnected
+from the system being debugged. This can be done by using the
+command {\sf Actions > Disconnect}, or clicking the
+\includegraphics{toolbar/disconnect.png} icon.
+
+\section{Using the Terminal Window}
+\label{sec:5}
+
+This section of the tutorial demonstrates the functionality of
+the Monitor Program's \emph{Terminal} window, which supports
+text-based input and output. For this example, create
+a new Monitor Program project, called {\it Monitor\_Terminal}.
+When creating the project, follow the same steps shown for the
+{\it Monitor\_Tutorial} project, which were described in 
+Section~\ref{sec:3.1}. For the screen shown in Figure~\ref{fig:7} set the program
+type to {\sf Assembly Program}, and select the
+sample program named {\it JTAG* UART}. The source code file that
+will be displayed in the screen of Figure~\ref{fig:13} is called 
+{\it JTAG\_UART.s}.  It communicates using
+memory-mapped I/O with the JTAG UART in the DE1-SoC
+Computer that is selected as 
+the {\sf Terminal device} in the screen of Figure~\ref{fig:9}.
+
+Compile, load and run the program. The Monitor Program
+window should appear as shown in Figure~\ref{fig:22}. 
+Click the mouse inside the Terminal window. Now, any characters
+typed on the computer keyboard are sent by the Monitor Program to
+the JTAG UART. These characters are shown in the Terminal window
+as they are typed, because the {\it JTAG\_UART.s} program echos
+the characters back to the Terminal window.
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.6]{screenshots/figure22.png}
+   \end{center}
+   \caption{Using the Terminal window.}
+	 \label{fig:22}
+\end{figure}
+
+\newpage
+The Terminal window supports a subset of the control character commands
+used for a de facto standard terminal, called the {\it VT100*}.
+The supported commands are listed in Table~\ref{tbl:1}. In this table
+\texttt{<ESC>} represents the ASCII character with the code
+\texttt{0x1B}.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{4in}|}
+        \hline
+        Character Sequence&Description\\
+        \hline
+        \hline
+        \texttt{<ESC>[2J}&Erases everything in the Terminal window\\
+        \hline
+        \texttt{<ESC>[7h}&Enable line wrap mode\\
+        \hline
+        \texttt{<ESC>[7l}&Disable line wrap mode\\
+        \hline
+        \texttt{<ESC>[\emph{\#}A}&Move cursor up by \emph{\#} rows or by one row if \emph{\#} is not specified\\
+        \hline
+        \texttt{<ESC>[\emph{\#}B}&Move cursor down by \emph{\#} rows or by one row if \emph{\#} is not specified\\
+        \hline
+        \texttt{<ESC>[\emph{\#}C}&Move cursor right by \emph{\#} columns or by one column if \emph{\#} is not specified\\
+        \hline
+        \texttt{<ESC>[\emph{\#}D}&Move cursor left by \emph{\#} columns or by one column if \emph{\#} is not specified\\
+        \hline
+        \texttt{<ESC>[\emph{$\#_1$};\emph{$\#_2$}f}&Move the cursor to row \emph{$\#_1$} and column \emph{$\#_2$}\\
+        \hline
+        \texttt{<ESC>[H}&Move the cursor to the home position (row 0 and column 0)\\
+        \hline
+        \texttt{<ESC>[s}&Save the current cursor position\\
+        \hline
+        \texttt{<ESC>[u}&Restore the cursor to the previously saved position\\
+        \hline
+        \texttt{<ESC>[7}&Same as \texttt{<ESC>[s}\\
+        \hline
+        \texttt{<ESC>[8}&Same as \texttt{<ESC>[u}\\
+        \hline
+        \texttt{<ESC>[K}&Erase from current cursor position to the end of the line\\
+        \hline
+        \texttt{<ESC>[1K}&Erase from current cursor position to the start of the line\\
+        \hline
+        \texttt{<ESC>[2K}&Erase entire line\\
+        \hline
+        \texttt{<ESC>[J}&Erase from current line to the bottom of the screen\\
+        \hline
+        \texttt{<ESC>[1J}&Erase from current cursor position to the top of the screen\\
+        \hline
+        \texttt{<ESC>[6n}&Queries the cursor position. A reply is sent back in the format \texttt{<ESC>[\emph{$\#_1$};\emph{$\#_2$}R},
+            corresponding to row \emph{$\#_1$} and column \emph{$\#_2$}.\\
+        \hline
+    \end{tabular}
+
+    \caption{VT100 commands supported by the Terminal window.}
+		 \label{tbl:1}
+\end{table}
+
+In addition to the JTAG\_UART, there exists another option for
+the terminal device. In Figure~\ref{fig:9}, in the {\sf Terminal device}
+dropdown menu there is also a {\sf Semihosting} option that
+is useful when C programs are used, as explained in the next section.
+
+\newpage
+\section{Using C Programs}
+\label{sec:6}
+
+C programs are used with the Monitor Program in a similar way as
+assembly-language programs. To see an example of a C program,
+create a new Monitor Program project called 
+{\it Monitor\_Terminal\_C}. Use the same settings as for the 
+{\it Monitor\_Terminal} example, but set the program type for
+this project to {\sf C Program}.
+Select the C sample program called {\it JTAG UART}.  
+As illustrated in Figure~\ref{fig:23}, this program includes a C source
+file named {\it JTAG\_UART.c}; it has the same functionality as
+the assembly-language code used in the previous example. 
+Compile and run the program to observe its behavior.
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.6]{screenshots/figure23.png}
+   \end{center}
+   \caption{Source files for a C program.}
+	 \label{fig:23}
+\end{figure}
+
+The C code in {\it JTAG\_UART.c} uses memory-mapped I/O to
+communicate with the JTAG UART. Alternatively, it is possible to
+use functions from the standard C library {\it stdio.h}, such as
+{\it printf} and {\it scanf}. In this case it is necessary to
+use the {\it Semihosting} terminal option, which can be selected 
+in the window shown in Figure~\ref{fig:9}. Instead of the JTAG\_UART\_for\_ARM\_0,
+choose {\sf Semihosting} in the dropdown menu for the
+{\sf Terminal device}. Semihosting is a mechanism by which a
+program running on an ARM processor can request services from
+the debugger (Monitor Program). When an ARM program is compiled
+by the Monitor Program, special C libraries are used which have
+been modified to use the Semihosting mechanism.
+All C library functions that communicate with a terminal, such as 
+{\it printf} and {\it scanf}, will send/receive text to/from
+the Monitor Program's Semihosting terminal. In effect,
+Semihosting allows the host computer to provide input and
+output facilities that a system implemented on a DE1-SoC board
+does not have.
+A sample program, called {\it Semihosting Example}, is available
+when specifying C as the program type in Figure~\ref{fig:7}.
+
+\subsection{Source Level Debugging}
+The Monitor program supports common source level debugging features such as step over, step into, 
+step out, and visualizing variables. Using the JTAG UART sample program project you created in the previous section, 
+go to the project settings ({\sf File > Edit Project }) and navigate to the {\it Program Settings} tab. 
+In the {\it Compiler Flags} input box, ensure that the optimization level is set to 0, by replacing {\it -O, -O1, -O2, } 
+or {\it -O3} flag with {\it -O0}. An optimization level of 0 allows the Monitor Program to read and display 
+variables from memory. Figure~\ref{fig:24} shows the Monitor Program's text editor. The editor will be disabled
+during the debug session, and re-enabled when the debug session is exited. Now save the project ({\sf File > Save Project}), 
+and compile and load the program ({\sf Actions > Compile \& load}).
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.6]{screenshots/figure24.png}
+   \end{center}
+   \caption{The Monitor Program with a source file open in editor view.}
+	 \label{fig:24}
+\end{figure}
+
+\subsubsection{Using Breakpoints}
+Once the program is loaded, navigate to the {\sf Editor} window of the Monitor Program.
+Go to the File menu and select {\sf File > Open...} to open the C source file which contains the {\it main} 
+function of you program (most likely {\it main.c}).
+
+Once the program is loaded, toggle the breakpoint at a line of source code by clicking on the numbers to the 
+left of the source code text. If a breakpoint does not show up on the line similar to Figure~\ref{fig:25}, the line of source code 
+likely does not correspond to an instruction. If this happens, try choosing a different line.
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.6]{screenshots/figure25.png}
+   \end{center}
+   \caption{Setting a breakpoint in the editor view.}
+	 \label{fig:25}
+\end{figure}
+
+Once the breakpoint is set, continue the program by clicking the green arrow on the toolbar, or {\sf Actions > Continue}.
+Once the program halts, the Monitor Program should look similar to Figure~\ref{fig:26}. In the Disassembly view the source level breakpoint 
+is marked with a red square as in Figure~\ref{fig:27}. This differentiates source level breakpoints from instruction level breakpoints.\\
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.6]{screenshots/figure26.png}
+   \end{center}
+   \caption{Hitting a breakpoint in the editor view.}
+	 \label{fig:26}
+\end{figure}
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.6]{screenshots/figure27.png}
+   \end{center}
+   \caption{Source level breakpoint in the disassembly view.}
+	 \label{fig:27}
+\end{figure}
+
+\subsubsection{Source Level Debugging Actions}
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=1]{screenshots/figure28.png}
+   \end{center}
+   \caption{Step Over, Step Into, Step Out toolbar icons}
+	 \label{fig:28}
+\end{figure}
+
+Navigate back the editor view and perform a Step Into action by selecting {\sf Actions > Step Into}, or by using the main toolbar.
+This will step to the next line of source code to be executed. If the program steps into a function in another file, the Monitor
+Program will open the file in a new tab and highlight the line.
+
+Next, perform a Step Out action by selecting {\sf Actions > Step Out}, or by using the main toolbar. This will step out of the current function 
+by executing until the first line of source code after returning from the current function. The Monitor Program will print an error to the
+{\sf Info \& Errors} window if it cannot step out of the current function. This may occur if the program is currently in the
+{\it main} function, or if the function does not return. 
+The step out function is only available for C programs, it is not available for assembly programs.
+
+The Step Over action ({\sf Actions > Step Over}) moves to the next line of source code without stepping into functions. 
+Execution will continue to the next line of source code inside the current function.
+
+\subsubsection{Enabling and Disabling Source Level Debugging}
+The source level debugging feature of the Monitor Program is a beta feature in the current release. The feature can be enabled and disabled at any point by going to the {\sf Edit} menu and selecting {\sf Edit > Enable Source Level Debugging}, or {\sf Edit > Disable Source Level Debugging}, depending on whether the feature is currently disabled or enabled respectively.
+
+\subsubsection{Variable Values}
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.7]{screenshots/figure29.png}
+   \end{center}
+   \caption{Monitor Program Variable View.}
+	 \label{fig:29}
+\end{figure}
+
+The Monitor Program's {\sf Variables} view is enabled when {\sf Enable Source Level Debugging}. It displays the value of C program variables when the program is halted.
+Some variable types such as Arrays,  Typedefs, Structures and Unions will be expandable in the view. Use the {\sf +} button to 
+expand and view the variables contents. Right clicking on a variable presents the options to jump to the declaration of the variable,
+and the display format of the variable.\\
+
+{\sf Go To Declaration} will open the file the variable is declared in and scroll to the declaration line number.\\
+{\it Display As...} will change the format in which the variable is displayed.\\
+
+Variable values are only available with an optimization level of \textbf{0} (gcc command line argument {\it -O0}). For instructions on how to change
+the programs optimization level, see the first paragraph of this section.
+
+
+\subsubsection{Setting the Optimization Level in Programs with Driver Support.}
+To set the optimization level for a {\it Program with Driver Support} (or BSP), first create a TCL script in the base directory of the project (the same directory as your AMP project file). The TCL file should have a {\it .tcl} file extension, for example {\it config.tcl}. Open this file in a text editor and add the single line:\\
+{\bf set\_setting hal.make.bsp\_cflags\_optimization -O0}\\
+Where the argument {\it -O0} above is the desired optimization level. Now open the project settings in the Monitor Program and navigate to the {\it Program Settings} tab. In the {\it BSP settings TCL script} input box (shown in Figure~\ref{fig:tclScript}) enter the path to the TCL script you just created, or use the {\it Browse} button to search for it.
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.6]{screenshots/tclScript.png}
+   \end{center}
+   \caption{Adding a TCL script to a Program with Driver Support.}
+	 \label{fig:tclScript}
+\end{figure}
+
+Click the {\it Finish} button to close the dialog and save and compile the project. The optimization level should be set for both the generated (BSP) files, as well as your project files.
+
+
+\section{Using the Monitor Program with Interrupts}
+\label{sec:7}
+\label{sec:7}
+
+The Monitor Program supports the use of exceptions and interrupts
+in programs. In an ARM-based system, interrupt requests are handled by the Generic Interrupt Controller. Consult the tutorial
+{\it Using the ARM Generic Interrupt Controller}, which is
+available at the Intel website, for a description of how
+interrupts are processed.
+
+\subsection{Interrupts with Assembly-Language Programs}
+\label{sec:7.1}
+
+To see an example using interrupts with assembly-language code, 
+create a new Monitor Program project.
+When creating the new project choose the ARM processor,
+set the program type to assembly language and select the sample
+program named {\it Interrupt Example}. 
+Figure~\ref{fig:30} lists the source files for this example.
+The main program is in the file {\it interrupt\_example.s}.
+Comments given in this file explain the behavior of the program.
+~\\
+ 
+\begin{figure}[h]
+   \begin{center}
+      \includegraphics[scale=1]{screenshots/figure30.png}
+   \end{center}
+   \caption{The assembly-language source files for the ARM interrupt example.}
+	 \label{fig:30}
+\end{figure}
+
+To enable the proper handling of exceptions and 
+interrupts it is necessary to specify the memory settings as
+required by the ARM processor. Figure~\ref{fig:10} indicates the memory 
+settings if exceptions and interrupts are not used.
+Figure~\ref{fig:31} shows the required memory settings for this example.
+The memory locations in the address range \texttt{0x0}
+to \texttt{0x3F} must be reserved for vectors used in various
+exceptions and interrupts. The main program can start at
+address \texttt{0x40}.
+
+Complete the project, download the program, run it, and observe
+its behavior when you press {\it KEY1}, {\it KEY2} or {\it KEY3}.   
+~\\
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.9]{screenshots/figure31.png}
+   \end{center}
+   \caption{Memory Settings for the ARM interrupt example.}
+	 \label{fig:31}
+\end{figure}
+
+\subsection{Interrupts with C Programs}
+\label{sec:7.2}
+
+To see an example using interrupts with C code, 
+create a new Monitor Program project.
+When creating the new project choose the ARM processor,
+set the program type to C language and select the sample
+program named {\it Interrupt Example}. 
+Figure~\ref{fig:32} lists the source files for this example.
+The main program is in the file {\it interrupt\_example.c}.
+Comments given in this file explain the behavior of the program.
+~\\
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=1]{screenshots/figure32.png}
+   \end{center}
+   \caption{The C-language source files for the ARM interrupt example.} 
+	 \label{fig:32}
+\end{figure}
+
+Complete the project, download the program, run it, and observe
+its behavior when you press {\it KEY1}, {\it KEY2} or {\it KEY3}.   
+
+
+\section{Working with Windows and Tabs}
+\label{sec:8}
+
+It is possible to rearrange the Monitor Program workspace by
+moving, resizing, or closing the internal windows inside the main
+Monitor Program window.
+
+To move a particular window to a different location, click on the
+window title or the tab associated with the window, and drag the
+mouse to the new location. As the mouse is moved across the main
+window, the dragged window will snap to different locations. 
+To detach the dragged window from the main window, drag it beyond
+the boundaries of the main window. 
+To re-attach a window to the main window, drag the tab associated
+with the window onto the main window.
+
+To resize a window, hover the mouse over one of its borders, and
+then drag the mouse. Resizing a window that is attached to the
+main window will cause any adjacent attached windows to also
+change in size accordingly.
+
+To hide or display a particular window, use the {\sf Windows}
+menu. To revert to the default window arrangement, simply exit
+and then restart the Monitor Program. Figure~\ref{fig:33} shows an example
+of a rearranged workspace.
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.6]{screenshots/figure33.png}
+   \end{center}
+   \caption{The \productNameMed{} with a rearranged workspace.} 
+	 \label{fig:33}
+\end{figure}
+
+\newpage
+\section{Appendix A}
+\label{sec:9}
+
+This appendix describes a number of Monitor Program features that
+are useful for advanced debugging or other purposes.
+
+\subsection{Using the Breakpoints Window}
+\label{sec:9.1}
+
+In Section~\ref{sec:3.6} we introduced instruction breakpoints and showed
+how they can be set using the Disassembly window. Another way to
+set breakpoints is to use the {\it Breakpoints} window, which is
+depicted in Figure~\ref{fig:34}. This window supports three 
+types of breakpoints in addition to the instruction breakpoint:
+{\it read watchpoint}, {\it write watchpoint}, and 
+{\it access watchpoint}, as follows:
+
+\begin{itemize}
+\item Read watchpoint - the processor is halted when a read
+operation is performed on a specific address.
+\item Write watchpoint - the processor is halted when a write
+operation is performed on a specific address.
+\item Access watchpoint - the processor is halted when a read or
+write operation is performed on a specific address.
+\end{itemize}
+
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.6]{screenshots/figure34.png}
+   \end{center}
+   \caption{The Breakpoints window.} 
+	 \label{fig:34}
+\end{figure}
+
+In Figure~\ref{fig:34} an instruction breakpoint is shown for the 
+address \texttt{0x00000010}. This corresponds to an address in
+{\it simple\_program.s}. 
+In Section~\ref{sec:3.6} we showed how to create such an instruction
+breakpoint by using the Disassembly window. But we could
+alternatively have created this breakpoint by right-clicking in
+a grey box under the label {\sf Instruction breakpoint} in 
+Figure~\ref{fig:34} and then selecting {\sf Add}. A breakpoint can be
+deleted by unchecking the box beside its address.
+
+Setting a read, write, or access watchpoint is done by
+right-clicking on the appropriate box in Figure~\ref{fig:34} and specifying
+the desired address.
+
+The Monitor Program also supports a type of breakpoint called a
+{\it conditional breakpoint}, which triggers only when a 
+user-specified condition is met. This type of breakpoint is
+specified in the {\it Run until} section by double-clicking on the 
+empty box {\it under} the label {\sf Condition} in Figure~\ref{fig:34} 
+to open the dialog shown in Figure~\ref{fig:35}. The condition can be 
+associated with an instructionbreakpoint, or it can be a stand-alone condition 
+if entered inthe {\sf Run until} box in the Breakpoints window. 
+As an example, we compiled and loaded the {\it simple\_program}
+project. Then, we entered the condition \texttt{R3 == 5}. The
+condition causes the breakpoint to trigger only if register
+R3 contains the value 5. Thus, running this program causes the 
+LEDs to display the current state of the slider switches as these
+switches are set to different patterns. But, when the selected
+pattern is 0x005, the conditional breakpoint will stop the
+execution of the program.
+
+
+Note that if a stand-alone condition is entered in the
+{\sf Run until} box, then the Run button associated with this box must be used to run the
+program, rather than the normal {\sf Actions > Continue} command.  
+The processor runs much more slowly than in its
+normal execution mode when a conditional breakpoint is being used.
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=1]{screenshots/figure35.png}
+   \end{center}
+   \caption{The Conditional Breakpoint dialog.} 
+	 \label{fig:35}
+\end{figure}
+
+\subsection{Working with the Memory Window}
+\label{sec:9.2}
+
+The Memory window was shown in Figure~\ref{fig:20}. This window is
+configurable in a variety of ways:
+
+\begin{itemize}
+\item Memory element size - the display can format the memory
+contents as bytes, half-words (2-bytes), or words (4-bytes).
+This setting can be configured by right-clicking on the Memory
+window, as illustrated in Figure~\ref{fig:36}.
+
+\item Number of words per line - the number of words per line can
+be configured to make it easier to find memory addresses, as
+depicted in Figure~\ref{fig:37}.
+
+\item Number format - this is similar to the number format option in the Register window described in Section~\ref{sec:3.7},
+and can be configured by right-clicking on the Memory window.
+
+\item Display order - the Memory window can display addresses
+increasing from left-to-right or right-to-left. 
+\end{itemize}
+
+\clearpage
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=1]{screenshots/figure36.png}
+   \end{center}
+   \caption{Setting the memory element size.} 
+	 \label{fig:36}
+\end{figure}
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=1]{screenshots/figure37.png}
+   \end{center}
+   \caption{Setting the number of words per line.} 
+	 \label{fig:37}
+\end{figure}
+
+
+\clearpage
+\subsubsection{Character Display}
+\label{sec:9.2.1}
+
+The \textsf{Memory} window can also be configured to interpret
+memory byte values as ASCII characters. 
+This is useful if one wishes to examine character strings that 
+are stored in the memory.
+For this purpose it is convenient to view
+the memory in bytes and characters simultaneously so that the
+characters appear in the correct sequence. This can be
+accomplished by clicking the {\sf Switch to character mode} menu
+item, as illustrated in Figure~\ref{fig:38}. A sample display in the
+character mode is shown in Figure~\ref{fig:39}.
+  
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=1]{screenshots/figure38.png}
+   \end{center}
+   \caption{Switching to the character mode.}
+	 \label{fig:38}
+\end{figure}
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.7]{screenshots/figure39.png}
+   \end{center}
+   \caption{Character mode display.}
+	 \label{fig:39}
+\end{figure}
+
+It is possible to return to the previous memory view mode by
+right-clicking and selecting the {\sf Revert to previous mode}
+menu item.
+
+\subsubsection{Memory Fill}
+\label{sec:9.2.2}
+
+Memory fills can be performed in the Memory window. Click the
+{\sf Actions > Memory fill} menu item or right-click on the
+Memory window and select {\sf Memory fill}. 
+A {\sf Memory fill} panel will appear on the left side of the
+Memory window. Simply fill in the desired values and 
+click {\bf Fill}. 
+
+\subsubsection{Load File Data into Memory}
+\label{sec:9.2.3}
+
+Data stored in a file can be loaded into the memory by using the
+Memory window. This feature is accessed by selecting the command
+{\sf Actions > Load file into memory} or by right-clicking on the
+Memory window. The {\sf Load file} panel will appear on the left
+side of the Memory window, as illustrated in Figure~\ref{fig:40}, to allow
+the user to browse and select a data file.  The user provides a base address in memory where the data should be stored. 
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.8]{screenshots/figure40.png}
+   \end{center}
+   \caption{The Load file panel.}
+	 \label{fig:40}
+\end{figure}
+
+The format of these files is illustrated in Figure~\ref{fig:41}. 
+The file consists of any number of lines, where each line
+comprises a comma-separated list of data values. Each data value
+is expressed as a hexadecimal number with an optional $-$ sign.
+Two additional parameters can be specified: the value of the
+delimiter character (comma is the default), and size in bytes of
+each data value (1 is the default).
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=.8]{screenshots/figure41.png}
+   \end{center}
+   \caption{A Delimited hexadecimal value file.}
+	 \label{fig:41}
+\end{figure}
+
+\subsection{Setting a Watch Expression}
+\label{sec:9.3}
+
+Watch expressions provide a convenient means of keeping track of
+the value of multiple expressions of interest. These expressions
+are re-evaluated each time program execution is stopped. 
+To add a watch expression:
+
+\begin{enumerate}
+\item Switch to the {\it Watches} window.
+
+\item Right-click on the gray bar and click \textsf{Add},
+as illustrated in Figure~\ref{fig:42}.
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=.9]{screenshots/figure42.png}
+   \end{center}
+   \caption{The Watches window.}
+	 \label{fig:42}
+\end{figure}
+
+\item The {\it Edit Watch Expression} window will appear, as
+shown in Figure~\ref{fig:43}. The desired watch expression can then be
+entered, using the syntax indicated in the window. In the figure,
+the expression \texttt{mem32(sp)} is entered, which will display
+the value of the data word at the current stack pointer address.
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=.8]{screenshots/figure43.png}
+   \end{center}
+   \caption{The Edit Watch Expression window.}
+	 \label{fig:43}
+\end{figure}
+
+\item Click \textsf{Ok}. The watch expression and its current
+value will appear in the table. The number format of a value
+displayed in the watch expression window can be changed by
+right-clicking on the row for that value.  
+As the program being debugged is repeatedly run, 
+the watch expression will be re-evaluated each time and its value
+will be shown in the table of watch values.
+\end{enumerate}
+
+\subsection{The GDB Server Panel (Advanced)}
+\label{sec:9.4}
+
+To see this panel, select the {\sf GDB Server} panel of the
+Monitor Program. This window will display the low-level commands
+being sent to the GDB Server, used to interact with the HPS
+system on the DE1-SoC board. It will also show the responses that GDB sends back. The Monitor Program provides the option
+of typing GDB commands and sending them to the debugger. 
+Consult online resources for the GDB program to learn what
+commands are available.
+
+\subsection{Running an ARM* Program from an SD Card}
+\label{sec:baremetal_sd_card}
+
+After developing an ARM program, you may wish execute it as a standalone application on the FPGA board without intervention from the Monitor Program. %This would be useful in any application where a USB cable connection to the board is undesirable. 
+%This is made possible by inserting an SD card containing the ARM program into the board. 
+This can be accomplished by using the \texttt{Actions > Generate U-Boot SD Card Binaries} operation of the Monitor Program. This operation generates files that can be placed into a special microSD* card configured with the \textit{U-Boot} loader. When the board is powered on with the SD card inserted, the ARM processor automatically runs the \textit{U-Boot} loader, programs the FPGA (if applicable), loads the program into memory, and executes the program.% into memory, and executes it. 
+
+% which:
+
+%\begin{enumerate}
+%\item Initializes the hardware system, including configuration of the SDRAM controller and peripheral pin multiplexing.
+%\item Programs the FPGA.
+%\item Loads the ARM program into memory.
+%\item Executes the ARM program from its entrypoint. 
+%\end{enumerate}
+
+ 
+
+The \textit{U-Boot} SD card images for supported DE-series boards are provided with the Monitor Program installation in the directory \textit{/<installation path>/University\_Program/SD\_Images/}. Unzip the file corresponding to your board and use a tool such as \textit{Win32DiskImager} to load the \textit{.img} file into a microSD card (2GB or larger). Note that this action will remove any existing data in the SD card. Once the SD card has been loaded with the image, it will contain the following files:
+
+\begin{itemize}
+\item \textit{program.bin}
+\item \textit{setup\_environment.bin}
+\item \textit{fpga.rbf}
+\item \textit{set\_vbar.bin}
+\end{itemize}
+
+The files \textit{program.bin}, \textit{setup\_environment.bin}, and \textit{fpga.rbf} are generated by the \texttt{Actions > Generate U-Boot SD Card Binaries} operation, and together they represent a Monitor Program project. The file \textit{program.bin} is the compiled ARM program, \textit{setup\_environment.bin} is a file that contains project configuration details, and \textit{fpga.rbf} is the FPGA programming file used by the project. All of these files except \textit{fpga.rbf} are mandatory for successful execution (\textit{fpga.rbf} may be omitted if the project does not use the FPGA). The default files included in the SD card image correspond to the \textit{Getting Started} sample program bundled with the Monitor Program. The file \textit{set\_vbar.bin} is a program that is part of the boot sequence that you must not modify nor delete.
+
+%The other three files are generated by the Monitor Program for a particular project. The three files that are included by default in the image are the ones generated for the \textit{Getting Started} sample program of the Monitor Program. The file \textit{program.bin} is the compiled ARM program, \textit{fpga.rbf} is the FPGA programming file for the project, and \textit{setup\_environment.bin} is a file that contains configuration details regarding your project. All of these files except \textit{fpga.rbf} are mandatory for a successful boot. The file \textit{fpga.rbf} is not used if your project does not use the FPGA. The file \textit{set\_vbar.bin} is a program that is part of the boot sequence that you should not modify or delete.
+
+To place your own ARM application into the SD card, generate \textit{program.bin}, \textit{setup\_environment.bin}, and \textit{fpga.rbf} for your project by selecting \texttt{Actions > Generate U-Boot SD Card Binaries} in the Monitor Program. Copy over the files to the SD card and replace any prior copies. 
+ 
+%\begin{enumerate}
+%\item Preloader: initializes the hardware, including the SDRAM controller
+%\item Bootloader: loads the user program into memory and executes it
+%\item User program
+%\end{enumerate}
+
+%Included with the Monitor Program installation is the compressed file \textit{AMP\_baremetal\_SD.zip} which contains the \textit{AMP\_baremetal\_SD.img}. This SD card image contains the preloader and the bootloader required to load a user ARM program. The user ARM program is 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Running Multiple Instances of the Monitor Program (Advanced)
+%\subsection{Running Multiple Instances of the Monitor Program
+%(Advanced)}
+%
+%In some cases, it may be useful to run more than one instance of
+%the Monitor Program on the same computer. For example, the
+%selected system may contain more than one processor. 
+%An instance of the Monitor Program is required to run and debug
+%programs on each available processor. As described in 
+%Section 3.1, it is possible to select a particular processor 
+%in a system via the \textsf{Processor} drop-down
+%list in the {\it New Project Wizard} and {\it Project Settings} %windows.
+%
+%The Monitor Program uses the {\it GDB Server} to interact with
+%the HPS system, and connects to the GDB Server using TCP ports. %By default, the Monitor Program uses port
+%2399 as the base port, and to connect to each processor in a
+%system, the Monitor Program will attempt to use a port located 
+%at a fixed offset from this base port. For example,
+%a single system consisting of 4 processors corresponds to ports
+%2399-2402.
+%
+%However, the Monitor Program does not detect any ports that may
+%already be in use by other applications. If the Monitor Program
+%fails to connect to the GDB Server due to a port conflict, then
+%the base port number can be changed by creating an environment
+%variable called \texttt{ALTERA\_MONITOR\_DEBUGGER\_BASE\_PORT}
+%and specifying a different number.
+%
+%It is also possible to have more than one board connected to 
+%the host computer. As described in Section 3.1, a particular
+%board can be selected via the \textsf{Host connection} drop-down
+%list in the {\it New Project Wizard} and {\it Project Settings}
+%windows. In this case, a separate instance of the Monitor
+%Program is needed to interact with each processor on each
+%physical board. By default, the Monitor Program assumes a
+%maximum of 10 Nios~II processors per board. This means that
+%ports 2399-2408 are used by the Monitor Program for the first
+%board connected to the computer, and the first processor on the
+%second board will use port 2409.
+
+%It is possible to specify a different value for the maximum
+%number of processors per Nios~II hardware system by creating an
+%environment variable called 
+%\texttt{ALTERA\_MONITOR\_DEBUGGER\_MAX\_PORTS\_PER\_CABLE} and
+%specifying a different number. 
+%This is useful if a system contains more than 10 Nios~II
+%processors. It is also useful if a port conflict exists and none
+%of the systems contain 10 or more processors. In this case,
+%decreasing this number (in conjunction with changing the base
+%port number) may provide a solution.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Examining the Instruction Trace
+%\subsection{Examining the Instruction Trace (Advanced)}
+%
+%An instruction trace is a hardware-level mechanism to record a
+%log of all recently executed instructions. 
+%The \emph{Nios~II JTAG Debug Module} has the instruction trace
+%capability, but only if a Level 3 or higher debugging level
+%is selected in the \emph{SOPC Builder} or \emph{Platform Designer}
+%configuration of the JTAG Debug Module 
+%(See the \emph{Nios~II Processor Reference Handbook},
+%available from Altera, for more information about the
+%configuration settings of the JTAG Debug Module). If the 
+%required JTAG Debug Module is not present, a message will be
+%shown in the \textsf{Info \& Errors} window of the Monitor
+%Program after loading a program, to indicate that instruction
+%trace is not available.
+%
+%The {\it Trace} feature is automatically enabled if the 
+%required JTAG Debug Module is available. To view the 
+%instruction trace of a program, go to the {\it Trace} window
+%after pausing the program during execution. As shown in 
+%Figure~\ref{fig:trace_1}, the instructions are grouped into
+%different colored blocks and labeled alphabetically. 
+%The number of times each instruction block is executed is 
+%shown beneath its alphabetical label.
+%
+%\begin{figure}[H]
+%   \begin{center}
+%      \includegraphics[scale=0.78]{screenshots/figure44.png}
+%   \end{center}
+%   \caption{The {\it Trace} window.}
+%   \label{fig:trace_1}
+%\end{figure}
+%
+%Right-clicking anywhere in the {\it Trace} window brings up
+%several options, as shown in Figure~\ref{fig:trace_2}. 
+%The {\it Trace} feature can be turned on or off by selecting
+%the \textsf{Enable trace} or \textsf{Disable trace} options. 
+%It is also possible to toggle the {\it debug events} in the 
+%trace on or off by selecting \textsf{Show debug events}, or
+%clear current trace sequences by selecting 
+%\textsf{Clear trace sequences}. 
+%
+%\begin{figure}[H]
+%   \begin{center}
+%      \includegraphics[scale=1]{screenshots/figure45.png}
+%   \end{center}
+%   \caption{Right-click options in the {\it Trace} window.}
+%   \label{fig:trace_2}
+%\end{figure}
+%
+%Running the program using the \textsf{Actions > Continue} or
+%\textsf{Actions > Single Step} commands will show up in the
+%trace sequence as {\it debug events} after each time the
+%program pauses execution, as shown in 
+%Figure~\ref{fig:trace_3}.
+%
+%\begin{figure}[H]
+%   \begin{center}
+%      \includegraphics[scale=0.78]{screenshots/figure46.png}
+%   \end{center}
+%   \caption{The {\it Trace} window with various debug events.}
+%   \label{fig:trace_3}
+%\end{figure}
+%
+%If the {\it pc} value is changed before the program continues 
+%to run, the Monitor Program will insert a gap sequence in the
+%trace, as shown in Figure~\ref{fig:trace_4}. 
+%The \textsf{Actions > Restart} command will set the {\it pc}
+%value back to the initial starting address. The {\it pc} 
+%value can also be arbitrarily set by double clicking its value 
+%in the \textsf{Registers} window and editing
+%its hexadecimal value. 
+%
+%\begin{figure}[H]
+%   \begin{center}
+%      \includegraphics[scale=0.62]{screenshots/figure47.png}
+%   \end{center}
+%   \caption{A gap sequence in the instruction trace.}
+%   \label{fig:trace_4}
+%\end{figure}
+%
+%Breakpoints in the program will also show up in the trace
+%sequence as a {\it debug event} each time the breakpoint
+%condition is met, as illustrated in Figure~\ref{fig:trace_5}.
+%
+%\begin{figure}[H]
+%   \begin{center}
+%      \includegraphics[scale=0.62]{screenshots/figure48.png}
+%   \end{center}
+%   \caption{A breakpoint in the instruction trace.}
+%   \label{fig:trace_5}
+%\end{figure} 
+%
+%\subsubsection{Note About Tracing Interrupt Sequences}
+%It is possible that interrupt sequences are happening in the
+%program, yet do not show up in the \textsf{Trace} window in 
+%the Monitor Program. This is because the instruction blocks
+%shown in the trace sequence are actually sampled from a window 
+%of time over the entire program execution. As a result, the
+%interrupt sequences may not be included in the sample of
+%instruction blocks displayed in the Monitor Program. 
+%One way to deal with this problem is to trigger a breakpoint
+%after an interrupt finishes executing.
+
+\section{Appendix B - Configuration File}
+The Monitor Program configuration file allows default values to be set for project creation. The monitor program searches 
+{\sf \$(UniversityProgramRoot)/amp.config} for the configuration file, where {\sf UniversityProgramRoot} is the path to the 
+University Program directory in the Quartus installation.\\
+For example {\sf C:/intelFPGA/16.1/University\_Program/amp.config}.
+
+To change the default path to the configuration file, add the following command line argument 
+when running the Monitor Program: {\sf \texttt{-}\texttt{-}config-file=<Path to File>}
+
+Table~\ref{tbl:2} summarizes the configuration options available in the Monitor Program.
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|l|p{5in}|}
+        \hline
+        Flag & Explanation\\
+        \hline\hline
+				\hline
+				project\_name				& The project name.\\
+				project\_path				& The new project directory path.\\
+				architecture				& The architecture.\\
+				system							& The default sample system to be used (ex. DE1-SoC Computer)\\
+				c\_compiler\_flags	& C Compiler flags\\
+				c\_linker\_flags		& C Linker flags\\
+				use\_small\_c\_lib	& Boolean to use the small C Library (Nios II)\\
+				emulate\_instr			& Boolean to emulate unimplemented instructions\\
+				include\_system\_info\_file & Boolean whether to include the system info header by default.\\
+				answer\_for\_reload\_file & {\it yes} or {\it no} option to bypass the file reload dialog when files are edited outside the program. If undefined, the dialog will be shown.\\
+				\hline
+    \end{tabular}
+    \caption{Configuration Flags and Default Options.} 
+		\label{tbl:2}
+\end{table}
+
+The configuration file uses white space or an equal sign as a delimiter, for example: 
+{\sf flag	option} or {\sf flag=option}. Where {\it flag} is one of the values in the first column of 
+Table~\ref{tbl:2} and {\it option} is the default value for that flag. Number signs 
+(\#) can be used to add comments to the configuration file. Lines starting with the symbol will
+not be processed with the configuration file. Boolean values can use integers or case insensitive strings. 
+Options of 'false', 'no' and '0' will all produce a false Boolean, any other values will produce a true Boolean.
+
+
+% Copyright and Trademark
+
+\input{\commonPath/Docs/copyright.tex}
+
+\end{document}

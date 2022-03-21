@@ -1,0 +1,65 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+
+my $total_data_size = 1024*1024*512;
+
+my @directions = ('mtos', 'stom');
+my @loopbacks = ('on', 'off');
+my @types = ('fixed','packet');
+my @payloads = (128, 1408, 4096, 8192, 16384, 32768, 65536, 131072, 262144, 524288, 1048576);
+# modify to install path of TBB
+$ENV{'LD_LIBRARY_PATH'} = '/opt/intel/tbb/lib/intel64_lin/gcc4.7/';
+
+print "------------------------------------------------------------------\n";
+print "loopback\tdata_size\tpayload_size\tdirection\ttype\tresult\n";
+print "------------------------------------------------------------------\n";
+
+
+my $report = "bw.dat";	
+open(my $fh, '>', $report) or die "Could not open $report";
+
+my $i = 1;
+my $bw;
+my $bw_stom;
+foreach my $iters (0..20) {
+	my $lower = 64;
+	my $upper = 1024*1024;
+	my $random = int(rand($upper)) + $lower;
+	
+	my $data_size = $random * 64;
+
+	my $payload_size = $data_size + 1;
+	while($payload_size > $data_size) {
+		$payload_size = $payloads[int(rand($#payloads))];
+	}
+
+	my $loopback = $loopbacks[int(rand(2))];
+	my $dir = $directions[int(rand(2))];
+	my $type = $types[int(rand(2))];
+
+	my $output_mtos = `./fpga_dma_st_test -l $loopback -s $data_size -p $payload_size -r $dir -t $type -f 0`;
+	if($output_mtos =~ /(\d+)/) {
+		$bw = $1;
+	}
+
+	if($data_size > 1024*1024) {
+		$data_size = sprintf("%.1f MB", $data_size/(1024*1024));
+	} elsif($data_size > 1024) {
+		$data_size = sprintf("%.1f KB", $data_size/(1024));
+	} else {
+		$data_size = sprintf("%.1f B", $data_size);
+	}
+
+	if($payload_size > 1024*1024) {
+		$payload_size = sprintf("%.1f MB", $payload_size/(1024*1024));
+	} elsif($payload_size > 1024) {
+		$payload_size = sprintf("%.1f KB", $payload_size/(1024));
+	} else {
+		$payload_size = sprintf("%.1f B", $payload_size);
+	}
+	
+	print "$loopback\t\t$data_size\t\t$payload_size\t\t$dir\t\t$type\t$bw\n";
+}
+
+close $fh

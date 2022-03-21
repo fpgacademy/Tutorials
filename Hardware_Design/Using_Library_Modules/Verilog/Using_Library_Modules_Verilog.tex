@@ -1,0 +1,389 @@
+\documentclass[11pt, twoside, pdftex]{article}
+
+% This include all the settings that we should use for the document
+\newcommand{\PDFTitle}{Using Library Modules in Verilog Designs}
+\newcommand{\commonPath}{../../../Common}
+
+\input{\commonPath/Docs/defaulttext.tex}
+\input{\commonPath/Docs/preamble.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% Add title
+\newcommand{\doctitle}{Using Library Modules \\ in Verilog Designs}
+\newcommand{\dochead}{Using Library Modules in Verilog Designs}
+% Usually no need to change these two lines
+\title{\fontfamily{phv}\selectfont{\doctitle} }
+\chead{ \small{\textsc{\bfseries \dochead} } }
+% Customizations
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% Allows multiple figures per page
+
+\renewcommand\floatpagefraction{.9}
+\renewcommand\topfraction{.9}
+\renewcommand\bottomfraction{.9}
+\renewcommand\textfraction{.1}   
+\setcounter{totalnumber}{50}
+\setcounter{topnumber}{50}
+\setcounter{bottomnumber}{50}
+\raggedbottom
+
+%%%%%%%%%%%%%%%%%%
+%%% DOCUMENT START
+%\begin{document}
+\begin{document}
+\begin{table}
+    \centering
+    \begin{tabular}{p{5cm}p{4cm}}
+        \hspace{-3cm}
+        &
+        \raisebox{1\height}{\parbox[h]{0.5\textwidth}{\Large\fontfamily{phv}\selectfont{\textsf{\doctitle}}}}
+    \end{tabular}
+    \label{tab:logo}
+\end{table}
+
+\colorbox[rgb]{0,0.384,0.816}{\parbox[h]{\textwidth}{\color{white}\textsf{\textit{\textBar}}}}
+
+\thispagestyle{plain}
+ 
+\section{Introduction}
+
+This tutorial explains how Intel's library modules can be included in Verilog-based designs,
+which are implemented by using the Quartus\textsuperscript{\textregistered} Prime software. 
+\\
+\\
+{\bf Contents}:
+\begin{itemize}
+\item Example Circuit
+\item Library of Parameterized Modules
+\item Augmented Circuit with an LPM
+\item Results for the Augmented Design
+\end{itemize}
+\clearpage
+\newpage
+\section{Background}
+
+Practical designs often include commonly used circuit blocks
+such as adders, subtractors, multipliers, decoders, counters, and shifters.
+Intel provides efficient implementations of such blocks in the form
+of library modules that can be instantiated in Verilog designs.
+The compiler may recognize that a standard function specified in Verilog code
+can be realized using a library module, in which case it may automatically
+{\it infer} this module.
+However, many library modules provide functionality that is too complex to be
+recognized automatically by the compiler. These modules have to 
+be instantiated in the design explicitly by the user. Quartus\textsuperscript{\textregistered} Prime software includes a 
+{\it library of parameterized modules} ({\it LPM}).
+The modules are general in structure and they are tailored to a specific
+application by specifying the values of general parameters.
+
+\noindent
+Doing this tutorial, the reader will learn about:
+\begin{itemize}
+\item Library of parameterized modules (LPMs)
+\item Configuring an LPM for use in a circuit
+\item Instantiating an LPM in a designed circuit
+\end{itemize}
+
+\noindent
+The detailed examples in the tutorial were obtained using the Quartus Prime version \versnum, 
+but other versions of the software can also be used. When selecting a device within Quartus Prime, use the device names associated with FPGA chip on the DE-series board by referring to Table \ref{tab:device}. 
+
+\begin{table}[H]
+	\begin{center}
+	\begin{tabular}{| c | c |}
+	\hline
+	Board & Device Name \\
+	\hline
+	DE0-CV & Cyclone\textsuperscript{\textregistered} V 5CEBA4F23C7 \\
+	\hline
+	DE0-Nano & Cyclone\textsuperscript{\textregistered} IVE EP4CE22F17C6 \\
+	\hline
+	DE0-Nano-SoC & Cyclone\textsuperscript{\textregistered} V SoC 5CSEMA4U23C6\\
+	\hline
+	DE1-SoC & Cyclone\textsuperscript{\textregistered} V SoC 5CSEMA5F31C6 \\
+	\hline
+	DE2-115 & Cyclone\textsuperscript{\textregistered} IVE EP4CE115F29C7 \\
+	\hline
+	DE10-Lite & Max\textsuperscript{\textregistered} 10 10M50DAF484C7G \\
+	\hline
+	DE10-Standard & Cyclone\textsuperscript{\textregistered} V SoC 5CSXFC6D6F31C6 \\
+	\hline
+	DE10-Nano & Cyclone\textsuperscript{\textregistered} V SE 5CSEBA6U2317 \\
+	\hline
+	\end{tabular}
+	\caption{DE-series FPGA device names}
+	\label{tab:device}
+	\end{center}
+\end{table}
+
+\section{Example Circuit}
+
+As an example, we will use the adder/subtractor circuit shown in Figure~\ref{fig:1}.
+It can add, subtract, and accumulate $n$-bit numbers 
+using the 2's complement number representation. 
+The two primary inputs are numbers $A = a_{n-1} a_{n-2} \cdots a_0$
+and $B = b_{n-1} b_{n-2} \cdots b_0$, and the primary output
+is $Z = z_{n-1} z_{n-2} \cdots z_0$. Another input is the {\it AddSub} 
+control signal which causes $Z = A + B$ to be performed when {\it AddSub} = 0 
+and $Z = A - B$ when {\it AddSub} = 1.
+A second control input, {\it Sel}, is used to select the accumulator mode of 
+operation. If {\it Sel} = 0, the operation $Z = A \pm B$ is performed, but if
+{\it Sel} = 1, then $B$ is added to or subtracted from the current
+value of $Z$.
+If the addition or subtraction operations result in arithmetic overflow, 
+an output signal, {\it Overflow}, is asserted.
+
+To make it easier to deal with asynchronous input signals, they are loaded 
+into flip-flops on a positive edge of the clock. 
+Thus, inputs $A$ and $B$ will be loaded into registers
+{\it Areg} and {\it Breg}, while {\it Sel} and {\it AddSub} will be loaded into
+flip-flops {\it SelR} and {\it AddSubR}, respectively.
+The adder/subtractor circuit places the result into register {\it Zreg}.
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.8]{figures/figure1.png}
+   \caption{The adder/subtractor circuit.} 
+	 \label{fig:1}
+	 \end{center}
+\end{figure} 
+
+ 
+The required circuit is described by the Verilog code in Figure~\ref{fig:2}.
+For our example, we use a 16-bit circuit as specified by $n = 16$.
+Implement this circuit as follows:
+\begin{itemize}
+\item Create a project {\it addersubtractor}.
+\item Include a file {\it addersubtractor.v}, which corresponds to Figure~\ref{fig:2},
+in the project. 
+%For convenience, this file is provided in the {\it design\_files} subdirectory within the tutorials folder, which is included on the
+%CD-ROM that accompanies the DE-series board and can also be found on Altera's DE-series web pages. 
+\item Select the FPGA chip that is on the DE-series board. A list of device names on DE-series boards can be found in Table \ref{tab:device}.
+\item Compile the design.
+\item Simulate the design by applying some typical inputs.
+\end{itemize}
+
+\newpage
+\input{figures/figure2a}
+\newpage
+\input{figures/figure2b}
+\section{Library of Parameterized Modules}
+
+The LPMs in the IP Catalog are general in structure 
+and they can be configured to suit a specific
+application by specifying the values of various parameters.
+We will use the {\it lpm\_add\_sub} module to simplify our 
+adder/subtractor circuit defined in Figures~\ref{fig:1} and~\ref{fig:2}.
+The augmented circuit is given in Figure~\ref{fig:3}. The {\it lpm\_add\_sub} module,
+instantiated under the name {\it megaddsub},
+replaces the adder circuit as well as the XOR gates that provide the input $H$
+to the adder. Since arithmetic overflow is one of the outputs that the LPM
+provides, it is not necessary to generate this output with a separate XOR gate.
+
+To implement this adder/subtractor circuit, create a new directory named
+{\it tutorial\_lpm}, and then create a project {\it addersubtractor2}.
+Choose the same device as we previously selected (Refer to Table \ref{tab:device}) 
+to allow a direct comparison of implemented designs.
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=1]{figures/figure3.png}
+   \caption{The augmented adder/subtractor circuit.} 
+	 \label{fig:3}
+	 \end{center}
+\end{figure}  
+
+The new design will include the desired LPM subcircuit specified as a Verilog 
+module that will be instantiated in the top-level Verilog design module.
+The Verilog module for the LPM subcircuit is generated by using a wizard as
+follows:
+\begin{enumerate}
+\item Select {\sf Tools $>$ IP Catalog}, which
+opens the IP Catalog window in Figure~\ref{fig:4}.
+\item In the IP Catalog panel, expand {\sf Library $>$ Basic Functions $>$ Arithmetic} and double-click on {\sf LPM\_ADD\_SUB }
+
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.65]{figures/figure4.png}
+   \caption{Choose an LPM.} 
+	 \label{fig:4}
+	 \end{center}
+\end{figure} 
+ 
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.65]{figures/figure5.png}
+   \caption{Create an LPM from the available library.} 
+	 \label{fig:5}
+	 \end{center}
+\end{figure}  
+
+\item In the pop-up box shown in Figure~\ref{fig:5}, choose {\sf Verilog} as the type of output file that should be created. 
+The output file must be given a name; choose the name {\it megaddsub.v} and
+indicate that the file should be placed in the directory 
+{\it tutorial\_lpm} as shown in the figure. Press {\sf OK}.
+ 
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.65]{figures/figure6.png}
+   \caption{Specify the size of data inputs.} 
+	 \label{fig:6}
+	 \end{center}
+\end{figure}  
+
+\item In the box in Figure~\ref{fig:6} specify that the width of the data inputs is 16 bits.
+Also, specify the operating mode in which one of the ports allows performing
+both addition and subtraction of the input operand, under the control of 
+the {\it add\_sub} input. A symbol for the resulting LPM is shown in the
+top left corner. Note that if {\it add\_sub} = 1 then {\it result} = $A + B$;
+otherwise, {\it result} = $A - B$. This interpretation of the control input
+and the operation performed is different from our original design in 
+Figures~\ref{fig:1} and~\ref{fig:2}, which we have to account for in the modified design.
+Observe that we have included this change in the circuit in Figure~\ref{fig:3}.
+Click {\sf Next}.
+ 
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.65]{figures/figure7.png}
+   \caption{Further specification of inputs.} 
+	 \label{fig:7}
+	 \end{center}
+\end{figure}
+
+\item In the box in Figure~\ref{fig:7}, specify that the values of
+both inputs may vary and select {\sf Signed} for the type of addition/subtraction.
+Click {\sf Next}.
+
+ 
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.65]{figures/figure8.png}
+   \caption{Specify the Overflow output.} 
+	 \label{fig:8}
+	 \end{center}
+\end{figure}  
+
+\item The box in Figure~\ref{fig:8} allows the designer to indicate optional inputs and 
+outputs that may be specified. Since we need the overflow signal, make the 
+{\sf Create an overflow output} choice and press {\sf Next}.
+ 
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.65]{figures/figure9.png}
+   \caption{Refuse the pipelining option.} 
+	 \label{fig:9}
+	 \end{center}
+\end{figure} 
+
+\item In the box in Figure~\ref{fig:9} say {\sf No} to the pipelining option and 
+click {\sf Next}.
+
+\item Figure~\ref{fig:10} shows the simulation model files needed to simulate the generated design. Press {\sf Next} to proceed to the final page.
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.65]{figures/figure10.png}
+   \caption{Simulation model files.} 
+	 \label{fig:10}
+	 \end{center}
+\end{figure}
+
+\item Figure~\ref{fig:11} gives a summary which shows the files that the wizard will create.
+Press {\sf Finish} to complete the process.
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.65]{figures/figure11.png}
+   \caption{Files created by the wizard.} 
+	 \label{fig:11}
+	 \end{center}
+\end{figure} 
+
+\item The box in Figure~\ref{fig:12} may pop up. If it does, press {\sf Yes} to add the newly generated files
+to the project.
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.65]{figures/figure12.png}
+   \caption{Add the new files to the project.} 
+	 \label{fig:12}
+	 \end{center}
+\end{figure}  
+
+\end{enumerate}
+\newpage
+\section{Augmented Circuit with an LPM}
+
+We will use the file {\it megaddsub.v} in our modified design.
+Figure~\ref{fig:13} depicts the Verilog code in this file; note that we have not shown 
+the comments in order to keep the figure small.
+\input{figures/figure13}
+
+\newpage
+The modified Verilog code for the adder/subtractor design is given in Figure~\ref{fig:14}.
+Put this code into a file
+{\it addersubtractor2.v} under the directory {\it tutorial\_lpm}. Also make sure to change the top level entity by selecting Project -> set as top level entity.
+The differences between this code and Figure~\ref{fig:2} are:
+\begin{itemize}
+\item The {\bf assign} statements that define the {\it over\_flow} signal 
+and the XOR gates (along with the signal defined as {\bf wire} H)
+are no longer needed.
+\item The {\it adderk} instance of the adder circuit is replaced 
+by {\it megaddsub}. Note that the {\it dataa} and {\it datab} inputs shown 
+in Figure~\ref{fig:6} are driven by the $G$ and {\it Breg} vectors, respectively. 
+Also, the inverted version of the {\it AddSubR} signal is specified to 
+conform with the usage of this control signal in the LPM.
+\item The {\it adderk} module is deleted from the code.
+\end{itemize}
+\input{figures/figure14a}
+\newpage
+\input{figures/figure14b}
+
+If the {\it megaddsub.qip} file has not been included in the project (e.g. if you
+answered {\sf No} in the box in Figure~\ref{fig:12}, or possibly if the box did not show up at all),
+you need to include it manually. To include the {\it megaddsub.v} file in the project,
+select {\sf Project $>$ Add/Remove Files in Project} to reach the window in Figure~\ref{fig:15}.
+The file {\it addersubtractor2.v} should already be listed as being included 
+in the project. Browse for the other files by clicking the button
+{\sf ...} to reach the window in Figure~\ref{fig:16}.
+Select the file {\it megaddsub.qip} and click {\sf Open}, which returns to the
+window in Figure~\ref{fig:15}. Click {\sf Add} to include the file and then click {\sf OK}.
+Now, the modified design can be compiled and simulated in the usual way.
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.4]{figures/figure15.png}
+   \caption{Inclusion of the new file in the project.} 
+	 \label{fig:15}
+	 \end{center}
+\end{figure}
+ 
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.5]{figures/figure16.png}
+   \caption{Specify the \it{megaddsub.qip} file.} 
+	 \label{fig:16}
+	 \end{center}
+\end{figure} 
+
+\section{Results for the Augmented Design}
+
+Compile the design and look at the summary, which is depicted in Figure~\ref{fig:17}.
+Observe that the modified design is implemented with a similar number of logic elements
+compared to using the code in Figure~\ref{fig:2}.
+ 
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.50]{figures/figure17.png}
+   \caption{Compilation Results for the Augmented Circuit.} 
+	 \label{fig:17}
+	 \end{center}
+\end{figure} 
+
+ 
+% Copyright and Trademark
+
+\input{\commonPath/Docs/copyright.tex}
+
+\end{document}

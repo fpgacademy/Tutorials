@@ -1,0 +1,182 @@
+\begin{figure}[h]
+
+\begin{flushleft} %%%\begin{singlespace}
+\parbox{12.5cm}{
+{\small \textsf{\textbf{alt\_up\_de0\_nano\_adc\_open\_dev}}} \\
+\begin{tabular}[ht]{lp{11cm}}
+	\textbf{Prototype:}
+	&
+	\texttt{alt\_up\_adc\_dev* alt\_up\_adc\_open\_dev( const char *name)} 
+	\\
+	\textbf{Include:}
+	&
+	{\tt <altera\_up\_avalon\_adc.h>}
+	\\
+	{\textbf{Parameters:}}
+	&
+	\texttt{{name}}
+	 -- the ADC Controller name. For example, if the ADC controller name in Platform Designer is "ADC", then {\it name} should be "/dev/ADC" 
+	\\
+	\textbf{Returns:}
+	& The corresponding device structure, or NULL if the device is not found.
+	\\
+	\textbf{Description:}
+	& Open the ADC controller device specified by {\it name} .\\
+\end{tabular}
+\\
+\\
+\\
+{\small \textsf{\textbf{alt\_up\_adc\_read}}} \\
+\begin{tabular}[ht]{lp{11cm}}
+	\textbf{Prototype:}
+	&
+	\texttt{unsigned int alt\_up\_adc\_read ( alt\_up\_adc\_dev *adc, unsigned channel)} 
+	\\
+	\textbf{Include:}
+	&
+	{\tt <altera\_up\_avalon\_adc.h>}
+	\\
+	{\textbf{Parameters:}}
+	&
+	\texttt{{adc}}
+	 -- struct for the ADC controller device . 
+	\\
+	&
+	\texttt{{channel}}
+	 -- the channel to be read, from 0 to 7.
+	 \\
+	\textbf{Returns:}
+	& data -- The converted value from the desired channel.
+	\\
+	\textbf{Description:}
+	& Read from a channel of the ADC.\\
+\end{tabular}
+\\
+\\
+\\
+{\small \textsf{\textbf{alt\_up\_\_adc\_update}}} \\
+\begin{tabular}[ht]{lp{11cm}}
+	\textbf{Prototype:}
+	&
+	\texttt{void alt\_up\_\_adc\_update( alt\_up\_adc\_dev *adc)} 
+	\\
+	\textbf{Include:}
+	&
+	{\tt <altera\_up\_avalon\_adc.h>}
+	\\
+	{\textbf{Parameters:}}
+	&
+	\texttt{{adc}}
+	 -- struct for the ADC controller device . 
+	\\
+	\textbf{Description:}
+	& Trigger the controller to convert all channels and store the values.\\
+\end{tabular}
+\\
+\\
+\\
+{\small \textsf{\textbf{alt\_up\_adc\_auto\_enable}}} \\
+\begin{tabular}[ht]{lp{11cm}}
+	\textbf{Prototype:}
+	&
+	\texttt{void alt\_up\_adc\_auto\_enable( alt\_up\_adc\_dev *adc)} 
+	\\
+	\textbf{Include:}
+	&
+	{\tt <altera\_up\_avalon\_adc.h>}
+	\\
+	{\textbf{Parameters:}}
+	&
+	\texttt{{adc}}
+	 -- struct for the ADC controller device . 
+	\\
+	\textbf{Description:}
+	& Enable automatic converting of channels.\\
+\end{tabular}
+\\
+\\
+\\
+{\small \textsf{\textbf{alt\_up\_adc\_auto\_disable}}} \\
+\begin{tabular}[ht]{lp{11cm}}
+	\textbf{Prototype:}
+	&
+	\texttt{void alt\_up\_adc\_auto\_disable( alt\_up\_adc\_dev *adc)} 
+	\\
+	\textbf{Include:}
+	&
+	{\tt <altera\_up\_avalon\_adc.h>}
+	\\
+	{\textbf{Parameters:}}
+	&
+	\texttt{{adc}}
+	 -- struct for the ADC controller device . 
+	\\
+	\textbf{Description:}
+	& Disable automatic converting of channels.\\
+\end{tabular}
+ } %%%\end{singlespace}
+	\caption{HAL functions for the ADC controller. }%(Part \it{a})}
+	\label{fig:hal_func}
+\end{flushleft}
+\end{figure} 
+%\FloatBarrier
+%\begin{center} %%%\begin{singlespace}
+%\parbox{12.5cm}{
+%{\small \textsf{\textbf{alt\_up\_de0\_nano\_adc\_set\_sclk\_counter}}} \\
+%\begin{tabular}[ht]{lp{11cm}}
+%	\textbf{Prototype:}
+%	&
+%	\texttt{void alt\_up\_de0\_nano\_adc\_set\_sclk\_counter( alt\_up\_de0\_nano\_adc\_dev *adc, unsigned sclk\_count)} 
+%	\\
+%	\textbf{Include:}
+%	&
+%	{\tt <altera\_up\_avalon\_de0\_nano\_adc.h>}
+%	\\
+%	{\textbf{Parameters:}}
+%	&
+%	\texttt{{adc}}
+%	 -- struct for the ADC controller device . 
+%	\\
+%	&
+%	\texttt{{sclk\_count}}
+%	 -- the new value for the SCLK counter.
+%	\\
+%	\textbf{Description:}
+%	& Set the frequency of SCLK by changing the ratio of system clock cycles per SCLK cycle.\\
+%\end{tabular}
+%\\
+%\\
+%\\{\small \textsf{\textbf{alt\_up\_de0\_nano\_adc\_set\_sclk\_freq}}} \\
+%\begin{tabular}[ht]{lp{11cm}}
+%	\textbf{Prototype:}
+%	&
+%	\texttt{void alt\_up\_de0\_nano\_adc\_set\_sclk\_freq( alt\_up\_de0\_nano\_adc\_dev *adc, float sclk\_freq, float sysclk\_freq)} 
+%	\\
+%	\textbf{Include:}
+%	&
+%	{\tt <altera\_up\_avalon\_de0\_nano\_adc.h>}
+%	\\
+%	{\textbf{Parameters:}}
+%	&
+%	\texttt{{adc}}
+%	 -- struct for the ADC controller device . 
+%	\\
+%	&
+%	\texttt{{sclk\_freq}}
+%	 -- the desired value for SCLK, in MHz.
+%	\\
+%	&
+%	\texttt{{sysclk\_freq}}
+%	 -- the system clock frequency in MHz. Typically 50MHz on DE0-Nano boards.
+%	\\
+%	\textbf{Description:}
+%	& Set the frequency of SCLK. This function provids an alternate interface to the \texttt{alt\_up\_de0\_nano\_adc\_set\_sclk\_freq} function.\\
+%\end{tabular}
+%\\
+%\\
+%} %%%\end{singlespace}
+%\\
+%\begin{center}
+%Figure~\ref{fig:hal_func}. HAL functions for the ADC controller. (Part \it{b}).
+%\end{center}
+%\vfill

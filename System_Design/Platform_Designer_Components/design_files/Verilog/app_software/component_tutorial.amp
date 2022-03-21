@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<altera_monitor_program_project version="1.0">
+    <architecture>Nios II</architecture>
+    <system>
+        <system_info filepath="true">../embedded_system.sopcinfo</system_info>
+        <system_sof filepath="true">../output_files/component_tutorial.sof</system_sof>
+        <system_jdi filepath="true"/>
+        <cable>USB-Blaster [USB-0]</cable>
+        <processor>nios2_qsys_0</processor>
+    </system>
+    <program>
+        <type>No Program</type>
+    </program>
+</altera_monitor_program_project>

@@ -1,0 +1,17 @@
+Notes:
+1. Might need to change the file format from Windows to UNIX first,
+so go to the demo and driver folders before running any programs, run:
+	dos2unix *
+
+2. To reprogram the FPGA without needing to restart the host computer if a valid PCIe connection has already been made,
+go to the demo folder, run: 
+	./reprogram save
+	<program a new sof>
+	./repgrogram restore
+Then go back to the driver folder to unload the driver first using:
+	./unload_alt_up_pci_driver.sh
+And reload it using:
+	./load_alt_up_pci_driver.sh
+The device connection should be reestablished. 
+	
+	

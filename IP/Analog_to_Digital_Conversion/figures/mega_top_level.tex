@@ -1,0 +1,42 @@
+\begin{figure}[h]
+
+\begin{center} %%%\begin{singlespace}
+\parbox{12.5cm}{
+\begin{tabbing}
+ZZZZ\=ZZ\=ZZ\=ZZ\=ZZ\kill
+{\bf module} adc\_demo (CLOCK\_50, KEY, SW, LED, ADC\_SCLK, \\
+\>\>\>\>ADC\_CS\_N, ADC\_SDAT, ADC\_SADDR);\\
+\> {\bf input} CLOCK\_50;\\
+\> {\bf input} [0:0] KEY;\\
+\> {\bf input} [2:0] SW;\\
+\> {\bf output} [7:0] LED;\\
+\\
+\> {\bf input} ADC\_SDAT;\\
+\> {\bf output}  ADC\_SCLK, ADC\_CS\_N, ADC\_SADDR;\\
+\\
+\> {\bf wire} [11:0] values [7:0];\\
+\\
+\> {\bf assign} LED = values [SW] [11:4];\\
+\\
+\>\>adc\_control ADC (\\
+\>\>\>.CLOCK (CLOCK\_50),\\
+\>\>\>.RESET (!KEY[0]),\\
+\>\>\>.ADC\_SCLK (ADC\_SCLK),\\
+\>\>\>.ADC\_CS\_N (ADC\_CS\_N),\\
+\>\>\>.ADC\_SDAT (ADC\_SDAT),\\
+\>\>\>.ADC\_SADDR (ADC\_SADDR),\\
+\>\>\>.CH0 (values[0]),\\
+\>\>\>.CH1 (values[1]),\\
+\>\>\>.CH2 (values[2]),\\
+\>\>\>.CH3 (values[3]),\\
+\>\>\>.CH4 (values[4]),\\
+\>\>\>.CH5 (values[5]),\\
+\>\>\>.CH6 (values[6]),\\
+\>\>\>.CH7 (values[7])\\
+\>\>);\\
+{\bf endmodule}
+\end{tabbing} } %%%\end{singlespace}
+	\caption{Example top-level module for a project using the ADC Controller for MegaWizard.}
+	\label{fig:mega_top}
+\end{center}
+\end{figure}

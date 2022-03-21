@@ -1,0 +1,50 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+
+my $total_data_size = 720 * 540;
+
+my @directions = ('mtos', 'stom', 'duplex');
+
+my @payloads = (64, 128, 256, 1024, 2048, 4096, 16384, 65536, 262144);
+# modify to install path of TBB
+$ENV{'LD_LIBRARY_PATH'} = '/glob/development-tools/versions/oneapi/beta10/inteloneapi/tbb/2021.1-beta10//lib/intel64/gcc4.8';
+
+print "Total data size = $total_data_size bytes\n";
+print "-----------------------------------------------\n";
+print "\t\tloopback on\n";
+print "payload\t\tmtos\tstom\ttime\n";
+print "-----------------------------------------------\n";
+
+
+my $report = "bw.dat";	
+open(my $fh, '>', $report) or die "Could not open $report";
+
+my $i = 1;
+my $bw_mtos;
+my $bw_stom;
+my $time;
+my $bw_duplex_mtos;
+my $bw_duplex_stom;
+foreach my $payload (@payloads)
+{
+	my $output_duplex = `./fpga_dma_st_test $payload`;
+	if($output_duplex =~ /Memory to Stream BW = (\d+) MBps, Stream to Memory BW = (\d+) MBps, Time = (\d+).(\d+) s/) {
+		$bw_duplex_mtos = $1;
+		$bw_duplex_stom = $2;
+		$time = $4;
+	}
+
+	if($payload > 1024) {
+		$payload = $payload/1024;
+		print $payload."KB\t\t$bw_duplex_mtos\t$bw_duplex_stom\t0.$time\n";
+		print $fh "$payload"."KB $bw_duplex_mtos $bw_duplex_stom 0.$time\n";
+	} else {
+		print $payload."B\t\t$bw_duplex_mtos\t$bw_duplex_stom\t0.$time\n";
+		print $fh "$payload"."B $bw_duplex_mtos $bw_duplex_stom 0.$time\n";
+	}
+	$i++;
+}
+
+close $fh
+#system("plot $report using 1:2 title 'Column' with lines");

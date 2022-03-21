@@ -1,0 +1,101 @@
+\documentclass[11pt, twoside, pdftex]{article}
+
+
+\newcommand{\typeName}{VHDL}
+\newcommand{\edition}{Standard}
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Preamble
+\input{../shared_sections/document_preamble.tex}
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% Document Begings
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% Header Logo and Title
+\input{../shared_sections/header_logo_and_text.tex}
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% Table of Contents
+{\tiny \tableofcontents}
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% Introduction
+\input{../shared_sections/section_introduction.tex}
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% Background
+\input{../shared_sections/section_background.tex}
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% Getting Started
+\input{../shared_sections/section_getting_started.tex}
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% Quartus Online Help
+\input{../shared_sections/section_online_help.tex}
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% Starting A New Project
+\input{../shared_sections/section_starting_new_project_std.tex}
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% Design Entry Using VHDL
+\input{../shared_sections/section_design_entry_using_vhdl.tex}
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% Compiling Designed Circuit
+\input{../shared_sections/section_compiling_designed_circuit_vhdl.tex}
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% Pin Assignments
+\input{../shared_sections/section_pin_assignments_std.tex}
+
+% Additional to pin assignments sections.
+For convenience when using large designs, all relevant pin assignments for the 
+DE-series board are given in individual files. For example, the DE1-SoC pin assignments 
+can be found in the {\it DE1\_SoC.qsf} file, which is available from Intel's FPGA University
+Program website.
+This file uses the names found in the {\it DE1-SoC User Manual}.
+If we wanted to make the pin assignments for our example circuit by importing
+this file, then we would have to use the same names in our 
+Block Diagram/Schematic design file;
+namely, {\it SW[0]}, {\it SW[1]} and {\it LEDG[0]} for 
+{\it x1}, {\it x2} and {\it f}, respectively.
+Since these signals are specified in the {\it DE1\_SoC.qsf} file
+as elements of vectors {\it SW} and {\it LEDG}, we must refer to them in the same
+way in our design file. For example, in the {\it DE1\_SoC.qsf} 
+file the 10 toggle switches are called {\it SW[9]} to {\it SW[0]}.
+In a design file they can also be referred to as a vector {\it SW[9..0]}.
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% Programming and Configuring
+\input{../shared_sections/section_programming_and_configuring_std.tex}
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% Testing Designed Circuit
+\input{../shared_sections/section_testing_the_designed_circuit.tex}
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% Copyright
+\input{\commonPath/Docs/copyright.tex}
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\end{document}
+% Document Ends
+%%%%%%%%%%%%%%%%%%%%%%%%%

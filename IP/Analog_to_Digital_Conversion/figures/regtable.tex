@@ -1,0 +1,60 @@
+\begin{table}[h]
+
+    \centering
+    \begin{tabular}{|c|c|c|p{7cm}|}
+        \hline
+        \multicolumn{4}{|l|}{\textit{\textbf{Table 2. DE-Series ADC Controller register map}}}
+        \\\hline
+            \textbf{Offset in bytes}
+            & \textbf{Register name}
+            & \textbf{Read/Write}
+            & \textbf{Purpose}
+        \\\hline
+        \multirow{2}{*}{0} 
+            & \texttt {CH\_0} & R & Converted value of channel 0
+        \\\cline{2-4}
+            & \texttt {Update} & W & Update the converted values
+        \\\hline
+        \multirow{2}{*}{4} 
+            & \texttt {CH\_1} & R & Converted value of channel 1
+        \\\cline{2-4}
+            & \texttt {Auto-Update} & W & Enables or disables auto-updating
+%        \\\hline
+%        \multirow{2}{*}{8} 
+%            & \texttt {CH\_2} & R & Converted value of channel 2.
+%        \\\cline{2-4}
+%            & \texttt {SCLK Counter} & W & Set the SCLK frequency.
+        \\\hline
+            8
+            & \texttt{CH\_2}
+            & R
+            & Converted value of channel 2
+        \\\hline
+            12
+            & \texttt{CH\_3}
+            & R
+            & Converted value of channel 3
+        \\\hline
+            16
+            & \texttt{CH\_4}
+            & R
+            & Converted value of channel 4
+        \\\hline
+            20
+            &\texttt{CH\_5}
+            & R
+            & Converted value of channel 5
+        \\\hline
+            24
+            & \texttt{CH\_6}
+            & R
+            & Converted value of channel 6
+        \\\hline
+            28
+            & \texttt{CH\_7}
+            & R
+            & Converted value of channel 7
+        \\\hline
+    \end{tabular}
+    \label{tab:regfiles}
+\end{table}

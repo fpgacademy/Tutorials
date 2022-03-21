@@ -1,0 +1,983 @@
+\documentclass[11pt, twoside, pdftex]{article}
+
+% This includes all the settings that we should use for the document
+\newcommand{\PDFTitle}{Using the ModelSim-Intel FPGA Simulator with Verilog Testbenches}
+\newcommand{\commonPath}{../../../Common}
+\input{\commonPath/Docs/defaulttext.tex}
+\input{\commonPath/Docs/preamble.tex}
+
+\usepackage{placeins}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% Add title
+\newcommand{\doctitle}{Using the ModelSim-Intel FPGA \\ Simulator with Verilog Testbenches}
+\newcommand{\dochead}{Using the ModelSim-Intel FPGA Simulator with Verilog Testbenches}
+% Usually no need to change these two lines
+\title{\fontfamily{phv}\selectfont{\doctitle} }
+\chead{ \small{\textsc{\bfseries \dochead} } }
+% Customizations
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% Allows multiple figures per page
+
+\renewcommand\floatpagefraction{.9}
+\renewcommand\topfraction{.9}
+\renewcommand\bottomfraction{.9}
+\renewcommand\textfraction{.1}   
+\setcounter{totalnumber}{50}
+\setcounter{topnumber}{50}
+\setcounter{bottomnumber}{50}
+\raggedbottom
+
+%%%%%%%%%%%%%%%%%%
+%%% DOCUMENT START
+%\begin{document}
+\begin{document}
+\begin{table}
+    \centering
+    \begin{tabular}{p{5cm}p{4cm}}
+	\hspace{-3cm}
+        &
+        \raisebox{1\height}{\parbox[h]{0.5\textwidth}{\Large\fontfamily{phv}\selectfont{\textsf{\doctitle}}}}
+    \end{tabular}
+    \label{tab:logo}
+\end{table}
+
+\colorbox[rgb]{0,0.384,0.816}{\parbox[h]{\textwidth}{\color{white}\textsf{\textit{\textBar}}}}
+
+\thispagestyle{plain}
+\newcommand{\red}[1]{{\color{red}\sf{#1}}}
+\lstset{language = Verilog}
+
+\section{Introduction}
+
+This tutorial introduces the simulation of Verilog code using the
+{\it ModelSim-Intel FPGA} simulator. We assume 
+that you are using {\it ModelSim-Intel FPGA Starter Edition version 18.0}. This software can 
+be downloaded and installed from the {\it Download Center for Intel FPGAs}. In this
+download center, you can select release {\it 18.0} of the {\it Quartus Prime Lite Edition}, 
+and then on the \texttt{Individual Files} tab choose to download and install the 
+{\it ModelSim-Intel FPGA Starter Edition} software. We assume that you are using a computer
+that is running the Windows operating system. If you are using the Linux operating system 
+then minor differences to the instructions would apply, such as using a / filesystem delimiter 
+rather than the $\backslash$ delimiter that is used with Windows. 
+ 
+{\bf Contents:}
+\begin{itemize}
+\item Getting Started with ModelSim
+\item Simulating a Sequential Circuit
+\item Simulating a Circuit that Includes a Memory Module
+\item Setting up a ModelSim Simulation
+\item Using the ModelSim Graphical User Interface
+\end{itemize}
+
+{\bf Requirements:}
+\begin{itemize}
+\item ModelSim-Intel FPGA Starter Edition software
+\item A computer running either Microsoft* Windows* (version 10 is recommended) or Linux 
+(Ubuntu, or a similar Linux distribution). The computer would typically be either a
+desktop computer or laptop, and is used to run the ModelSim software.
+\end{itemize}
+
+{\bf Optional:}
+\begin{itemize}
+\item Intel Quartus\textsuperscript{\textregistered} Prime software
+\item A DE-series development and education board, such as the DE1-SoC board. These boards are 
+described on Intel's FPGA University Program website, and are available from the manufacturer 
+Terasic Technologies.
+\end{itemize}
+
+\clearpage
+\newpage
+\section{Getting Started}
+
+The ModelSim Simulator is a sophisticated and powerful tool that supports a variety of 
+usage models. In this tutorial we focus on only one design flow: using the ModelSim
+software as a {\it stand-alone} program to perform {\it functional} simulations, with 
+simulation inputs specified in a {\it testbench}, and with simulator commands provided 
+via {\it script} files. Other possible design flows for using ModelSim include {\it invoking}
+it from within the Intel Quartus Prime software, performing {\it timing} simulations, and
+specifying simulation inputs by {\it drawing} waveforms in a graphical editor instead of
+using a testbench. These flows are not described here, but can be found in other
+documentation that is available on the Internet.  
+
+\noindent
+To introduce the {\it ModelSim} software, we will first open an existing simulation example.
+The example is a multibit adder named {\it Addern}, and is included as 
+part of the {\it design files} provided
+along with this tutorial. Copy the {\it Addern} files to a folder on your computer, such
+as {\it C:$\backslash$ModelSim\_Tutorial$\backslash$Addern}. In the {\it Addern} folder
+there is a Verilog source-code file called {\it Addern.v} and a subfolder named {\it ModelSim}.
+The {\it Addern.v} file, shown in Figure~\ref{fig:addern}, is the Verilog code that will 
+be simulated in this part of the tutorial. We will specify signal 
+values for the adder's inputs, {\it Cin}, {\it X}, and {\it Y}, and then the {\it
+ModelSim} simulator will generate corresponding values for the outputs, {\it Sum} and {\it Cout}.
+
+\lstset{language=Verilog,numbers=none,escapechar=|}
+\begin{figure}[h]
+\begin{center}
+\begin{minipage}[t]{12.5 cm}
+\begin{lstlisting}[name=addern]
+// A multi-bit adder
+module Addern (Cin, X, Y, Sum, Cout);
+    parameter n = 16;
+    input Cin;
+    input [n-1:0] X, Y;
+    output [n-1:0] Sum;
+    output Cout;
+
+    assign {Cout, Sum} = X + Y + Cin;
+endmodule
+\end{lstlisting}
+\end{minipage}
+\caption{Verilog code for the multibit adder.}
+\label{fig:addern}
+\end{center}
+\end{figure}
+
+\noindent
+We will use three files included in the \texttt{ModelSim} subfolder to control the 
+{\it ModelSim} simulator. The files are named {\it testbench.v}, {\it testbench.tcl}, and 
+{\it wave.do}.
+
+\noindent
+The {\it testbench.v} file is a style of Verilog code known as a {\it testbench}. 
+The purpose of a testbench is to {\it instantiate} a Verilog module that is to be simulated,
+and to specify values for its inputs at various simulation times. In this case the module
+to be simulated is our multibit adder, which we refer to as the {\it design under test} (DUT).
+The first statement in the Verilog 
+testbench, illustrated in Figure~\ref{fig:tb1}, is called a {\it timescale compiler directive}.
+Its first argument sets the {\it units} of simulation time to 1 nanosecond. The user can
+specify values for the inputs to the DUT in terms of these time units, as we will illustrate
+shortly. The second argument sets the {\it resolution} of the simulation to 1 picosecond.
+This parameter specifies the granularity of time for which ModelSim evaluates signal values
+during a simulation. We will use these parameters for all of our simulations in this tutorial.
+
+\noindent
+Line~\ref{line:tb1_module} is the start of the testbench module, which has no inputs or
+outputs. In Lines~\ref{line:tb1_tb1} and \ref{line:tb1_tb2} we declare the signals {\it Cin}, 
+{\it X}, and {\it Y}, which will be used as the inputs to the DUT. Values will be assigned 
+at various simulation times to these signals in the testbench code. Verilog syntax requires
+that these signals have the type {\it reg} as given in the figure.  When a value is 
+specified in the testbench code for a signal with the reg type, the signal maintains this 
+value until it is changed again in the testbench.  Lines~\ref{line:tb1_tb3} 
+and~\ref{line:tb1_tb4} in Figure~\ref{fig:tb1} declare the signals {\it Sum} and
+{\it Cout}, which will be connected to the outputs of the DUT. These signals, 
+whose values are determined by the behavior of the DUT during the simulation, have to be 
+declared with the type {\it wire} as given in the code.
+
+\noindent
+The {\it Addern} module, our design under test, is instantiated in Line~\ref{line:addern} of the 
+testbench. The {\it Addern} inputs and outputs are attached to the signals declared previously
+in Lines~\ref{line:tb1_tb1} to~\ref{line:tb1_tb4} of the testbench.
+
+\noindent
+Lines~\ref{line:tb1_init1} to \ref{line:tb1_init8} provide an {\it initial block}. It is is used
+to assign values to the reg signals that provide inputs to the DUT. The initial block
+starts executing at the beginning of simulation time, so that line~\ref{line:tb1_init2} 
+initializes the signals {\it X}, {\it Y}, and {\it Cin} to 0 at simulation time 0.
+Line~\ref{line:tb1_init3} specifies that after 20
+simulation time {\it units} the value of the input {\it Y} changes to 10. Since the
+unit of simulation time is set to 1~ns by the timescale directive in 
+Line~\ref{line:tb1_tb0}, this
+means that $Y$ changes to the value 10 at 20~ns in simulation time. 
+Line~\ref{line:tb1_init4} specifies that after another 20~ns, meaning at 40 ns in simulation
+time, input {\it X} changes to 10. The rest of the
+initial block specifies various values for the adder inputs at 20 ns time increments.
+
+\lstset{language=Verilog,numbers=left,escapechar=|}
+\begin{figure}[h]
+\begin{center}
+\begin{minipage}[t]{12.5 cm}
+\begin{lstlisting}[name=testbench]
+|\label{line:tb1_tb0}|`timescale 1ns / 1ps
+|\label{line:tb1_module}|module testbench ( );
+    // reg signals provide inputs to the design under test
+|\label{line:tb1_tb1}|    reg Cin;
+|\label{line:tb1_tb2}|    reg [15:0] X, Y;
+    // wire signals are used for outputs
+|\label{line:tb1_tb3}|    wire [15:0] Sum;
+|\label{line:tb1_tb4}|    wire Cout;
+
+    // instantiate the design under test
+|\label{line:addern}|    Addern U1 (Cin, X, Y, Sum, Cout);
+
+    // assign signal values at various simulation times
+|\label{line:tb1_init1}|    initial 
+    begin
+|\label{line:tb1_init2}|        X <= 0; Y <= 0; Cin <= 0;
+|\label{line:tb1_init3}|        #20 X <= 0; Y <= 10; Cin <= 0;
+|\label{line:tb1_init4}|        #20 X <= 10; Y <= 10; Cin <= 0;
+|\label{line:tb1_init5}|        #20 X <= 10; Y <= 10; Cin <= 1;
+|\label{line:tb1_init6}|        #20 X <= 16'hFFF0; Y <= 16'hF; Cin <= 0;
+|\label{line:tb1_init7}|        #20 X <= 16'hFFF0; Y <= 16'hF; Cin <= 1;
+|\label{line:tb1_init8}|    end // initial
+endmodule
+\end{lstlisting}
+\end{minipage}
+\caption{The Verilog testbench code.}
+\label{fig:tb1}
+\end{center}
+\end{figure}
+
+\noindent
+Open the {\it ModelSim} software to reach the window shown in Figure~\ref{fig:gui1}.
+Click on the {\it Transcript} window at the bottom of the figure and then use the
+\texttt{cd} command to navigate to the ModelSim folder for the multibit adder. For 
+example, in our case we would type \texttt{cd C:/ModelSim\_Tutorial/Addern/ModelSim}. 
+Note that ModelSim uses the /~symbol to navigate between filesystem folders, even though 
+the Windows operating system uses the $\backslash$~symbol for this purpose.
+Next, we wish to run a series of simulator commands that are included in the script file
+{\it testbench.tcl}. 
+
+\newpage
+\begin{figure}[t]
+	\begin{center}
+		\includegraphics[width = .9\textwidth]{figures/gui1.png}
+	\end{center}
+		  \caption{The {\it ModelSim} window.}
+	\label{fig:gui1}
+\end{figure}
+
+\noindent
+Figure~\ref{fig:tcl} shows the contents of the script {\it testbench.tcl}. First, the
+\texttt{quit} command is invoked to ensure that no simulation is already running. Then, in
+Line~\ref{line:tcl2} the \texttt{vlib} command is executed to create a {\it work} design
+library; ModelSim stores compilation/simulation results in this working library.   
+The Verilog compiler is invoked in Line~\ref{line:tcl3} to
+compile the source code for the {\it Addern} module, which is in the {\it parent} folder (../),  
+and in Line~\ref{line:tcl4} to compile {\it testbench.v} in the current folder.
+The simulation is started by the \texttt{vsim} command in Line~\ref{line:tcl5}. It includes some
+simulation libraries for Intel FPGAs that may be needed by ModelSim.
+If the included libraries aren't required for the current
+design, then they will be ignored during the simulation. 
+Line~\ref{line:tcl6} in Figure~\ref{fig:tcl} executes the command \texttt{do~wave.do}.
+The {\it do} command is used to execute other ModelSim commands provided in a file. In
+this case the file {\it wave.do}, which will be described shortly, contains various commands
+that are used to configure the ModelSim waveform-display window. The final command in 
+Figure~\ref{fig:do} advances the simulation by a desired amount of time, which in 
+this case is 120 ns.
+
+\noindent
+To run the script, in the {\it Transcript} window type the command
+\texttt{do testbench.tcl}. ModelSim will execute the commands in this script and then
+update its graphical user interface to show the simulation results. 
+The updated ModelSim window after running the {\it testbench.tcl} script is illustrated 
+in Figure~\ref{fig:gui2}.
+
+\lstset{language=Tcl,numbers=left,escapechar=|}
+\begin{figure}[b]
+\begin{center}
+\begin{minipage}[t]{15 cm}
+\begin{lstlisting}[name=tcl]
+|\label{line:tcl0}|# stop any simulation that is currently running
+|\label{line:tcl1}|quit -sim
+# create the default "work" library
+|\label{line:tcl2}|vlib work;
+
+# compile the Verilog source code in the parent folder
+|\label{line:tcl3}|vlog ../*.v
+# compile the Verilog code of the testbench
+|\label{line:tcl4}|vlog *.v
+# start the Simulator, including some libraries
+|\label{line:tcl5}|vsim work.testbench -Lf 220model_ver -Lf altera_mf_ver -Lf verilog
+# show waveforms specified in wave.do
+|\label{line:tcl6}|do wave.do
+# advance the simulation the desired amount of time
+|\label{line:tcl7}|run 120 ns
+\end{lstlisting}
+\end{minipage}
+\caption{The {\it testbench.tcl} file.}
+\label{fig:tcl}
+\end{center}
+\end{figure}
+
+\begin{figure}[t]
+	\begin{center}
+		\includegraphics[width = .85\textwidth]{figures/gui2.png}
+	\end{center}
+		  \caption{The updated {\it ModelSim} window.}
+	\label{fig:gui2}
+\end{figure}
+\newpage
+\clearpage
+\noindent
+The {\it wave.do} file used for this design example appears in Figure~\ref{fig:do}. 
+It specifies in Lines~\ref{line:do1} to \ref{line:do2}
+which signal waveforms should be displayed in the simulation results, and 
+also includes a number of settings related to the display. To add or delete waveforms 
+in the display you can manually edit the {\it wave.do} file using any text editor, 
+or you can select which waveforms should be displayed by using the ModelSim graphical 
+user interface. Referring to Figure~\ref{fig:gui2}, changes to the displayed waveforms 
+can be selected by right-clicking in the waveform window. Waveforms can be added to 
+the display by selecting a signal in the \texttt{Objects} window and then 
+{\it dragging-and-dropping} that signal name into the \texttt{Wave} window. 
+A more detailed discussion about commands
+available in the graphical user interface is provided in Appendix A.
+
+\noindent
+Quit the ModelSim software to complete this part of the tutorial. To quit the program you 
+can either select the \texttt{File}~$>$~\texttt{Quit} command, or 
+type \texttt{exit} in the {\it Transcript}
+window, or just click on the \texttt{X} in the upper-right corner of the ModelSim window.
+
+\lstset{numbers=left,escapechar=|}
+\begin{figure}[h]
+\begin{center}
+\begin{minipage}[t]{14.5 cm}
+\begin{lstlisting}[name=do]
+onerror {resume}
+quietly WaveActivateNextPane {} 0
+|\label{line:do1}|add wave -noupdate -label Cin /testbench/Cin
+add wave -noupdate -label X -radix hexadecimal /testbench/X
+add wave -noupdate -label Y -radix hexadecimal /testbench/Y
+add wave -noupdate -label Cout /testbench/Cout
+add wave -noupdate -divider Adder
+add wave -noupdate -label Cin /testbench/U1/Cin
+add wave -noupdate -label X -radix hexadecimal /testbench/U1/X
+add wave -noupdate -label Y -radix hexadecimal /testbench/U1/Y
+add wave -noupdate -label Sum -radix hexadecimal /testbench/U1/Sum
+|\label{line:do2}|add wave -noupdate -label Cout /testbench/U1/Cout
+TreeUpdate [SetDefaultTree]
+WaveRestoreCursors {{Cursor 1} {20000 ps} 0}
+quietly wave cursor active 1
+configure wave -namecolwidth 73
+configure wave -valuecolwidth 64
+configure wave -justifyvalue left
+configure wave -signalnamewidth 0
+configure wave -snapdistance 10
+configure wave -datasetprefix 0
+configure wave -rowmargin 4
+configure wave -childrowmargin 2
+configure wave -gridoffset 0
+configure wave -gridperiod 1
+configure wave -griddelta 40
+configure wave -timeline 0
+configure wave -timelineunits ns
+update
+WaveRestoreZoom {0 ps} {120 ns}
+\end{lstlisting}
+\end{minipage}
+\caption{The {\it wave.do} file.}
+\label{fig:do}
+\end{center}
+\end{figure}
+
+\section{Simulating a Sequential Circuit}
+
+Another ModelSim example, called {\it Accumulate}, is included as part of the
+{\it design files} for this tutorial. Copy the {\it Accumulate} example to 
+a folder on your computer, such as 
+{\it C:$\backslash$ModelSim\_Tutorial$\backslash$Accumulate}. In the {\it Accumulate} folder
+there is a Verilog source-code file called {\it Accumulate.v} and a subfolder named 
+{\it ModelSim}. The {\it Accumulate.v} file, which provides the Verilog code that we will 
+simulate, is shown in Figure~\ref{fig:accumulate}. It
+represents the logic circuit illustrated in Figure~\ref{fig:circuit}, which includes an
+adder, register, and down-counter. The purpose of this circuit is to add together, or
+{\it accumulate}, values of the input {\it X} for each clock cycle until the counter 
+reaches zero.
+
+\noindent
+The {\it Accumulate} module in Figure~\ref{fig:accumulate} has ports {\it KEY}, 
+{\it CLOCK\_50}, {\it SW}, and {\it LEDR} because the module is intended to be implemented
+on a DE-series board that features an Intel FPGA, such as the {\it DE1-SoC} board. After 
+simulating the Verilog code to verify its correct operation, you may
+wish to compile it using the Quartus Prime CAD tools and then download and test the 
+resulting circuit on a board.  
+
+\lstset{language=Verilog,numbers=none,escapechar=?}
+\begin{figure}[bh!]
+\begin{center}
+\begin{minipage}[t]{15 cm}
+\begin{lstlisting}[name=accumulate]
+module Accumulate (KEY, CLOCK_50, SW, LEDR);
+    input [0:0] KEY;
+    input CLOCK_50;
+    input [9:0] SW;
+    output [9:0] LEDR;
+
+    wire Clock, Resetn, z;
+    wire [4:0] X, Y;
+    reg [9:0] Sum;
+    reg [4:0] Count;
+
+    assign Clock = CLOCK_50;
+    assign Resetn = KEY[0];
+    assign X = SW[4:0];
+    assign Y = SW[9:5];
+
+    always @(posedge Clock)
+        if (Resetn  == 1'b0)    // synchronous clear of the accumulator
+            Sum <= 0;
+        else if (z == 1'b1)
+            Sum <= Sum + X;
+
+    always @(posedge Clock)
+        if (Resetn  == 1'b0)    // synchronous load of the counter
+            Count <= Y;
+        else if (z == 1'b1)
+            Count <= Count - 1'b1;
+
+    assign z = | Count;
+    assign LEDR = Sum;
+endmodule
+\end{lstlisting}
+\end{minipage}
+\caption{Verilog code for the accumulator.}
+\label{fig:accumulate}
+\end{center}
+\end{figure}
+
+\noindent
+A {\it testbench.v} file for the accumulator design under test (DUT) is given in 
+Figure~\ref{fig:tb2}. Three reg-type signals, {\it KEY}, {\it CLOCK\_50}, and 
+{\it SW} are declared to provide inputs to the DUT, as well as a wire-type signal {\it LEDR}
+for connecting to the DUT outputs. The {\it Accumulate} module is instantiated in
+Line~\ref{line:tb2_inst}.
+
+\noindent
+It is useful to define a periodic signal that can be used as a clock input for 
+the {\it Accumulate} sequential circuit. We could manually define some number of cycles 
+for such a signal by using an {\it initial} block in the testbench, but this method would be
+awkward. Instead, Lines~\ref{line:tb2_clk1} to~\ref{line:tb2_clk2} in 
+Figure~\ref{fig:tb2} show how a clock signal can be 
+easily specified by using an {\it always} block. Unlike an initial block, in which the
+statements are executed just once in sequential order, the statements in an always block
+are executed repeatedly. Thus, Line~\ref{line:tb2_clk2} in the always block inverts the 
+{\it CLOCK\_50} signal 
+every 10~ns in simulation time and creates a 50 MHz periodic waveform. The always block is
+executed {\it concurrently} by the Simulator along with the initial block in
+Lines~\ref{line:tb2_init1} to~\ref{line:tb2_init2}. This code first initializes the {\it CLOCK\_50} 
+signal to 0 at the start of the simulation. This action is necessary because the default 
+value of a reg-type signal is \texttt{X} (unknown value), which cannot be {\it inverted} 
+in the always block. The initial block also sets {\it KEY}$_0 = 0$ and {\it SW}$=0$
+at the start of the simulation, which allows the {\it Sum} in the accumulator to be
+cleared. At 20~ns in simulation time {\it SW}$_{9-5}$ is set to 10, so that this value can 
+be loaded into the counter. Finally, at 40~ns in simulation time {\it KEY}$_0$
+is set to 1 and {\it SW}$_{4-0}$ is set to 30, so that this value can be
+{\it accumulated} for each clock cycle until the counter reaches~0.
+
+\begin{figure}[t]
+	\begin{center}
+		\includegraphics[scale = 1.0]{figures/figaccum.pdf}
+	\end{center}
+		  \caption{The accumulator circuit.}
+	\label{fig:circuit}
+\end{figure}
+
+\noindent
+Reopen the {\it ModelSim} software to get to the window in Figure~\ref{fig:gui1}.
+Click on the {\it Transcript} window at the bottom of the figure and then use the
+\texttt{cd} command to navigate to the ModelSim folder for the accumulator. For 
+example, in our case we would type 
+\texttt{cd C:/ModelSim\_Tutorial/Accumulate/ModelSim}. 
+Then, in the {\it Transcript} window type the command \texttt{do testbench.tcl} as you
+did for the previous example. The {\it testbench.tcl} script for this example is identical
+to the one shown in Figure~\ref{fig:tcl}, except that the last line specifies
+\texttt{run 300 ns}.
+
+\lstset{language=Verilog,numbers=left,escapechar=|}
+\begin{figure}[h]
+\begin{center}
+\begin{minipage}[t]{12.5 cm}
+\begin{lstlisting}[name=testbench2]
+|\label{line:tb2_tb2_0}|`timescale 1ns / 1ps
+
+module testbench ( );
+    // reg signals to provide inputs to the DUT
+|\label{line:tb2_dec1}|    reg [0:0] KEY;
+    reg CLOCK_50;
+|\label{line:tb2_dec2}|    reg [9:0] SW;
+    // wire signals to connect to outputs from the DUT
+|\label{line:tb2_dec3}|    wire [9:0] LEDR;
+
+    // instantiate the design under test
+|\label{line:tb2_inst}|    Accumulate U1 (KEY, CLOCK_50, SW, LEDR);
+
+    // generate a 50 MHz periodic clock waveform
+|\label{line:tb2_clk1}|    always
+|\label{line:tb2_clk2}|        #10 CLOCK_50 <= ~CLOCK_50;
+
+|\label{line:tb2_init1}|    initial
+    begin
+        CLOCK_50 <= 1'b0;
+        KEY[0] <= 1'b0;
+        SW <= 0;
+        #20 SW[9:5] <= 10;
+        #20	KEY[0] <= 1'b1;
+        		SW[4:0] <= 30;
+|\label{line:tb2_init2}|    end // initial
+endmodule
+\end{lstlisting}
+\end{minipage}
+\caption{The Verilog testbench code for the sequential circuit.}
+\label{fig:tb2}
+\end{center}
+\end{figure}
+
+\noindent
+The simulation results for our sequential circuit, which display the waveforms selected in its
+{\it wave.do} file, appear in Figure~\ref{fig:gui3}. In this figure the {\it SW} and 
+{\it LEDR} signals are displayed in hexadecimal, while {\it X}, {\it Sum}, {\it Y}, and {\it
+Count} are displayed as unsigned (decimal) values. The {\it Sum} is cleared by the 
+clock edge at 10~ns, and the {\it Count} is initialized to 10 at 30~ns. Starting with the clock
+edge at 50~ns the value $X=30$ is accumulated until the counter reaches 0.
+
+\noindent
+Quit the ModelSim software to complete this part of the tutorial.
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[width = 0.95\textwidth]{figures/gui3.png}
+	\end{center}
+		  \caption{The simulation results for our sequential circuit.}
+	\label{fig:gui3}
+\end{figure}
+
+\section{Simulating a Circuit that Includes a Memory Module}
+
+The {\it design files} archive provided along with this tutorial includes a ModelSim example 
+called {\it Display}. It shows how to instantiate a memory module in Verilog code, and how
+to initialize the stored contents of the memory in a ModelSim simulation. Copy the {\it Display}
+files to a folder on your computer, such as 
+{\it C:$\backslash$ModelSim\_Tutorial$\backslash$Display}. 
+In the {\it Display} folder there is a file called {\it Display.v}
+that provides the Verilog code that we will simulate, and 
+a subfolder named {\it ModelSim}.
+
+\noindent
+Figure~\ref{fig:display} shows the Verilog code for {\it Display.v}.
+Its ports are named {\it KEY}, {\it SW}, {\it HEX0}, and {\it LEDR} because the module is intended 
+to be implemented on a DE-series board that features an Intel FPGA, such as the {\it DE1-SoC}
+board. After simulating the Verilog code to verify its correct operation, you may
+wish to compile it using the Quartus Prime CAD tools and then download and test the 
+resulting circuit on a board.  
+
+\noindent
+Figure~\ref{fig:memory}$a$ gives a logic circuit that corresponds to the code in 
+Figure~\ref{fig:display}. The circuit contains a counter that is used to read the 
+contents of successive addresses from a memory. This memory provides codes in ASCII format 
+for some upper- and lower-case letters, which are provided as inputs to a decoder module. 
+The counter and memory module have a common clock signal, and the counter has a
+synchronous clear input. Each successive clock cycle advances the counter and reads 
+a new ASCII code from the memory. Since the counter is three-bits wide, only the first 
+eight locations in the memory are read (the upper two address bits on the memory are set
+to 00), and they provide the ASCII codes for letters A, b, C, d, E, F, g, and h. The 
+decoder produces an appropriate bit-pattern to render each letter on a seven-segment display.
+The memory used in the logic circuit is depicted in part $b$ of Figure~\ref{fig:memory}. It
+is a $32 \times 8$ synchronous read-only memory (ROM), which has a register for holding 
+address values. The memory is initialized with the contents of the file {\it inst\_mem.mif},
+which is illustrated in Figure~\ref{fig:mif}. This file contains the ASCII codes for the 
+eight letters displayed by the circuit.
+
+\lstset{language=Verilog,numbers=none,escapechar=?}
+\begin{figure}[h!]
+\begin{center}
+\begin{minipage}[t]{15 cm}
+\begin{lstlisting}[name=display]
+module Display (KEY, SW, HEX0, LEDR);
+    input [0:0] KEY;
+    input [0:0] SW;
+    output reg [6:0] HEX0;
+    output [9:0] LEDR;	
+
+    parameter A = 8'd65, b = 8'd98, C = 8'd67, d = 8'd100, E = 8'd69, 
+        F = 8'd70, g = 8'd103, h = 8'd104;
+    wire Resetn, Clock;
+    wire [2:0] Count;
+    wire [7:0] char;
+
+    assign Resetn = SW[0];
+    assign Clock = KEY[0];
+
+    count3 U1 (Resetn, Clock, Count);
+    inst_mem U2 ({2'b0, Count}, Clock, char);
+    assign LEDR = {2'b0, char};
+
+    always @(*)
+        case (char)
+            A: HEX0 = 7'b0001000;
+            b: HEX0 = 7'b0000011;
+            C: HEX0 = 7'b1000110;
+            d: HEX0 = 7'b0100001;
+            E: HEX0 = 7'b0000110;
+            F: HEX0 = 7'b0001110;
+            g: HEX0 = 7'b0010000;
+            h: HEX0 = 7'b0001011;
+            default HEX0 = 7'b1111111;
+        endcase
+endmodule
+
+module count3 (Resetn, Clock, Q);
+    input Resetn, Clock;
+    output reg [2:0] Q;
+
+    always @ (posedge Clock, negedge Resetn)
+        if (Resetn == 0)
+            Q <= 3'b000;
+        else
+            Q <= Q + 1'b1;
+endmodule
+\end{lstlisting}
+\end{minipage}
+\caption{Verilog code for the display circuit.}
+\label{fig:display}
+\end{center}
+\end{figure}
+
+\begin{figure}[t]
+	\begin{center}
+		\includegraphics[scale = 1.0]{figures/figdisplay.pdf}
+	\end{center}
+		  \caption{The circuit for the memory example.}
+	\label{fig:memory}
+\end{figure}
+
+\begin{figure}[bh!]
+\begin{center}
+\begin{minipage}[t]{12.5 cm}
+\begin{tabbing}
+DEPTH = 32;\\
+WIDTH = 8;\\
+ADDRESS\_RADIX = HEX;\\
+DATA\_RADIX = DEC;\\
+CONTENT\\
+BEGIN\\
+BEGI\=00X\=: \=104;XXXX\=\% A \=\% \kill
+\>00 \>: \>65;    \>\% A \>\%\\
+\>01 \>: \>98;    \>\% b \>\%\\
+\>02 \>: \>67;    \>\% C \>\%\\
+\>03 \>: \>100;   \>\% d \>\%\\
+\>04 \>: \>69;    \>\% E \>\%\\
+\>05 \>: \>70;    \>\% F \>\%\\
+\>06 \>: \>103;   \>\% g \>\%\\
+\>07 \>: \>104;   \>\% h \>\%\\
+END;
+\end{tabbing}
+\end{minipage}
+\end{center}
+    \caption{The {\it inst\_mem.mif} memory initialization file.}
+\label{fig:mif}
+\end{figure}
+
+\noindent
+A {\it testbench.v} file for the {\it Display} design under test (DUT) is given in 
+Figure~\ref{fig:tb3}. Two reg-type signals, {\it KEY} and {\it SW} are declared to provide 
+inputs to the DUT, as well as two wire-type signals {\it HEX0} and {\it LEDR}
+for connecting to the DUT outputs. The DUT is instantiated in Line~\ref{line:disp} of 
+the testbench. It 
+uses an always block to create a clock waveform with a 20~ns period on the {\it KEY} signal. An 
+initial block is used to initialize the {\it KEY} clock waveform to 0, and to perform a synchronous 
+reset of the counter with the SW signal. 
+
+\lstset{language=Verilog,numbers=left,escapechar=|}
+\begin{figure}[h]
+\begin{center}
+\begin{minipage}[t]{12.5 cm}
+\begin{lstlisting}[name=testbench3]
+`timescale 1ns / 1ps
+
+module testbench ( );
+    reg [0:0] KEY;
+    reg [0:0] SW;
+    wire [6:0] HEX0;
+    wire [9:0] LEDR;
+
+|\label{line:disp}|    Display U1 (KEY, SW, HEX0, LEDR);
+
+    always
+    begin : Clock_Generator
+        #10 KEY <= ~KEY;
+    end
+
+    initial
+    begin
+        KEY <= 1'b0;
+        SW <= 1'h0;
+        #20 SW[0] <= 1'b1;
+    end // initial
+endmodule
+\end{lstlisting}
+\end{minipage}
+\caption{Testbench code for the memory example.}
+\label{fig:tb3}
+\end{center}
+\end{figure}
+
+\noindent
+Figure~\ref{fig:tcl2} shows the contents of the script {\it testbench.tcl} for this example.
+It has the same structure as the file shown in Figure~\ref{fig:tcl}, with two exceptions. 
+First, in Lines~\ref{line:tcl2_1} to~\ref{line:tcl2_2} the script checks whether there 
+exists an {\it inst\_mem.mif} memory initialization file in the parent folder; if so, 
+it copies this file to the ModelSim folder so that the memory will be properly initialized
+during simulation. Second, in Lines~\ref{line:tcl2_3} 
+to~\ref{line:tcl2_4} the script checks if an ``empty black box'' file, which can 
+optionally be created by the Quartus software, exists in the parent directory. 
+If so, the script deletes this file, because it would cause an error during simulation.
+
+\lstset{language=Tcl,numbers=left,escapechar=|}
+\begin{figure}[b!]
+\begin{center}
+\begin{minipage}[t]{15 cm}
+\begin{lstlisting}[name=tcl2]
+# stop any simulation that is currently running
+quit -sim
+
+# if simulating with a MIF file, copy it. Assumes inst_mem.mif
+|\label{line:tcl2_1}|if {[file exists ../inst_mem.mif]} {
+	file delete inst_mem.mif
+	file copy ../inst_mem.mif .
+|\label{line:tcl2_2}|}
+# if Quartus generated an "empty black box" file, delete it
+|\label{line:tcl2_3}|if {[file exists ../inst_mem_bb.v]} {
+	file delete ../inst_mem_bb.v
+|\label{line:tcl2_4}|}
+# create the default "work" library
+vlib work;
+
+# compile the Verilog source code in the parent folder
+vlog ../*.v
+# compile the Verilog code of the testbench
+vlog *.v
+# start the Simulator, including some libraries
+vsim work.testbench -Lf 220model_ver -Lf altera_mf_ver -Lf verilog
+# show waveforms specified in wave.do
+do wave.do
+# advance the simulation the desired amount of time
+run 120 ns
+\end{lstlisting}
+\end{minipage}
+\caption{The {\it testbench.tcl} file.}
+\label{fig:tcl2}
+\end{center}
+\end{figure}
+
+\noindent
+Reopen the {\it ModelSim} software to get to the window in Figure~\ref{fig:gui1}.
+In the {\it Transcript} window use the \texttt{cd} command to navigate to the 
+ModelSim folder for the this part of the tutorial. For example, in our 
+case we would type \texttt{cd C:/ModelSim\_Tutorial/Display/ModelSim}. 
+In the {\it Transcript} window type the command \texttt{do testbench.tcl} to run
+the script in Figure~\ref{fig:tcl2}.
+The simulation results for our circuit, which display the waveforms selected in its
+{\it wave.do} file, appear in Figure~\ref{fig:gui4}. It shows in the {\it char} 
+waveform, displayed using the ``radix'' ASCII, the values read from each address in memory.
+These values are also shown in hexadecimal in the {\it LEDR} waveform, and the 
+decoder outputs are shown in binary in the {\it HEX0} waveform.
+
+\section{Setting up a ModelSim Simulation}
+
+The files described above can be used as a starting point for setting up your own ModelSim 
+simulation, as follows. In the folder that contains your Verilog source-code to be
+simulated, make a subfolder named {\it ModelSim}. Copy into this subfolder the 
+files {\it testbench.v}, {\it testbench.tcl}, and {\it wave.do} from one of the examples 
+above. Then, modify {\it testbench.v} to instantiate your top-level Verilog module and create 
+whatever waveforms are needed. You can use an identical {\it testbench.tcl} script as 
+shown above, except that you might want to specify a different amount of simulation time for 
+the \texttt{run} command. Since the .{\it v} and .{\it tcl} files are ASCII text
+files, you can edit them with any text editor of your choosing (or the text editor
+provided within ModelSim). Finally, modify the {\it wave.do} file to choose the waveforms 
+that should be displayed. You can change the {\it wave.do} file manually by editing it with 
+a text editor, or you can make use of the commands available in the ModelSim graphical 
+user interface, as discussed in Appendix A.
+
+\begin{figure}[h!]
+	\begin{center}
+		\includegraphics[width = 0.95\textwidth]{figures/display.png}
+	\end{center}
+		  \caption{The simulation results for our memory example.}
+	\label{fig:gui4}
+\end{figure}
+
+\clearpage
+\section*{Appendix A: Using the ModelSim Graphical User Interface}
+
+This appendix illustrates some of the features available in the ModelSim graphical user
+interface for displaying waveforms. We will show how to add waveforms to the ModelSim
+window, and how to change the properties of a waveform, such as its displayed name 
+and number radix.
+
+As an example we will show how waveforms can be added to the ModelSim display for the
+{\it accumulator} circuit from the previous section. Figure \ref{fig:appa_fig1} displays the 
+ModelSim window for this circuit before any waveforms have been selected.
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[width = \textwidth]{figures/appa_fig1.png}
+	\end{center}
+		  \caption{The {\it ModelSim} waveform display.}
+	\label{fig:appa_fig1}
+\end{figure}
+
+\noindent
+In Figure \ref{fig:appa_fig2} we have selected a waveform, as follows. First, we clicked
+on the \texttt{testbench} module in the upper left part of the display. As a result of
+this action the signals that exist in the selected module are listed in the \texttt{Objects}
+pane (the area with the dark blue background). In this list we then used the 
+left mouse button to {\it drag-and-drop} the \texttt{KEY} signal name from the 
+\texttt{Objects} list into the \texttt{Wave} window. Then, as illustrated in the figure, we 
+right-clicked on the name of the signal in the \texttt{Wave} display, which is 
+\texttt{/testbench/KEY}, and then clicked on \texttt{Properties} to open the window in 
+Figure \ref{fig:appa_fig3}.
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[width = \textwidth]{figures/appa_fig2.png}
+	\end{center}
+		  \caption{Adding a waveform from the testbench module.}
+	\label{fig:appa_fig2}
+\end{figure}
+
+\begin{figure}[h!]
+	\begin{center}
+		\includegraphics[scale=0.8]{figures/appa_fig3.png}
+	\end{center}
+		  \caption{Specifying a display name for a waveform.}
+	\label{fig:appa_fig3}
+\end{figure}
+
+\noindent
+In Figure \ref{fig:appa_fig3} we assigned the name \texttt{KEY} to the waveform, clicked
+\texttt{Apply} and then closed this dialogue. We then used the same drag-and-drop mechanism
+to add the signals \texttt{CLOCK\_50}, \texttt{SW}, and \texttt{LEDR} from the
+\texttt{testbench} module to the \texttt{Wave} window, and set convenient display names 
+for these waveforms. The updated \texttt{Wave} window is shown in Figure \ref{fig:appa_fig4}.
+
+\begin{figure}[hb!]
+	\begin{center}
+		\includegraphics[width = \textwidth]{figures/appa_fig4.png}
+	\end{center}
+	\caption{The waveform display after adding more {\it testbench} signals.}
+	\label{fig:appa_fig4}
+\end{figure}
+
+\noindent
+Next, we wish to add signals from the \texttt{Accumulate} module to the \texttt{Wave} window. 
+But first we can add a {\it divider}, as a visual aid that separates the \texttt{testbench} 
+signals and the \texttt{Accumulate} module signals. A divider can be added by
+right-clicking on the \texttt{Wave} window, as indicated in the Figure \ref{fig:appa_fig5}, 
+clicking on \texttt{Add} in the pop-up menu, and then selecting \texttt{New Divider} to 
+open the window in Figure~\ref{fig:appa_fig6}. 
+
+\begin{figure}[hb!]
+	\begin{center}
+		\includegraphics[]{figures/appa_fig5.png}
+	\end{center}
+		  \caption{Adding a divider to the waveform display.}
+	\label{fig:appa_fig5}
+\end{figure}
+
+\noindent
+We assigned \texttt{Accumulate} as the divider name in Figure~\ref{fig:appa_fig6},
+and then closed this dialogue. The \texttt{Wave} window now appears as shown in 
+Figure~\ref{fig:appa_fig7}.
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[scale=0.8]{figures/appa_fig6.png}
+	\end{center}
+		  \caption{Assigning a name to the divider.}
+	\label{fig:appa_fig6}
+\end{figure}
+
+\newpage
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[width = \textwidth]{figures/appa_fig7.png}
+	\end{center}
+	\caption{The waveform display after adding the \texttt{Accumulate} divider.}
+	\label{fig:appa_fig7}
+\end{figure}
+
+\noindent
+To add signals from the \texttt{Accumulate} module to the \texttt{Wave} window we need to
+click on the \texttt{U1} instance name of the \texttt{Accumulate} model, as indicated  
+on the left-hand side of Figure~\ref{fig:appa_fig8}. The signals available in this module
+are then listed in the \texttt{Objects} pane. To obtain the display in the figure, we
+used the drag-and-drop mechanism, and the \texttt{Wave Properties} dialogue, described 
+previously, to add the \texttt{Clock}, \texttt{Resetn}, \texttt{X}, \texttt{Sum},
+\texttt{Y}, \texttt{Count}, and \texttt{z} signals to the \texttt{Wave} window.
+We now wish to perform a simulation of our \texttt{testbench} so that waveforms will be 
+generated and shown for our selected signals. 
+However, it is {\it critical} to first {\it save} the selections
+that have been made in the \texttt{Wave} display to the {\it wave.do} file. If you run a 
+simulation {\it without} first performing a save to the {\it wave.do} file, then all 
+changes made to the \texttt{Wave} window will be discarded and lost!  
+
+\begin{figure}[h!]
+	\begin{center}
+		\includegraphics[width = \textwidth]{figures/appa_fig8.png}
+	\end{center}
+		  \caption{The waveform display after adding signals from the accumulate module.}
+	\label{fig:appa_fig8}
+\end{figure}
+
+\noindent
+The command \texttt{File > Save Format} opens the dialogue shown in Figure~\ref{fig:appa_fig9}.
+After clicking \texttt{OK} and then overwriting the {\it wave.do} file, the testbench 
+simulation can be executed by typing the command \texttt{do testbench.tcl}. The resulting
+waveform display is illustrated in Figure~\ref{fig:appa_fig10}. In this figure we
+right-clicked on the \texttt{Wave} window and selected \texttt{Zoom Range} to open the
+dialogue in Figure~\ref{fig:appa_fig11}. As indicated in the figure, we select a time range 
+from 0 to 300 ns for the Wave display.
+
+\begin{figure}[h!]
+	\begin{center}
+		\includegraphics[scale=0.8]{figures/appa_fig9.png}
+	\end{center}
+	\caption{The \texttt{Save Format} dialogue.}
+	\label{fig:appa_fig9}
+\end{figure}
+
+\begin{figure}[h!]
+	\begin{center}
+		\includegraphics[scale=0.8]{figures/appa_fig10.png}
+	\end{center}
+		  \caption{The display after running the simulation; changing the zoom range.}
+	\label{fig:appa_fig10}
+\end{figure}
+
+\begin{figure}[h!]
+	\begin{center}
+		\includegraphics[scale=0.8]{figures/appa_fig11.png}
+	\end{center}
+		  \caption{Inputting the zoom range.}
+	\label{fig:appa_fig11}
+\end{figure}
+
+\begin{figure}[h!]
+	\begin{center}
+		\includegraphics[scale=0.8]{figures/appa_fig12.png}
+	\end{center}
+		  \caption{Setting the radix for a waveform.}
+	\label{fig:appa_fig12}
+\end{figure}
+
+\begin{figure}[h!]
+	\begin{center}
+		\includegraphics[scale=0.8]{figures/appa_fig13.png}
+	\end{center}
+		  \caption{The final waveform display.}
+	\label{fig:appa_fig13}
+\end{figure}
+
+\clearpage
+\noindent
+To make it easier to see the values of signals in the \texttt{Wave} window, you can select
+radices other than binary, which is the default. For example, in
+Figure~\ref{fig:appa_fig12} we right-clicked on the \texttt{SW} signal, clicked on
+\texttt{Radix}, and then selected \texttt{Hexadecimal}. After setting the radix to
+hexadecimal for several additional signals, the final \texttt{Wave} display appears as
+illustrated in Figure~\ref{fig:appa_fig13}. As mentioned earlier, changes to the waveforms
+have to be saved by using the \texttt{File > Save Format} command.
+
+\noindent
+This tutorial has described only a subset of the commands that are provided in the
+ModelSim graphical user interface. Although a discussion of other available commands is 
+beyond the scope of this tutorial, a number of more detailed ModelSim tutorials can be 
+found by searching for them on the Internet.
+
+% Copyright
+
+\input{\commonPath/Docs/copyright.tex}
+
+\end{document}

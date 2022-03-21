@@ -1,0 +1,493 @@
+\documentclass[11pt, twoside, pdftex]{article}
+
+% This includes all the settings that we should use for the document
+\newcommand{\PDFTitle}{Using the Timing Analyzer}
+\newcommand{\commonPath}{../../../Common}
+\input{\commonPath/Docs/defaulttext.tex}
+\input{\commonPath/Docs/preamble.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% Add title
+\newcommand{\doctitle}{Using the \\ Timing Analyzer}
+\newcommand{\dochead}{Using the Timing Analyzer}
+% Usually no need to change these two lines
+\title{\fontfamily{phv}\selectfont{\doctitle} }
+\chead{ \small{\textsc{\bfseries \dochead} } }
+% Customizations
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% Allows multiple figures per page
+
+\renewcommand\floatpagefraction{.9}
+\renewcommand\topfraction{.9}
+\renewcommand\bottomfraction{.9}
+\renewcommand\textfraction{.1}   
+\setcounter{totalnumber}{50}
+\setcounter{topnumber}{50}
+\setcounter{bottomnumber}{50}
+\widowpenalty 10000
+\clubpenalty 10000
+\raggedbottom
+
+%%%%%%%%%%%%%%%%%%
+%%% DOCUMENT START
+%\begin{document}
+\begin{document}
+\begin{table}
+    \centering
+    \begin{tabular}{p{5cm}p{4cm}}
+        \hspace{-3cm}
+        &
+        \raisebox{1\height}{\parbox[h]{0.5\textwidth}{\Large\fontfamily{phv}\selectfont{\textsf{\doctitle}}}}
+    \end{tabular}
+    \label{tab:logo}
+\end{table}
+
+\colorbox[rgb]{0,0.384,0.816}{\parbox[h]{\textwidth}{\color{white}\textsf{\textit{\textBar}}}}
+
+\thispagestyle{plain}
+ 
+\section{Introduction}
+
+This tutorial provides an introduction to the Timing Analyzer. It demonstrates how to 
+set up timing constraints and obtain timing information for a logic circuit.
+
+The reader is expected to have a basic understanding of the Verilog hardware description 
+language, and to be familiar with the Intel\textsuperscript{\textregistered} Quartus\textsuperscript{\textregistered} Prime CAD software.
+
+{\bf Contents}:
+\begin{itemize}
+\item Introduction to timing analysis
+\item Using the Timing Analyzer
+\item Setting Up Timing Constraints
+\end{itemize}
+\clearpage
+\newpage
+
+\section{Background}
+
+Timing analysis is a process of analyzing delays in a logic circuit to determine the conditions 
+under which the circuit operates reliably. One example of a timing analysis computation is
+to find the maximum clock frequency for a circuit, illustrated in 
+Figure~\ref{fig:fmax_computation_example}. 
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=.75]{figures/sample_circuit_unbalanced.pdf}
+\end{center}
+\caption{A example for timing analysis.}
+\label{fig:fmax_computation_example}
+\end{figure}
+
+\noindent
+In this example, flip-flops on the left-hand side drive a combinational circuit that 
+generates an output that is later stored in the flip-flop on the right-hand side. To 
+operate correctly, the clock period has to be long enough to accommodate the delay on the 
+longest path in the circuit. If we assume that the clock-to-Q and setup times for each 
+flip-flop are 1 ns, and the delay through each gate is 1 ns, then the maximum clock frequency 
+for this circuit is:
+$$
+f_{max} = \frac{1}{t_{cq}+3 \times t_{and}+t_{su}} = \frac{1}{5 {\rm ~ns}} = 200 {\rm ~MHz}
+$$
+Computing the longest delays in a circuit and comparing these delays to the clock period 
+is a basic function of a timing analyzer. The timing analyzer can be used to guide 
+computer-aided design (CAD) tools in the implementation of logic circuits. For example, the 
+circuit in Figure~\ref{fig:fmax_computation_example} shows an implementation
+of a 4-input function using 2-input AND gates. Without any timing requirements, the presented solution is acceptable. However, if a user
+requires the circuit to operate at a clock frequency of 250 MHz, then 
+the above solution is inadequate. By placing timing constraints on the
+maximum clock frequency, it is possible to direct the CAD tools to seek an implementation
+that meets those constraints. As a result,
+the CAD tools may arrive at a solution shown in Figure~\ref{fig:fmax_computation_example_optimized}. The new circuit has
+$f_{max} = 250$ MHz and thus meets the required timing constraints.
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=.75]{figures/sample_circuit_balanced.pdf}
+\end{center}
+\caption{Functionally equivalent circuit with a different logic structure.}
+\label{fig:fmax_computation_example_optimized}
+\end{figure}
+
+In this tutorial, we demonstrate how to obtain timing information and how to set timing 
+constraints using the Timing Analyzer.
+
+The example circuit provided with this tutorial contains only one clock signal, which is
+connected to all flip-flops. Performing timing analysis for circuits that have
+multiple clock signals is discussed in section \ref{sec:mult}.
+
+\section{Design Example}
+As an example we will use an adder that adds three 8-bit numbers and produces a sum output. The inputs are $A$, $B$, and $C$, which are
+stored in registers {\it reg\_A}, {\it reg\_B} and {\it reg\_C} at the positive edge of the {\it clock}. The three registers provide inputs
+to the adder, whose result is stored in the {\it reg\_sum} register. The output of the {\it reg\_sum} register drives
+the output port {\it sum}. The diagram of the circuit is shown in Figure~\ref{fig:design_example}.
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=.75]{figures/design_example.pdf}
+\end{center}
+\caption{Diagram of the example circuit.}
+\label{fig:design_example}
+\end{figure}
+
+The Verilog source code for the design is given in Figure~\ref{fig:design_verilog_code}. Note that the ''synthesis keep''
+comment is included in this code. This comment is interpreted as a directive that
+instructs the Quartus Prime software to retain the specified
+nodes in the final implementation of the circuit and keep their names as stated. This directive will allow us to refer to these nodes
+in the tutorial. 
+
+\begin{figure}[H]
+\begin{lstlisting}[language=Verilog, xleftmargin=3cm]
+module add_three_numbers(clock, A, B, C, sum);
+    input clock;
+    input [7:0] A,B,C;
+    output [9:0] sum;
+
+    // Registers
+    reg [7:0] reg_A, reg_B, reg_C /* synthesis keep */;
+    reg [9:0] reg_sum /* synthesis keep */;
+
+    always @(posedge clock)
+    begin
+        reg_A <= A;
+        reg_B <= B;
+        reg_C <= C;
+        reg_sum <= reg_A + reg_B + reg_C;
+    end
+    assign sum = reg_sum;
+endmodule
+\end{lstlisting}
+\caption{Verilog code for the example circuit.}
+\label{fig:design_verilog_code}
+\end{figure}
+
+To begin the tutorial create a new Quartus Prime project for the design of our example circuit. 
+Select as the target device the EP4CE115F29C7, which is the FPGA chip on the Intel DE2-115 
+board. Type the Verilog code in Figure~\ref{fig:design_verilog_code} into a file and add
+this file to the project. 
+
+You do not need to make any pin assignments for this example.  Compile the project to see the 
+results of timing analysis. These results will be available in the compilation
+report, once the design is compiled. 
+
+\section{Using the Timing Analyzer}
+
+As illustrated in Figure~\ref{fig:SB1}, open the Timing Analyzer section 
+of the Compilation Report, and click on the {\sf Clocks} item to select it. 
+In the {\it Clocks} display panel that opens on the right-hand side of the Quartus Prime
+window, notice that the {\it clock} signal from the example design 
+has been given a clock period constraint of 1 ns (frequency of 1000 MHz). This is a
+default constraint that the Quartus Prime CAD tool places on any clock signal in a design project
+that does not have any user-provided timing constraints. 
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.5]{figures/SB1.png}
+\end{center}
+\caption{The Timing Analyzer section of the compilation report.}
+\label{fig:SB1}
+\end{figure}
+
+As indicated in Figure~\ref{fig:SB1}, right-click on the name of the {\it clock} signal 
+and select the command {\sf Report Timing ... (In Timing Analyzer UI)}. This action opens
+the {\it Report Timing} dialog shown in Figure~\ref{fig:SB2}. Click the drop-down arrow
+in the {\sf From clock} item and select the {\it clock} signal. This selection is used to
+instruct the Timing Analyzer to analyze all paths in the example circuit that start and end at
+flip-flops that are clocked by the {\it clock} signal. The various settings displayed in 
+Figure~\ref{fig:SB2} are described in Section \ref{sec:TQGUI}.
+
+Accept all of the other default selections in Figure~\ref{fig:SB2} and click on 
+the {\sf Report Timing} button. This command opens the Timing Analyzer Graphical User Interface
+(GUI), as depicted in Figure \ref{fig:SB3}.
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.6]{figures/SB2.png}
+\end{center}
+\caption{The Report Timing dialog.}
+\label{fig:SB2}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.5]{figures/SB3.png}
+\end{center}
+\caption{The Timing Analyzer GUI.}
+\label{fig:SB3}
+\end{figure}
+
+The Timing Analyzer GUI consists of several sections. They include the main menu at the top, the 
+Report pane in the top-left corner, the Tasks pane on the left, the detailed results panes
+in the middle, and the Console display at the bottom of the window. The main menu is used 
+to interact with the Timing Analyzer tool and issue commands. The Report pane contains any 
+reports generated when 
+using the tool, and the Tasks pane contains a sequence of actions that can be performed to
+obtain timing reports. The View pane hosts any windows that are opened, such as details
+about the timing information.  The Console window at the bottom provides access to a command 
+line for Timing Analyzer.
+
+We will focus on the panes in the middle of the Timing Analyzer GUI, which show detailed
+results of the timing analysis. The {\sf Slow 1200mV 85C Model} pane lists the analyzed paths in the 
+circuit from source to destination flip-flops for that particular timing model. The first column in this pane shows the
+{\it Slack} of each path with respect to the (default) clock constraint of 1 ns.  For each
+path in the circuit the slack value represents the difference between the clock period 
+constraint and the path delay; a positive slack means that the delay is smaller than the 
+constraint, and a negative slack represents a delay that is larger than the constraint. 
+The slack values in the report are negative, and shown in red, because the timing results 
+fail to meet the required constraint.  The maximum negative slack value shown is -2.432 ns, 
+which means that the worst-case delay path is $1 - (-2.432) = 3.432$ ns long. This corresponds 
+to a maximum usable clock frequency, F$_{max}$, of about 291.38 MHz.
+
+The waveforms shown for path \#1 in Figure \ref{fig:SB3} illustrate the detailed timing
+situation. The waveforms show that the clock signal takes 3.048 ns to propagate from its
+input pin to the source flip-flop, and then this flip-flop produces data that takes 3.349 ns to reach the
+destination flip-flop. Also, the clock signal takes 2.935 ns to reach the destination
+flip-flop. The clock delays at the source and destination flip-flops
+represent a clock skew $t_{skew} = 2.935 - 3.048 = -0.113$. A value of $0.032$
+to account for {\it Clock Pessimism} is added to the clock skew, 
+making the final clock skew value to be -0.081 ns.
+The difference in the required arrival time of the data on this path and the
+actual arrival time is shown by the negative slack value of 
+$1 - 3.349 + t_{skew} = -2.430$ ns. Timing Analyzer adds a value of $-0.002$ ns to account for 
+{\it Clock Uncertainty}, leading to the final slack value of -2.432 ns.
+
+\subsection{Setting Up Timing Constraints for a Design}
+In the Timing Analyzer GUI, select {\sf Constraints $>$ Create Clock}, which leads to the
+Create Clock window shown in Figure~\ref{fig:setconstraint1}. Set the Clock name to
+{\it clock} and the Period to {\it 4.000} ns. It is necessary to tell the Timing Analyzer which signal in
+our design this clock constraint applies to. To do this, click the {\sf ...} button to the right of 
+the {\sf Targets} field, leading to the Name Finder window shown in Figure~\ref{fig:setconstraint2}.
+Click {\sf List} to show all of the ports in the design. In the list of ports, highlight {\it clock}, which is the
+clock signal in our circuit, press {\sf $>$}, then click {\sf OK}. Finally, click the {\sf Run}
+button in the Create Clock window to apply the constraint.
+
+In order to use this clock constraint for all future compilations and timing 
+analysis of this project, we must save the constraint to a file of the type
+{\it sdc} which stands for {\sf Synopsys* Design Constraint}. This file uses an industry-standard
+format for specifying timing constraints. Select {\sf Constraints $>$ Write SDC File...} to write
+all of the currently set constraints (in our case just the one clock constraint) to an SDC file.
+This leads to the dialog shown in Figure~\ref{fig:setconstraint4}. Specify the file name {\it add\_three\_numbers.sdc} (note that this is different from the default file name)
+and press {\sf OK}. Note that Quartus will by default try to locate and use the sdc file whose file name
+matches the project name (except for the .sdc extension).
+
+Now, navigate back to the previous screen by going to the {\sf Report} pane on the left hand side of the Timing Analyzer GUI and selecting {\sf Setup: Clock > Slow 1200mV 85C Model}. You will notice that our clock timing report {\it Setup clock} is now out of date, as indicated by the yellow
+font and highlighting. Right-click the report and select {\sf Regenerate}, as shown in 
+Figure~\ref{fig:setconstraint5}, to re-run the timing analysis using the new 4 ns clock period constraint. 
+This analysis results in a positive slack of 0.568 ns. The corresponding waveforms are depicted in 
+Figure~\ref{fig:SB8}. 
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.55]{figures/setconstraint1.png}
+\end{center}
+\caption{The Create Clock window.}
+\label{fig:setconstraint1}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.55]{figures/setconstraint2.png}
+\end{center}
+\caption{The Name Finder window.}
+\label{fig:setconstraint2}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.55]{figures/setconstraint4.png}
+\end{center}
+\caption{The Write SDC File dialog.}
+\label{fig:setconstraint4}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.5]{figures/setconstraint5.png}
+\end{center}
+\caption{Regenerating the Timing Report.}
+\label{fig:setconstraint5}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.65]{figures/SB8.png}
+\end{center}
+\caption{Timing analysis results using the 4 ns clock period constraint.}
+\label{fig:SB8}
+\end{figure}
+
+Close the Timing Analyzer GUI. A dialog will appear, asking if you want to save the SDC file.
+Select {\sf No}, since we have already saved the SDC file.
+
+Since we have not recompiled the example design after adding the 4 ns clock period
+constraint, the timing analysis is based of the circuit that was produced by Quartus Prime
+when using the (default) 1 ns clock period constraint. To see the effect of the new timing
+constraint on the compilation results, recompile the project. Then, follow the steps described
+previously to perform a new timing analysis using the Timing Analyzer. The 4 ns timing constraint
+will cause the Quartus Prime optimization algorithms to make different decisions from those
+made when the (default) 1 ns constraint was used. In particular, the optimization
+algorithms will likely take less time to execute, because once the generated circuit has
+sufficient positive slack to meet the constraint, the algorithms can terminate. 
+Figure~\ref{fig:SB9} shows the results of timing analysis, with a positive slack of 0.718 ns. 
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.5]{figures/SB9.png}
+\end{center}
+\caption{Updated compilation results with the 4 ns clock period constraint.}
+\label{fig:SB9}
+\end{figure}
+
+\section{The Timing Analyzer Graphical User Interface}
+\label{sec:TQGUI}
+
+In the above sections we accessed the Timing Analyzer via the Quartus Prime Compilation Report. Another
+way to open the Timing Analyzer GUI is to use the command {\sf Tools > Timing Analyzer}
+from the main Quartus Prime window. The Timing Analyzer window shown in Figure~\ref{fig:5}, will appear.
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.5]{figures/figure5.png}
+\end{center}
+\caption{The Timing Analyzer window.}
+\label{fig:5}
+\end{figure}
+
+To demonstrate some of the commands available in the Timing Analyzer GUI, we go through a set of basic 
+steps to obtain timing data for the example design. In the Tasks pane, begin by double-clicking
+the {\sf Create Timing Netlist} command to create a timing netlist, which will be used to perform 
+the analysis. Note that while this netlist was generated automatically when performing a timing 
+analysis as described in the previous sections, the netlist can also be generated manually 
+by using the Tasks pane. Next double-click {\sf Read SDC File} to instruct the analyzer to 
+read a Synopsys Design Constraints (SDC) file and apply the constraints during analysis.
+The SDC file can be edited manually (using any text editor) at any time, and the timing
+analysis can then be re-run using the new constraints. 
+Finally, double-click the {\sf Update Timing Netlist} command to use the specified 
+constraints to determine which parts of the circuit fail 
+to meet them. Once the timing netlist is updated, reports can be generated.
+
+\subsection{Timing Analysis Reports}
+
+To generate a report, double-click on a report name in the Tasks pane. 
+For example, double-click on the {\sf Report Setup Summary}. This command
+will bring up a window in the view pane as shown in Figure~\ref{fig:7}. Right-click on the
+{\it clock} name then click on {\sf Report Timing...} to open the Report Timing dialog in Figure~\ref{fig:9}. Although we previously 
+showed this dialog in Figure~\ref{fig:SB2} we now describe it in more detail. 
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.5]{figures/figure7.png}
+\end{center}
+\caption{Setup summary.}
+\label{fig:7}
+\end{figure}
+
+There are several fields in Figure~\ref{fig:9} that help specify the data to be reported. The 
+first field is the {\sf Clocks} field, which specifies the types of paths that will be reported. 
+More precisely, it specifies the clock signal at the source flip-flops ({\sf From clock}) 
+and the clock signal at the destination flip-flops ({\sf To clock}).  For this example, choose 
+the signal named {\it clock} for the 
+{\sf To clock} and {\sf From clock} fields. This will limit the reporting to the 
+register-to-register paths only.
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.5]{figures/figure9.png}
+\end{center}
+\caption{Timing report generation window.}
+\label{fig:9}
+\end{figure}
+
+The next field is the {\sf Targets} field. It can be used to refine the report by focusing 
+only on certain paths in the design. We can specify the starting
+and the ending point of the paths of interest by filling the {\sf From} and {\sf To} fields. 
+In addition, we can look at only the paths that pass through certain
+nodes in the design. For this example, we leave these fields blank to indicate that every path 
+should be taken into account for the report.
+
+The next two fields are the {\sf Analysis type} and {\sf Paths} fields. The {\sf Analysis type} 
+field specifies if the report should contain setup, hold,
+recovery, or removal information. Each of these analyses looks for distinct timing 
+characteristics in your design. For example, the setup analysis determines if the data arrives 
+at a flip-flop sufficiently early for the flip-flop to store it reliably, given a clock period. 
+On the other hand, the hold analysis determines if the data input at any given flip-flop remains 
+stable after the positive edge of the clock long enough for the data to be
+stored in a flip-flop reliably. The {\sf Paths} field specifies the maximum number of paths to 
+be reported and the maximum slack required for a path to be included in the report. For this 
+example, choose the type of analysis to be {\sf Setup} and select 10 paths to be reported. This 
+will generate a setup analysis report and show 10 paths with the least slack.
+
+The next set of fields specify the {\sf Output} format and the level of detail in the report. 
+The output could be to a window or a file. Set the Detail level to {\sf Path Only}, then set 
+the output to a window by checking the {\sf Report panel name} check box (and not 
+the {\sf File name} check box). The window should be named {\sf Setup: clock} by default,
+and that name will identify the report in the report pane.
+
+Finally, the last field is the {\sf Tcl command} field. This field shows a command that will 
+be executed to generate the requested report. You do not need to edit this field. 
+
+\subsection{Creating Timing Constraints in the Timing Analyzer GUI}
+
+Timing constraints can be entered by using the {\sf Constraints} menu in the 
+Timing Analyzer GUI.  To assign a clock constraint, select {\sf Create Clock...} from the 
+{\sf Constraint} menu. A window shown in Figure~\ref{fig:12} will appear.
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.65]{figures/figure12.png}
+\end{center}
+\caption{The Timing Analyzer window to create a clock constraint.}
+\label{fig:12}
+\end{figure}
+
+In the figure the clock constraint is given the name {\it clock} in the top field. The
+clock period is assigned to be 4 ns in the field below. The next two fields define the time
+at which the clock changes from 0 to 1 and 1 to 0. Leaving these fields empty indicates that 
+the rising edge of the clock should appear at time 0, and the falling edge at one half of 
+the clock period. Finally, the {\sf Targets} field is set to the signal name {\it clock} as 
+shown in the figure, to indicate that the given constraint is for the signal named {\it clock}. 
+Pressing the {\sf Run} button applies the constraint. The constraint can be saved into an SDC file by double-clicking on the {\sf Write SDC File...} task as 
+shown in Figure~\ref{fig:13}.
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.6]{figures/figure13.png}
+\end{center}
+\caption{Saving a constraints file.}
+\label{fig:13}
+\end{figure}
+
+Once the constraints file is saved, it can be used by Quartus~Prime when compiling a project. This 
+is done in Quartus~Prime by going into {\sf Assignments > Settings... > Timing Analyzer}, 
+and adding the SDC file to the Timing Analyzer settings as shown 
+in Figure~\ref{fig:14}. The Quartus Prime project can then be recompiled to use the constraint.
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.55]{figures/figure14.png}
+\end{center}
+\caption{Including a constraints file in Quartus Prime project.}
+\label{fig:14}
+\end{figure}
+
+\section{Circuits with Multiple Clock Signals}
+\label{sec:mult}
+
+The Timing Analyzer is capable of analyzing circuits that contain multiple clocks. This includes cases where 
+the designer uses several clocks, or where clock signals are generated automatically to 
+support features such as the SignalTap Logic Analyzer or a JTAG* interface. Should the reader 
+work with such designs, it is important to note that the experience with the Timing Analyzer may differ 
+from that described above. In designs with multiple clocks, it is important to apply constraints
+to each clock before performing timing analysis. Doing so will make the analyzer provide 
+the same reports as described in previous sections.
+
+\section{Conclusion}
+
+This tutorial demonstrated the basic use of the Timing Analyzer. While the descriptions 
+of timing analysis and setting up timing constraints were limited to clock constraints in a 
+simple circuit, the Timing Analyzer provides even more powerful tools to specify timing constraints 
+for larger and more complex designs.
+
+% Copyright and Trademark
+
+\input{\commonPath/Docs/copyright.tex}
+\end{document}

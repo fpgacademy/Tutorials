@@ -1,0 +1,882 @@
+<?xml version="1.0" ?>
+<spirit:component xmlns:altera="http://www.altera.com/XMLSchema/IPXact/extensions" xmlns:spirit="http://www.spiritconsortium.org/XMLSchema/SPIRIT/1685-2009">
+  <spirit:vendor>Intel FPGA University Program</spirit:vendor>
+  <spirit:library>streaming_dma_test_system_video_rgb_resampler_0</spirit:library>
+  <spirit:name>video_rgb_resampler_0</spirit:name>
+  <spirit:version>17.1</spirit:version>
+  <spirit:busInterfaces>
+    <spirit:busInterface>
+      <spirit:name>avalon_rgb_sink</spirit:name>
+      <spirit:busType spirit:vendor="altera" spirit:library="altera" spirit:name="avalon_streaming" spirit:version="17.1"></spirit:busType>
+      <spirit:slave></spirit:slave>
+      <spirit:portMaps>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>startofpacket</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>stream_in_startofpacket</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>endofpacket</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>stream_in_endofpacket</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>valid</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>stream_in_valid</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>ready</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>stream_in_ready</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>data</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>stream_in_data</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+      </spirit:portMaps>
+      <spirit:parameters>
+        <spirit:parameter>
+          <spirit:name>associatedClock</spirit:name>
+          <spirit:displayName>associatedClock</spirit:displayName>
+          <spirit:value spirit:format="string" spirit:id="associatedClock">clk</spirit:value>
+        </spirit:parameter>
+        <spirit:parameter>
+          <spirit:name>associatedReset</spirit:name>
+          <spirit:displayName>associatedReset</spirit:displayName>
+          <spirit:value spirit:format="string" spirit:id="associatedReset">reset</spirit:value>
+        </spirit:parameter>
+        <spirit:parameter>
+          <spirit:name>beatsPerCycle</spirit:name>
+          <spirit:displayName>Beats Per Cycle</spirit:displayName>
+          <spirit:value spirit:format="long" spirit:id="beatsPerCycle">1</spirit:value>
+        </spirit:parameter>
+        <spirit:parameter>
+          <spirit:name>dataBitsPerSymbol</spirit:name>
+          <spirit:displayName>Data bits per symbol</spirit:displayName>
+          <spirit:value spirit:format="long" spirit:id="dataBitsPerSymbol">8</spirit:value>
+        </spirit:parameter>
+        <spirit:parameter>
+          <spirit:name>emptyWithinPacket</spirit:name>
+          <spirit:displayName>emptyWithinPacket</spirit:displayName>
+          <spirit:value spirit:format="bool" spirit:id="emptyWithinPacket">false</spirit:value>
+        </spirit:parameter>
+        <spirit:parameter>
+          <spirit:name>errorDescriptor</spirit:name>
+          <spirit:displayName>Error descriptor</spirit:displayName>
+          <spirit:value spirit:format="string" spirit:id="errorDescriptor"></spirit:value>
+        </spirit:parameter>
+        <spirit:parameter>
+          <spirit:name>firstSymbolInHighOrderBits</spirit:name>
+          <spirit:displayName>First Symbol In High-Order Bits</spirit:displayName>
+          <spirit:value spirit:format="bool" spirit:id="firstSymbolInHighOrderBits">true</spirit:value>
+        </spirit:parameter>
+        <spirit:parameter>
+          <spirit:name>highOrderSymbolAtMSB</spirit:name>
+          <spirit:displayName>highOrderSymbolAtMSB</spirit:displayName>
+          <spirit:value spirit:format="bool" spirit:id="highOrderSymbolAtMSB">false</spirit:value>
+        </spirit:parameter>
+        <spirit:parameter>
+          <spirit:name>maxChannel</spirit:name>
+          <spirit:displayName>Maximum channel</spirit:displayName>
+          <spirit:value spirit:format="long" spirit:id="maxChannel">0</spirit:value>
+        </spirit:parameter>
+        <spirit:parameter>
+          <spirit:name>packetDescription</spirit:name>
+          <spirit:displayName>Packet description </spirit:displayName>
+          <spirit:value spirit:format="string" spirit:id="packetDescription"></spirit:value>
+        </spirit:parameter>
+        <spirit:parameter>
+          <spirit:name>prSafe</spirit:name>
+          <spirit:displayName>Partial Reconfiguration Safe</spirit:displayName>
+          <spirit:value spirit:format="bool" spirit:id="prSafe">false</spirit:value>
+        </spirit:parameter>
+        <spirit:parameter>
+          <spirit:name>readyLatency</spirit:name>
+          <spirit:displayName>Ready latency</spirit:displayName>
+          <spirit:value spirit:format="long" spirit:id="readyLatency">0</spirit:value>
+        </spirit:parameter>
+        <spirit:parameter>
+          <spirit:name>symbolsPerBeat</spirit:name>
+          <spirit:displayName>Symbols per beat  </spirit:displayName>
+          <spirit:value spirit:format="long" spirit:id="symbolsPerBeat">1</spirit:value>
+        </spirit:parameter>
+      </spirit:parameters>
+    </spirit:busInterface>
+    <spirit:busInterface>
+      <spirit:name>avalon_rgb_source</spirit:name>
+      <spirit:busType spirit:vendor="altera" spirit:library="altera" spirit:name="avalon_streaming" spirit:version="17.1"></spirit:busType>
+      <spirit:master></spirit:master>
+      <spirit:portMaps>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>ready</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>stream_out_ready</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>startofpacket</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>stream_out_startofpacket</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>endofpacket</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>stream_out_endofpacket</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>valid</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>stream_out_valid</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>data</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>stream_out_data</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+      </spirit:portMaps>
+      <spirit:parameters>
+        <spirit:parameter>
+          <spirit:name>associatedClock</spirit:name>
+          <spirit:displayName>associatedClock</spirit:displayName>
+          <spirit:value spirit:format="string" spirit:id="associatedClock">clk</spirit:value>
+        </spirit:parameter>
+        <spirit:parameter>
+          <spirit:name>associatedReset</spirit:name>
+          <spirit:displayName>associatedReset</spirit:displayName>
+          <spirit:value spirit:format="string" spirit:id="associatedReset">reset</spirit:value>
+        </spirit:parameter>
+        <spirit:parameter>
+          <spirit:name>beatsPerCycle</spirit:name>
+          <spirit:displayName>Beats Per Cycle</spirit:displayName>
+          <spirit:value spirit:format="long" spirit:id="beatsPerCycle">1</spirit:value>
+        </spirit:parameter>
+        <spirit:parameter>
+          <spirit:name>dataBitsPerSymbol</spirit:name>
+          <spirit:displayName>Data bits per symbol</spirit:displayName>
+          <spirit:value spirit:format="long" spirit:id="dataBitsPerSymbol">8</spirit:value>
+        </spirit:parameter>
+        <spirit:parameter>
+          <spirit:name>emptyWithinPacket</spirit:name>
+          <spirit:displayName>emptyWithinPacket</spirit:displayName>
+          <spirit:value spirit:format="bool" spirit:id="emptyWithinPacket">false</spirit:value>
+        </spirit:parameter>
+        <spirit:parameter>
+          <spirit:name>errorDescriptor</spirit:name>
+          <spirit:displayName>Error descriptor</spirit:displayName>
+          <spirit:value spirit:format="string" spirit:id="errorDescriptor"></spirit:value>
+        </spirit:parameter>
+        <spirit:parameter>
+          <spirit:name>firstSymbolInHighOrderBits</spirit:name>
+          <spirit:displayName>First Symbol In High-Order Bits</spirit:displayName>
+          <spirit:value spirit:format="bool" spirit:id="firstSymbolInHighOrderBits">true</spirit:value>
+        </spirit:parameter>
+        <spirit:parameter>
+          <spirit:name>highOrderSymbolAtMSB</spirit:name>
+          <spirit:displayName>highOrderSymbolAtMSB</spirit:displayName>
+          <spirit:value spirit:format="bool" spirit:id="highOrderSymbolAtMSB">false</spirit:value>
+        </spirit:parameter>
+        <spirit:parameter>
+          <spirit:name>maxChannel</spirit:name>
+          <spirit:displayName>Maximum channel</spirit:displayName>
+          <spirit:value spirit:format="long" spirit:id="maxChannel">0</spirit:value>
+        </spirit:parameter>
+        <spirit:parameter>
+          <spirit:name>packetDescription</spirit:name>
+          <spirit:displayName>Packet description </spirit:displayName>
+          <spirit:value spirit:format="string" spirit:id="packetDescription"></spirit:value>
+        </spirit:parameter>
+        <spirit:parameter>
+          <spirit:name>prSafe</spirit:name>
+          <spirit:displayName>Partial Reconfiguration Safe</spirit:displayName>
+          <spirit:value spirit:format="bool" spirit:id="prSafe">false</spirit:value>
+        </spirit:parameter>
+        <spirit:parameter>
+          <spirit:name>readyLatency</spirit:name>
+          <spirit:displayName>Ready latency</spirit:displayName>
+          <spirit:value spirit:format="long" spirit:id="readyLatency">0</spirit:value>
+        </spirit:parameter>
+        <spirit:parameter>
+          <spirit:name>symbolsPerBeat</spirit:name>
+          <spirit:displayName>Symbols per beat  </spirit:displayName>
+          <spirit:value spirit:format="long" spirit:id="symbolsPerBeat">4</spirit:value>
+        </spirit:parameter>
+      </spirit:parameters>
+    </spirit:busInterface>
+    <spirit:busInterface>
+      <spirit:name>clk</spirit:name>
+      <spirit:busType spirit:vendor="altera" spirit:library="altera" spirit:name="clock" spirit:version="17.1"></spirit:busType>
+      <spirit:slave></spirit:slave>
+      <spirit:portMaps>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>clk</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>clk</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+      </spirit:portMaps>
+      <spirit:parameters>
+        <spirit:parameter>
+          <spirit:name>clockRate</spirit:name>
+          <spirit:displayName>Clock rate</spirit:displayName>
+          <spirit:value spirit:format="string" spirit:id="clockRate">0</spirit:value>
+        </spirit:parameter>
+        <spirit:parameter>
+          <spirit:name>externallyDriven</spirit:name>
+          <spirit:displayName>Externally driven</spirit:displayName>
+          <spirit:value spirit:format="bool" spirit:id="externallyDriven">false</spirit:value>
+        </spirit:parameter>
+        <spirit:parameter>
+          <spirit:name>ptfSchematicName</spirit:name>
+          <spirit:displayName>PTF schematic name</spirit:displayName>
+          <spirit:value spirit:format="string" spirit:id="ptfSchematicName"></spirit:value>
+        </spirit:parameter>
+      </spirit:parameters>
+    </spirit:busInterface>
+    <spirit:busInterface>
+      <spirit:name>reset</spirit:name>
+      <spirit:busType spirit:vendor="altera" spirit:library="altera" spirit:name="reset" spirit:version="17.1"></spirit:busType>
+      <spirit:slave></spirit:slave>
+      <spirit:portMaps>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>reset</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>reset</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+      </spirit:portMaps>
+      <spirit:parameters>
+        <spirit:parameter>
+          <spirit:name>associatedClock</spirit:name>
+          <spirit:displayName>Associated clock</spirit:displayName>
+          <spirit:value spirit:format="string" spirit:id="associatedClock">clk</spirit:value>
+        </spirit:parameter>
+        <spirit:parameter>
+          <spirit:name>synchronousEdges</spirit:name>
+          <spirit:displayName>Synchronous edges</spirit:displayName>
+          <spirit:value spirit:format="string" spirit:id="synchronousEdges">DEASSERT</spirit:value>
+        </spirit:parameter>
+      </spirit:parameters>
+    </spirit:busInterface>
+  </spirit:busInterfaces>
+  <spirit:model>
+    <spirit:views>
+      <spirit:view>
+        <spirit:name>QUARTUS_SYNTH</spirit:name>
+        <spirit:envIdentifier>:quartus.altera.com:</spirit:envIdentifier>
+        <spirit:modelName>altera_up_avalon_video_rgb_resampler</spirit:modelName>
+        <spirit:fileSetRef>
+          <spirit:localName>QUARTUS_SYNTH</spirit:localName>
+        </spirit:fileSetRef>
+      </spirit:view>
+    </spirit:views>
+    <spirit:ports>
+      <spirit:port>
+        <spirit:name>clk</spirit:name>
+        <spirit:wire>
+          <spirit:direction>in</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>STD_LOGIC</spirit:typeName>
+              <spirit:viewNameRef>QUARTUS_SYNTH</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>reset</spirit:name>
+        <spirit:wire>
+          <spirit:direction>in</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>STD_LOGIC</spirit:typeName>
+              <spirit:viewNameRef>QUARTUS_SYNTH</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>stream_in_startofpacket</spirit:name>
+        <spirit:wire>
+          <spirit:direction>in</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>STD_LOGIC</spirit:typeName>
+              <spirit:viewNameRef>QUARTUS_SYNTH</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>stream_in_endofpacket</spirit:name>
+        <spirit:wire>
+          <spirit:direction>in</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>STD_LOGIC</spirit:typeName>
+              <spirit:viewNameRef>QUARTUS_SYNTH</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>stream_in_valid</spirit:name>
+        <spirit:wire>
+          <spirit:direction>in</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>STD_LOGIC</spirit:typeName>
+              <spirit:viewNameRef>QUARTUS_SYNTH</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>stream_in_ready</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>STD_LOGIC</spirit:typeName>
+              <spirit:viewNameRef>QUARTUS_SYNTH</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>stream_in_data</spirit:name>
+        <spirit:wire>
+          <spirit:direction>in</spirit:direction>
+          <spirit:vector>
+            <spirit:left>0</spirit:left>
+            <spirit:right>7</spirit:right>
+          </spirit:vector>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>STD_LOGIC_VECTOR</spirit:typeName>
+              <spirit:viewNameRef>QUARTUS_SYNTH</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>stream_out_ready</spirit:name>
+        <spirit:wire>
+          <spirit:direction>in</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>STD_LOGIC</spirit:typeName>
+              <spirit:viewNameRef>QUARTUS_SYNTH</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>stream_out_startofpacket</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>STD_LOGIC</spirit:typeName>
+              <spirit:viewNameRef>QUARTUS_SYNTH</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>stream_out_endofpacket</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>STD_LOGIC</spirit:typeName>
+              <spirit:viewNameRef>QUARTUS_SYNTH</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>stream_out_valid</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>STD_LOGIC</spirit:typeName>
+              <spirit:viewNameRef>QUARTUS_SYNTH</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>stream_out_data</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:vector>
+            <spirit:left>0</spirit:left>
+            <spirit:right>31</spirit:right>
+          </spirit:vector>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>STD_LOGIC_VECTOR</spirit:typeName>
+              <spirit:viewNameRef>QUARTUS_SYNTH</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+    </spirit:ports>
+  </spirit:model>
+  <spirit:vendorExtensions>
+    <altera:entity_info>
+      <spirit:vendor>Intel FPGA University Program</spirit:vendor>
+      <spirit:library>streaming_dma_test_system_video_rgb_resampler_0</spirit:library>
+      <spirit:name>altera_up_avalon_video_rgb_resampler</spirit:name>
+      <spirit:version>17.1</spirit:version>
+    </altera:entity_info>
+    <altera:altera_module_parameters>
+      <spirit:parameters>
+        <spirit:parameter>
+          <spirit:name>input_type</spirit:name>
+          <spirit:displayName>Incoming Format</spirit:displayName>
+          <spirit:value spirit:format="string" spirit:id="input_type">8-bit Grayscale</spirit:value>
+        </spirit:parameter>
+        <spirit:parameter>
+          <spirit:name>output_type</spirit:name>
+          <spirit:displayName>Outgoing Format</spirit:displayName>
+          <spirit:value spirit:format="string" spirit:id="output_type">32-bit RGBA</spirit:value>
+        </spirit:parameter>
+        <spirit:parameter>
+          <spirit:name>alpha</spirit:name>
+          <spirit:displayName>Alpha Value for Output</spirit:displayName>
+          <spirit:value spirit:format="long" spirit:id="alpha">255</spirit:value>
+        </spirit:parameter>
+        <spirit:parameter>
+          <spirit:name>input_bits</spirit:name>
+          <spirit:displayName>Color Bits</spirit:displayName>
+          <spirit:value spirit:format="long" spirit:id="input_bits">8</spirit:value>
+        </spirit:parameter>
+        <spirit:parameter>
+          <spirit:name>input_planes</spirit:name>
+          <spirit:displayName>Color Planes</spirit:displayName>
+          <spirit:value spirit:format="long" spirit:id="input_planes">1</spirit:value>
+        </spirit:parameter>
+        <spirit:parameter>
+          <spirit:name>output_bits</spirit:name>
+          <spirit:displayName>Color Bits</spirit:displayName>
+          <spirit:value spirit:format="long" spirit:id="output_bits">8</spirit:value>
+        </spirit:parameter>
+        <spirit:parameter>
+          <spirit:name>output_planes</spirit:name>
+          <spirit:displayName>Color Planes</spirit:displayName>
+          <spirit:value spirit:format="long" spirit:id="output_planes">4</spirit:value>
+        </spirit:parameter>
+        <spirit:parameter>
+          <spirit:name>AUTO_DEVICE_FAMILY</spirit:name>
+          <spirit:displayName>Auto DEVICE_FAMILY</spirit:displayName>
+          <spirit:value spirit:format="string" spirit:id="AUTO_DEVICE_FAMILY">Arria 10</spirit:value>
+        </spirit:parameter>
+        <spirit:parameter>
+          <spirit:name>AUTO_CLK_CLOCK_RATE</spirit:name>
+          <spirit:displayName>Auto CLOCK_RATE</spirit:displayName>
+          <spirit:value spirit:format="string" spirit:id="AUTO_CLK_CLOCK_RATE">200000000</spirit:value>
+        </spirit:parameter>
+      </spirit:parameters>
+    </altera:altera_module_parameters>
+    <altera:altera_system_parameters>
+      <spirit:parameters>
+        <spirit:parameter>
+          <spirit:name>device</spirit:name>
+          <spirit:displayName>Device</spirit:displayName>
+          <spirit:value spirit:format="string" spirit:id="device">10AX115N2F40E2LG</spirit:value>
+        </spirit:parameter>
+        <spirit:parameter>
+          <spirit:name>deviceFamily</spirit:name>
+          <spirit:displayName>Device family</spirit:displayName>
+          <spirit:value spirit:format="string" spirit:id="deviceFamily">Arria 10</spirit:value>
+        </spirit:parameter>
+        <spirit:parameter>
+          <spirit:name>deviceSpeedGrade</spirit:name>
+          <spirit:displayName>Device Speed Grade</spirit:displayName>
+          <spirit:value spirit:format="string" spirit:id="deviceSpeedGrade">2</spirit:value>
+        </spirit:parameter>
+        <spirit:parameter>
+          <spirit:name>generationId</spirit:name>
+          <spirit:displayName>Generation Id</spirit:displayName>
+          <spirit:value spirit:format="long" spirit:id="generationId">0</spirit:value>
+        </spirit:parameter>
+        <spirit:parameter>
+          <spirit:name>bonusData</spirit:name>
+          <spirit:displayName>bonusData</spirit:displayName>
+          <spirit:value spirit:format="string" spirit:id="bonusData">bonusData 
+{
+}
+</spirit:value>
+        </spirit:parameter>
+        <spirit:parameter>
+          <spirit:name>hideFromIPCatalog</spirit:name>
+          <spirit:displayName>Hide from IP Catalog</spirit:displayName>
+          <spirit:value spirit:format="bool" spirit:id="hideFromIPCatalog">true</spirit:value>
+        </spirit:parameter>
+        <spirit:parameter>
+          <spirit:name>lockedInterfaceDefinition</spirit:name>
+          <spirit:displayName>lockedInterfaceDefinition</spirit:displayName>
+          <spirit:value spirit:format="string" spirit:id="lockedInterfaceDefinition"><![CDATA[<boundaryDefinition>
+    <interfaces>
+        <interface>
+            <name>avalon_rgb_sink</name>
+            <type>avalon_streaming</type>
+            <isStart>false</isStart>
+            <ports>
+                <port>
+                    <name>stream_in_startofpacket</name>
+                    <role>startofpacket</role>
+                    <direction>Input</direction>
+                    <width>1</width>
+                    <lowerBound>0</lowerBound>
+                    <vhdlType>STD_LOGIC</vhdlType>
+                </port>
+                <port>
+                    <name>stream_in_endofpacket</name>
+                    <role>endofpacket</role>
+                    <direction>Input</direction>
+                    <width>1</width>
+                    <lowerBound>0</lowerBound>
+                    <vhdlType>STD_LOGIC</vhdlType>
+                </port>
+                <port>
+                    <name>stream_in_valid</name>
+                    <role>valid</role>
+                    <direction>Input</direction>
+                    <width>1</width>
+                    <lowerBound>0</lowerBound>
+                    <vhdlType>STD_LOGIC</vhdlType>
+                </port>
+                <port>
+                    <name>stream_in_ready</name>
+                    <role>ready</role>
+                    <direction>Output</direction>
+                    <width>1</width>
+                    <lowerBound>0</lowerBound>
+                    <vhdlType>STD_LOGIC</vhdlType>
+                </port>
+                <port>
+                    <name>stream_in_data</name>
+                    <role>data</role>
+                    <direction>Input</direction>
+                    <width>8</width>
+                    <lowerBound>0</lowerBound>
+                    <vhdlType>STD_LOGIC_VECTOR</vhdlType>
+                </port>
+            </ports>
+            <assignments>
+                <assignmentValueMap/>
+            </assignments>
+            <parameters>
+                <parameterValueMap>
+                    <entry>
+                        <key>associatedClock</key>
+                        <value>clk</value>
+                    </entry>
+                    <entry>
+                        <key>associatedReset</key>
+                        <value>reset</value>
+                    </entry>
+                    <entry>
+                        <key>beatsPerCycle</key>
+                        <value>1</value>
+                    </entry>
+                    <entry>
+                        <key>dataBitsPerSymbol</key>
+                        <value>8</value>
+                    </entry>
+                    <entry>
+                        <key>emptyWithinPacket</key>
+                        <value>false</value>
+                    </entry>
+                    <entry>
+                        <key>errorDescriptor</key>
+                    </entry>
+                    <entry>
+                        <key>firstSymbolInHighOrderBits</key>
+                        <value>true</value>
+                    </entry>
+                    <entry>
+                        <key>highOrderSymbolAtMSB</key>
+                        <value>false</value>
+                    </entry>
+                    <entry>
+                        <key>maxChannel</key>
+                        <value>0</value>
+                    </entry>
+                    <entry>
+                        <key>packetDescription</key>
+                        <value></value>
+                    </entry>
+                    <entry>
+                        <key>prSafe</key>
+                        <value>false</value>
+                    </entry>
+                    <entry>
+                        <key>readyLatency</key>
+                        <value>0</value>
+                    </entry>
+                    <entry>
+                        <key>symbolsPerBeat</key>
+                        <value>1</value>
+                    </entry>
+                </parameterValueMap>
+            </parameters>
+        </interface>
+        <interface>
+            <name>avalon_rgb_source</name>
+            <type>avalon_streaming</type>
+            <isStart>true</isStart>
+            <ports>
+                <port>
+                    <name>stream_out_ready</name>
+                    <role>ready</role>
+                    <direction>Input</direction>
+                    <width>1</width>
+                    <lowerBound>0</lowerBound>
+                    <vhdlType>STD_LOGIC</vhdlType>
+                </port>
+                <port>
+                    <name>stream_out_startofpacket</name>
+                    <role>startofpacket</role>
+                    <direction>Output</direction>
+                    <width>1</width>
+                    <lowerBound>0</lowerBound>
+                    <vhdlType>STD_LOGIC</vhdlType>
+                </port>
+                <port>
+                    <name>stream_out_endofpacket</name>
+                    <role>endofpacket</role>
+                    <direction>Output</direction>
+                    <width>1</width>
+                    <lowerBound>0</lowerBound>
+                    <vhdlType>STD_LOGIC</vhdlType>
+                </port>
+                <port>
+                    <name>stream_out_valid</name>
+                    <role>valid</role>
+                    <direction>Output</direction>
+                    <width>1</width>
+                    <lowerBound>0</lowerBound>
+                    <vhdlType>STD_LOGIC</vhdlType>
+                </port>
+                <port>
+                    <name>stream_out_data</name>
+                    <role>data</role>
+                    <direction>Output</direction>
+                    <width>32</width>
+                    <lowerBound>0</lowerBound>
+                    <vhdlType>STD_LOGIC_VECTOR</vhdlType>
+                </port>
+            </ports>
+            <assignments>
+                <assignmentValueMap/>
+            </assignments>
+            <parameters>
+                <parameterValueMap>
+                    <entry>
+                        <key>associatedClock</key>
+                        <value>clk</value>
+                    </entry>
+                    <entry>
+                        <key>associatedReset</key>
+                        <value>reset</value>
+                    </entry>
+                    <entry>
+                        <key>beatsPerCycle</key>
+                        <value>1</value>
+                    </entry>
+                    <entry>
+                        <key>dataBitsPerSymbol</key>
+                        <value>8</value>
+                    </entry>
+                    <entry>
+                        <key>emptyWithinPacket</key>
+                        <value>false</value>
+                    </entry>
+                    <entry>
+                        <key>errorDescriptor</key>
+                    </entry>
+                    <entry>
+                        <key>firstSymbolInHighOrderBits</key>
+                        <value>true</value>
+                    </entry>
+                    <entry>
+                        <key>highOrderSymbolAtMSB</key>
+                        <value>false</value>
+                    </entry>
+                    <entry>
+                        <key>maxChannel</key>
+                        <value>0</value>
+                    </entry>
+                    <entry>
+                        <key>packetDescription</key>
+                        <value></value>
+                    </entry>
+                    <entry>
+                        <key>prSafe</key>
+                        <value>false</value>
+                    </entry>
+                    <entry>
+                        <key>readyLatency</key>
+                        <value>0</value>
+                    </entry>
+                    <entry>
+                        <key>symbolsPerBeat</key>
+                        <value>4</value>
+                    </entry>
+                </parameterValueMap>
+            </parameters>
+        </interface>
+        <interface>
+            <name>clk</name>
+            <type>clock</type>
+            <isStart>false</isStart>
+            <ports>
+                <port>
+                    <name>clk</name>
+                    <role>clk</role>
+                    <direction>Input</direction>
+                    <width>1</width>
+                    <lowerBound>0</lowerBound>
+                    <vhdlType>STD_LOGIC</vhdlType>
+                </port>
+            </ports>
+            <assignments>
+                <assignmentValueMap/>
+            </assignments>
+            <parameters>
+                <parameterValueMap>
+                    <entry>
+                        <key>clockRate</key>
+                        <value>0</value>
+                    </entry>
+                    <entry>
+                        <key>externallyDriven</key>
+                        <value>false</value>
+                    </entry>
+                    <entry>
+                        <key>ptfSchematicName</key>
+                    </entry>
+                </parameterValueMap>
+            </parameters>
+        </interface>
+        <interface>
+            <name>reset</name>
+            <type>reset</type>
+            <isStart>false</isStart>
+            <ports>
+                <port>
+                    <name>reset</name>
+                    <role>reset</role>
+                    <direction>Input</direction>
+                    <width>1</width>
+                    <lowerBound>0</lowerBound>
+                    <vhdlType>STD_LOGIC</vhdlType>
+                </port>
+            </ports>
+            <assignments>
+                <assignmentValueMap/>
+            </assignments>
+            <parameters>
+                <parameterValueMap>
+                    <entry>
+                        <key>associatedClock</key>
+                        <value>clk</value>
+                    </entry>
+                    <entry>
+                        <key>synchronousEdges</key>
+                        <value>DEASSERT</value>
+                    </entry>
+                </parameterValueMap>
+            </parameters>
+        </interface>
+    </interfaces>
+</boundaryDefinition>]]></spirit:value>
+        </spirit:parameter>
+        <spirit:parameter>
+          <spirit:name>systemInfos</spirit:name>
+          <spirit:displayName>systemInfos</spirit:displayName>
+          <spirit:value spirit:format="string" spirit:id="systemInfos"><![CDATA[<systemInfosDefinition>
+    <connPtSystemInfos>
+        <entry>
+            <key>clk</key>
+            <value>
+                <connectionPointName>clk</connectionPointName>
+                <suppliedSystemInfos>
+                    <entry>
+                        <key>CLOCK_RATE</key>
+                        <value>200000000</value>
+                    </entry>
+                </suppliedSystemInfos>
+                <consumedSystemInfos/>
+            </value>
+        </entry>
+    </connPtSystemInfos>
+</systemInfosDefinition>]]></spirit:value>
+        </spirit:parameter>
+      </spirit:parameters>
+    </altera:altera_system_parameters>
+    <altera:altera_interface_boundary>
+      <altera:interface_mapping altera:name="avalon_rgb_sink" altera:internal="video_rgb_resampler_0.avalon_rgb_sink" altera:type="avalon_streaming" altera:dir="end">
+        <altera:port_mapping altera:name="stream_in_data" altera:internal="stream_in_data"></altera:port_mapping>
+        <altera:port_mapping altera:name="stream_in_endofpacket" altera:internal="stream_in_endofpacket"></altera:port_mapping>
+        <altera:port_mapping altera:name="stream_in_ready" altera:internal="stream_in_ready"></altera:port_mapping>
+        <altera:port_mapping altera:name="stream_in_startofpacket" altera:internal="stream_in_startofpacket"></altera:port_mapping>
+        <altera:port_mapping altera:name="stream_in_valid" altera:internal="stream_in_valid"></altera:port_mapping>
+      </altera:interface_mapping>
+      <altera:interface_mapping altera:name="avalon_rgb_source" altera:internal="video_rgb_resampler_0.avalon_rgb_source" altera:type="avalon_streaming" altera:dir="start">
+        <altera:port_mapping altera:name="stream_out_data" altera:internal="stream_out_data"></altera:port_mapping>
+        <altera:port_mapping altera:name="stream_out_endofpacket" altera:internal="stream_out_endofpacket"></altera:port_mapping>
+        <altera:port_mapping altera:name="stream_out_ready" altera:internal="stream_out_ready"></altera:port_mapping>
+        <altera:port_mapping altera:name="stream_out_startofpacket" altera:internal="stream_out_startofpacket"></altera:port_mapping>
+        <altera:port_mapping altera:name="stream_out_valid" altera:internal="stream_out_valid"></altera:port_mapping>
+      </altera:interface_mapping>
+      <altera:interface_mapping altera:name="clk" altera:internal="video_rgb_resampler_0.clk" altera:type="clock" altera:dir="end">
+        <altera:port_mapping altera:name="clk" altera:internal="clk"></altera:port_mapping>
+      </altera:interface_mapping>
+      <altera:interface_mapping altera:name="reset" altera:internal="video_rgb_resampler_0.reset" altera:type="reset" altera:dir="end">
+        <altera:port_mapping altera:name="reset" altera:internal="reset"></altera:port_mapping>
+      </altera:interface_mapping>
+    </altera:altera_interface_boundary>
+    <altera:altera_has_warnings>false</altera:altera_has_warnings>
+    <altera:altera_has_errors>false</altera:altera_has_errors>
+  </spirit:vendorExtensions>
+</spirit:component>

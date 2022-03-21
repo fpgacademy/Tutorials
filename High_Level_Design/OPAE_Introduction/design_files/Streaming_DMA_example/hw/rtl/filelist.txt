@@ -1,0 +1,99 @@
+streaming_dma_afu.json
+
+# CCI-P avmm shim
+QI:BBB_ccip_avmm/hw/par/ccip_avmm_addenda.qsf
+SI:BBB_ccip_avmm/hw/sim/ccip_avmm_sim_addenda.txt
+
+
+
+# MPF
++define+MPF_PLATFORM_DCP_PCIE=1
+QI:BBB_cci_mpf/hw/par/qsf_cci_mpf_PAR_files.qsf
+SI:BBB_cci_mpf/hw/sim/cci_mpf_sim_addenda.txt
+
+afu.sv
+ccip_interface_reg.sv
+ccip_std_afu.sv
+
+# Qsys systems and component search path
+TEST_streaming_dma/streaming_dma_test_system.qsys
+TEST_streaming_dma/memory_to_stream_dma_bbb/memory_to_stream_dma_bbb.qsys
+TEST_streaming_dma/stream_to_memory_dma_bbb/stream_to_memory_dma_bbb.qsys
+
+
+# DFH Qsys IP component
+TEST_streaming_dma/QSYS_IPs/afu_id_avmm_slave/afu_id_avmm_slave.sv
+
+# Modified mSGDMA write master
+TEST_streaming_dma/QSYS_IPs/write_master/dcp_byte_enable_generator.v
+TEST_streaming_dma/QSYS_IPs/write_master/dcp_write_burst_control.v
+TEST_streaming_dma/QSYS_IPs/write_master/dcp_write_master.v
+TEST_streaming_dma/QSYS_IPs/write_master/dcp_ST_to_MM_Adapter.v
+TEST_streaming_dma/QSYS_IPs/write_master/dcp_write_master_response_tracking.v
+
+# Modified mSGDMA read master
+TEST_streaming_dma/QSYS_IPs/read_master/dcp_read_master.v
+TEST_streaming_dma/QSYS_IPs/read_master/dcp_read_burst_control.v
+TEST_streaming_dma/QSYS_IPs/read_master/dcp_MM_to_ST_Adapter.v
+TEST_streaming_dma/QSYS_IPs/read_master/dcp_read_master_response_tracking.v
+
+# Modified mSGDMA dispatcher
+TEST_streaming_dma/QSYS_IPs/dispatcher/dcp_csr_block.v
+TEST_streaming_dma/QSYS_IPs/dispatcher/dcp_fifo_with_byteenables.v
+TEST_streaming_dma/QSYS_IPs/dispatcher/dcp_descriptor_buffers.v
+TEST_streaming_dma/QSYS_IPs/dispatcher/dcp_read_signal_breakout.v
+TEST_streaming_dma/QSYS_IPs/dispatcher/dcp_response_block.v
+TEST_streaming_dma/QSYS_IPs/dispatcher/dcp_dispatcher.v
+TEST_streaming_dma/QSYS_IPs/dispatcher/dcp_write_signal_breakout.v
+
+# mSGDMA frontend that will feed descriptors into dispatcher
+TEST_streaming_dma/QSYS_IPs/dcp_msgdma_front_end/mSGDMA_frontend_descriptor_format_pkg.sv
+TEST_streaming_dma/QSYS_IPs/dcp_msgdma_front_end/mSGDMA_frontend.sv
+TEST_streaming_dma/QSYS_IPs/dcp_msgdma_front_end/mSGDMA_descriptor_fetch_read_master.sv
+TEST_streaming_dma/QSYS_IPs/dcp_msgdma_front_end/mSGDMA_descriptor_store_write_master.sv
+
+
+# new write only pipeline bridge that supports Avalon write responses
+TEST_streaming_dma/QSYS_IPs/far_reach_avalon_mm_bridge/far_reach_avalon_mm_bridge.sv
+TEST_streaming_dma/QSYS_IPs/far_reach_avalon_mm_bridge/far_reach_avalon_mm_bridge_stall_free_pipeline.sv
+
+
+# Streamimg DMA AFU Qsys system .ip files
+TEST_streaming_dma/ip/streaming_dma_test_system/
+TEST_streaming_dma/ip/streaming_dma_test_system/dma_clock.ip
+TEST_streaming_dma/ip/streaming_dma_test_system/emif_B_clock.ip
+TEST_streaming_dma/ip/streaming_dma_test_system/streaming_dma_afu_id.ip
+TEST_streaming_dma/ip/streaming_dma_test_system/emif_A_bridge.ip
+TEST_streaming_dma/ip/streaming_dma_test_system/host_rd_bridge.ip
+TEST_streaming_dma/ip/streaming_dma_test_system/streaming_dma_test_system_reset_in.ip
+TEST_streaming_dma/ip/streaming_dma_test_system/emif_A_clock.ip
+TEST_streaming_dma/ip/streaming_dma_test_system/emif_B_bridge.ip
+TEST_streaming_dma/ip/streaming_dma_test_system/mmio_bridge.ip
+TEST_streaming_dma/ip/streaming_dma_test_system/null_dfh.ip
+TEST_streaming_dma/ip/streaming_dma_test_system/host_wr_bridge.ip
+
+
+# Memory to streaming DMA BBB Qsys system .ip files
+TEST_streaming_dma/memory_to_stream_dma_bbb/
+TEST_streaming_dma/memory_to_stream_dma_bbb/ip/memory_to_stream_dma_bbb/memory_to_stream_dma_bbb_clock_in.ip
+TEST_streaming_dma/memory_to_stream_dma_bbb/ip/memory_to_stream_dma_bbb/memory_to_stream_dma_bbb_csr_bridge.ip
+TEST_streaming_dma/memory_to_stream_dma_bbb/ip/memory_to_stream_dma_bbb/memory_to_stream_dma_bbb_dispatcher.ip
+TEST_streaming_dma/memory_to_stream_dma_bbb/ip/memory_to_stream_dma_bbb/memory_to_stream_dma_bbb_dma_read_master.ip
+TEST_streaming_dma/memory_to_stream_dma_bbb/ip/memory_to_stream_dma_bbb/memory_to_stream_dma_bbb_host_bridge.ip
+TEST_streaming_dma/memory_to_stream_dma_bbb/ip/memory_to_stream_dma_bbb/memory_to_stream_dma_bbb_id.ip
+TEST_streaming_dma/memory_to_stream_dma_bbb/ip/memory_to_stream_dma_bbb/memory_to_stream_dma_bbb_memory_bridge.ip
+TEST_streaming_dma/memory_to_stream_dma_bbb/ip/memory_to_stream_dma_bbb/memory_to_stream_dma_bbb_reset_in.ip
+TEST_streaming_dma/memory_to_stream_dma_bbb/ip/memory_to_stream_dma_bbb/memory_to_stream_dma_bbb_mSGDMA_frontend.ip
+
+# Streaming to memory DMA BBB Qsys system .ip files
+TEST_streaming_dma/stream_to_memory_dma_bbb/
+TEST_streaming_dma/stream_to_memory_dma_bbb/ip/stream_to_memory_dma_bbb/stream_to_memory_dma_bbb_clock_in.ip
+TEST_streaming_dma/stream_to_memory_dma_bbb/ip/stream_to_memory_dma_bbb/stream_to_memory_dma_bbb_csr_bridge.ip
+TEST_streaming_dma/stream_to_memory_dma_bbb/ip/stream_to_memory_dma_bbb/stream_to_memory_dma_bbb_dcp_modular_sgdma_dispatcher.ip
+TEST_streaming_dma/stream_to_memory_dma_bbb/ip/stream_to_memory_dma_bbb/stream_to_memory_dma_bbb_id.ip
+TEST_streaming_dma/stream_to_memory_dma_bbb/ip/stream_to_memory_dma_bbb/stream_to_memory_dma_bbb_memory_bridge.ip
+TEST_streaming_dma/stream_to_memory_dma_bbb/ip/stream_to_memory_dma_bbb/stream_to_memory_dma_bbb_reset_in.ip
+TEST_streaming_dma/stream_to_memory_dma_bbb/ip/stream_to_memory_dma_bbb/stream_to_memory_dma_bbb_write_master.ip
+TEST_streaming_dma/stream_to_memory_dma_bbb/ip/stream_to_memory_dma_bbb/stream_to_memory_dma_bbb_host_bridge.ip
+TEST_streaming_dma/stream_to_memory_dma_bbb/ip/stream_to_memory_dma_bbb/stream_to_memory_dma_bbb_mSGDMA_frontend.ip
+

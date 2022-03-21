@@ -1,0 +1,331 @@
+\documentclass[11pt, twoside, pdftex]{article}
+
+% This includes all the settings that we should use for the document
+\newcommand{\PDFTitle}{Accessing HPS Devices from the FPGA}
+\newcommand{\commonPath}{../../Common}
+\input{\commonPath/Docs/defaulttext.tex}
+\input{\commonPath/Docs/preamble.tex}
+
+\usepackage{placeins}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% Add title
+\newcommand{\doctitle}{Accessing HPS Devices from the FPGA}
+\newcommand{\dochead}{Accessing HPS Devices from the FPGA}
+% Usually no need to change these two lines
+\title{\fontfamily{phv}\selectfont{\doctitle} }
+\chead{ \small{\textsc{\bfseries \dochead} } }
+% Customizations
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% Allows multiple figures per page
+
+\renewcommand\floatpagefraction{.9}
+\renewcommand\topfraction{.9}
+\renewcommand\bottomfraction{.9}
+\renewcommand\textfraction{.1}   
+\setcounter{totalnumber}{50}
+\setcounter{topnumber}{50}
+\setcounter{bottomnumber}{50}
+\widowpenalty 10000
+\clubpenalty 10000
+\raggedbottom
+
+%%%%%%%%%%%%%%%%%%
+%%% DOCUMENT START
+%\begin{document}
+\begin{document}
+\begin{table}
+    \centering
+    \begin{tabular}{p{5cm}p{4cm}}
+        \hspace{-3cm}
+        &
+        \raisebox{1\height}{\parbox[h]{0.5\textwidth}{\Large\fontfamily{phv}\selectfont{\textsf{\doctitle}}}}
+    \end{tabular}
+    \label{tab:logo}
+\end{table}
+
+\colorbox[rgb]{0,0.384,0.816}{\parbox[h]{\textwidth}{\color{white}\textsf{\textit{\textBar}}}}
+
+\thispagestyle{plain}
+
+\section{Introduction}
+
+This document describes how to connect a bus-mastering device in the FPGA to slave devices in the Hard Processor System (HPS)
+in Intel\textsuperscript{\textregistered} SoC FPGA devices. This allows masters on the FPGA to use HPS resources such as USB, ethernet, SD* card, and more.
+
+%This document describes how to connect devices in the FPGA to devices of the Hard Processor System (HPS) in Intel SoC FPGA 
+%devices. On DE-Series boards such as the DE1-SoC, the HPS contains devices such as USB, ethernet, SD card, and
+%accelerometer. This reference document provides the information necessary connect a bus-mastering component in
+%the FPGA to these HPS-side devices.
+
+%connect bus-mastering devices in the FPGA to slave
+%devices connected to the Hard Processor System (HPS) of Intel SoC FPGA devices. This tutorial describes 
+%the connections between the Hard Processor System (HPS) and the FPGA, and how they can be 
+%configured to achieve the desired routing. The reader is expected to 
+
+{\bf Contents:}
+
+\begin{itemize}
+\item HPS Devices Overview
+	\subitem Built-In Devices
+	\subitem Peripheral Pins and External Devices
+	\subitem Allowing Non-Secure Access to Devices
+\item Accessing the HPS Interconnect from the FPGA
+	\subitem Connecting an FPGA Master to the HPS Interconnect
+	\subitem Enabling the FPGA-to-HPS Bridge
+	\subitem The Address Span Extender
+	%\subitem Cache-Coherent Accesses
+\item Accessing HPS Peripheral Pins from the FPGA using LoanIO
+	\subitem Using the LoanIO Interface in Platform Designer
+	\subitem Configuring Pin Multiplexing for LoanIO
+\end{itemize}
+
+\clearpage
+\newpage
+
+%\section{Overview of HPS-FPGA Connectivity}
+
+%Intel SoC FPGA devices are composed of two portions: the Hard Processor System and the FPGA. Bridges
+%between the HPS and the FPGA facilitate bidirectional communication. In this document we
+%discuss the use of the FPGA-to-HPS bridge which allows bus-mastering components in the FPGA
+%to control devices that are in or connected to the HPS. An overview of the connections is shown below in Figure~\ref{}.
+
+
+%The bus-mastering devices are instantiated in Platform Designer and connected to the bridge. To connect the
+%devices to the bridge, you must instantiate the \textit{Arria V/Cyclone V Hard Processor System} 
+%component, which exposes the \textit{f2h\_axi\_slave} port. Any bus-mastering device can be connected
+%to this slave, to connect to the FPGA-to-HPS bridge.
+
+\section{HPS Devices Overview}
+
+\subsection{Built-In Devices}
+\label{sec:built_in_devices}
+
+Table~\hyperref[tab:builtindevices]{1} lists the devices that are built into the HPS. 
+These devices provide memory-mapped interfaces which are mapped to addresses within the HPS interconnect's 32-bit (4GB) address space. 
+%The base addresses of these interfaces are shown in the table. 
+Any master device connected to the interconnect (such as one that is instantiated in the FPGA) can read and write these interfaces at their respective addresses. 
+For more details about these devices, refer to the document \textit{Cyclone\textsuperscript{\textregistered} V Hard Processor System Technical Reference Manual}.
+
+%These devices are connected to the HPS's
+%interconnect, and their memory-mapped interfaces of registers and/or memories are mapped to certain address ranges 
+%on the interconnect's 32-bit (4GB) address space. The interconnect is a collection of switches and buses that connect 
+%various master devices (such as the ARM Cortex-A9 CPU) to the connected slave devices. The FPGA-to-HPS bridge is
+%another master, allowing any FPGA-side masters to access the slave (refer to Section~\ref{}).
+%The HPS contains various devices that are connected to its interconnect. The interconnect consists of switches and buses
+%that connect device masters to slave devices. Each slave device provides a memory-mapped interface of registers and/or memories 
+%that is mapped to a certain address range of the interconnect's 4GB address space. Table~\ref{tab:builtindevices} below lists the HPS's built-in 
+%devices and the address range to which they are mapped. 
+
+\input {figures/HPS_Devices_Table.tex}
+
+\subsection{External Devices and Peripheral Pin Multiplexing}
+\label{sec:pinmuxing}
+
+In addition to built-in devices, the HPS may be connected to external devices through the HPS's peripheral pins. 
+These pins are physical connections that are wired to other devices on the FPGA board. 
+%In addition to the built-in devices, the HPS may be connected to external devices through its peripheral pins.
+%In addition to the built-in devices listed above, an FPGA board might contain external devices that have been connected to the HPS. 
+%For example, the ADXL345 accelerometer chip on the DE1-SoC board is connected to HPS peripheral pins of the board's Cyclone V SoC. 
+%For example, the DE1-SoC board contains an accelerometer chip whose I2C wires are connected to HPS peripheral pins of board's Cyclone V SoC. 
+Peripheral pin multiplexers inside the HPS are then configured to route the signals from these pins to various endpoints. These multiplexers' select signals are set by
+writing to \textit{Pin Mux Control} registers, which are mapped in HPS address space. %at \texttt{0xFFD08400} as part of the \textit{System Manager Module} collection of registers. 
+To determine which peripheral pins have been connected to external devices, consult the board manufacturer's 
+schematics for the board in question. %to determine which peripheral pins have been connected to the external devices.
+
+As an example of using the pin multiplexing, let's examine the peripheral pin connection to the ADXL345 accelerometer chip on the DE1-SoC board. The ADXL345 is operated through its I2C interface, and by consulting the DE1-SoC board's schematics we can see that the accelerometer's I2C wires are connected to the HPS peripheral pins \textit{trace\_d6} and \textit{trace\_d7}. To determine which registers are responsible for controling these pins' multiplexers, we consult the \textit{Cyclone V HPS Memory Map} document. Figure~\ref{fig:pinmuxregisters_doc} shows an excerpt of the memory map, which shows that registers \textit{GENERALIO7} and \textit{GENERALIO8} are responsible for pins \textit{trace\_d6} and \textit{trace\_d7} respectively.
+%The registers that control the pins' multiplexers are located in the \textit{Pin Mux Control Group}, which is part of the \textit{System Manager Module}. 
+%By consulting the \textit{Cyclone V HPS Memory Map}, as shown in Figure~\ref{fig:pinmuxregisters_doc}, we can find the register responsible for each peripheral pin's multiplexer. In the memory map, we can see that registers \textit{GENERALIO7} and \textit{GENERALIO8} are responsible for pins \textit{trace\_d6} and \textit{trace\_d7} respectively. 
+
+\begin{figure} [H]
+\begin{center}
+\includegraphics[scale = 0.8]{figures/fig_pinmuxregisters_doc.png}
+\end{center}
+\caption{Consulting the Cyclone V HPS Memory Map for the list of Pin Mux Control registers.}
+\label{fig:pinmuxregisters_doc}
+\end{figure}
+
+By clicking on one of the pin multiplexing registers, you can see a list of possible routings that can be made for the corresponding pin. Figure~\ref{fig:generalio7_reg} shows the list for the \textit{GENERALIO7} register (\textit{trace\_d6} pin). Note that the routing options for \textit{trace\_d7} is similar to \textit{trace\_d6}. 
+
+\begin{figure} [H]
+\begin{center}
+\includegraphics[scale = 0.6]{figures/fig_generalio7_reg.png}
+\end{center}
+\caption{Consulting the Cyclone V HPS Memory Map for details of the \textit{GENERALIO7} register.}
+\label{fig:generalio7_reg}
+\end{figure}
+
+\vskip 0.5in
+The possible routings for \textit{trace\_d6} are described in more detail below:
+
+\begin{enumerate}
+\item GPIO/LoanIO number 55: A value of 0 routes the pin to the GPIO/LoanIO multiplexer, which in turn can route this signal to either the GPIO controller or to the FPGA fabric as a LoanIO wire.
+\item I2C0.SDA: A value of 1 routes the pin to SDA port of the I2C controller \textit{I2C0}.
+\item SPIS1.SS0: A value of 2 routes the pin to the SS0 port of the SPI Slave controller \textit{SPIS1}.
+\item TRACE.D6: A value of 3 routes the pin to the D6 port of the Trace controller. 
+\end{enumerate}
+
+Figure~\ref{fig:pinmux} provides a high-level view of the ADXL345's signals, and the multiplexers involved in routing them. The typical routing configuration is to connect the ADXL345's I2C signals to the \textit{I2C0} I2C controller. This allows a master to communicate with the ADXL345 chip via \textit{I2C0}'s memory-mapped register interface. This means writing `1' to \textit{GENERALIO7} and \textit{GENERALIO8}, and `0' to \textit{I2C0USEFPGA}. %a block diagram of the multiplexers involved in routing the ADXL345 signals.  a block diagram that summarizes the possible routing configurations for the ADXL345 connection. shows the multiplexers involved in routing the \textit{trace\_d6} and \textit{trace\_d7} pins inside the HPS. Some of the possible routings and the required register configurations to achieve each routing are shown below:
+
+\begin{figure} [H]
+\begin{center}
+\includegraphics[scale = 0.8]{figures/fig_pinmux.pdf}
+\end{center}
+\caption{Routing the I2C signals from the accelerometer in a DE1-SoC board.}
+\label{fig:pinmux}
+\end{figure}
+
+\iffalse
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        \multicolumn{5}{|c|}{\textit{\textbf{Table 2. Example Routing Configurations of the ADXL345 I2C Signals on the DE1-SoC}}}
+        \\\hline
+            \textbf{Routing Destination}
+            & \textbf{GENERALIO7/8}
+            & \textbf{GPLMUX55/56}
+            & \textbf{I2C0USEFPGA}
+            & \textbf{Routing Diagram}
+        \\\hline
+            I2C0 Controller
+            & 1
+            & DON'T CARE
+            & 0
+            & lalala
+        \\\hline
+            GPIO1 Controller
+            & 0
+            & 1
+            & DON'T CARE
+            & lalala
+        \\\hline
+            FPGA (LoanIO port)
+            & 0
+            & 0
+            & DON'T CARE
+            & lalala
+        \\\hline
+    \end{tabular}
+    \label{tab:builtindevices}
+\end{table}
+\fi
+
+
+\subsection{Allowing Non-Secure Access to Devices}
+
+The HPS interconnect contains a security feature that limits access to various devices so that only ``secure'' masters, such as the ARM* Cortex* A9 processor, can access them. Because masters in the FPGA are considered non-secure, a secure master must first configure the interconnect to allow non-secure access to a device before FPGA-side masters can access it. This is done by writing to \textit{Security Register Group} registers, which are part of the \textit{L3 GPV Registers}. To allow non-secure access to a device, a `1' must be written to the device's corresponding security bit. For example, to allow non-secure access to \textit{I2C0}'s register interface, you must write a `1' to bit 2 of the \textit{l4sp} register. Further details about the \textit{Security Register Group} registers can be found in the \textit{Cyclone V HPS Memory Map}, as shown in Figure~\ref{fig:securityregs}.
+
+\begin{figure} [H]
+\begin{center}
+\includegraphics[scale = 0.6]{figures/fig_securityregisters.png}
+\end{center}
+\caption{The L3 GPV Security Registers, seen in the \textit{Cyclone V HPS Memory Map}.}
+\label{fig:securityregs}
+\end{figure}
+
+%Connections inside the HPS to these peripheral pins can be
+%configured to route the signals to various end points, including routing them to the FPGA fabric, thus giving FPGA-side
+%components access to these external devices.
+
+\section{Accessing the HPS Interconnect from the FPGA}
+
+\subsection{Connecting an FPGA Master to the HPS Interconnect}
+
+An AXI or Avalon\textsuperscript{\textregistered} bus-mastering device inside the FPGA can be connected to the HPS interconnect through the FPGA-to-HPS bridge. This connection is
+made in the Platform Designer system integration tool, by connecting the master device's memory mapped master port to the \textit{Hard Processor System} component's
+AXI\_Slave port named \textit{f2h\_axi\_slave}. Figure~\ref{fig:nios_to_hps} shows an example of such connection in the Platform Designer GUI, where the master device is an instantiation of the Nios\textsuperscript{\textregistered} II soft processor. 
+%The connection is made by connecting the \textit{data\_master} port of the Nios II processor to the \textit{f2h\_axi\_slave} port of the Arria V/Cyclone V Hard Processor System.
+
+\begin{figure} [H]
+\begin{center}
+\includegraphics[scale = 0.8]{figures/fig_Nios_to_HPS.png}
+\end{center}
+\caption{Connecting an FPGA-side master to the HPS interconnect.}
+\label{fig:nios_to_hps}
+\end{figure}
+
+\subsection{Enabling the FPGA-to-HPS Bridge}
+
+Before FPGA-side masters can access the HPS interconnect, the FPGA-to-HPS bridge must first be enabled by deasserting its reset bit in the \textit{brgmodrst}. The \textit{brgmodrst} register is located at address \texttt{0xFFD0501C} in HPS address space. Since FPGA-side masters cannot access HPS address space until the bridge is enabled, the resets must be deasserted by a master inside the HPS. This is usually accomplished by running a baremetal program on the ARM Cortex A9 processor to write a 0 to bit 2 of the \textit{brgmodrst} register. After deasserting the bridge's reset, the FPGA-side master has access to the full 4GB address space through the FPGA-to-HPS bridge. 
+
+\subsection{The Address Span Extender}
+
+The HPS interconnect has an address space that spans 4GB, which takes up the entirety of a 32-bit master's address range. This scenario was shown in Figure~\ref{fig:nios_to_hps}, where the \textit{f2h\_axi\_slave} connection took up the entire 32-bit (\texttt{0x00000000} - \texttt{0xffffffff}) address range of the Nios II processor. Such a connection would prevent the master from addressing any other memory-mapped device. As a workaround to this limitation, you can use a standard Platform Designer IP core called the \textit{Address Span Extender}.
+
+The \textit{Address Span Extender} IP core provides a window into the address space of a slave. Figure~\ref{fig:nios_to_hps_via_addr_extender} shows the use of the \textit{Address Span Extender} to provide a 16MB window into the top portion of the HPS interconnect's memory range, from 0xFF000000 to 0xFFFFFFFF. This window provides the Nios II processor access to all of the HPS's built-in devices listed in Section~\ref{sec:built_in_devices}, and leaves the rest of the address range free for addressing other memory-mapped devices. The size of the window, as well as the window's offset from the base address of the slave can be configured during the instantiation of the core. For further details regarding the \textit{Address Span Extender}, refer to the \textit{Platform Designer System Design Components } section of the \textit{Quartus\textsuperscript{\textregistered} Prime Handbook}.
+
+\begin{figure} [H]
+\begin{center}
+\includegraphics[scale = 0.5]{figures/fig_Nios_to_HPS_via_addr_extender.png}
+\end{center}
+\caption{Connecting an FPGA-side master to the HPS interconnect via an address span extender.}
+\label{fig:nios_to_hps_via_addr_extender}
+\end{figure}
+
+\iffalse
+\subsection{Cache-Coherent Access via the Accelerator Coherency Port}
+
+TO INCLUDE OR NOT INCLUDE THIS SECTION. THAT IS THE QUESTION.
+
+To access portions of the HPS address range that are cached by the ARM Cortex-A9 processor in a cache-coherent manner, the FPGA master must access the memory through the \textit{Accelerator Coherency Port} (ACP). The portion of memory that is cached includes the main memory (DDR3 SDRAM in most cases). Memory accesses made through the ACP go through the ARM processor's L2 cache, ensuring reads and writes to cached lines are done coherently. The use of the L2 cache also gives potential performance benefit, if accesses result in hits in the cache.
+
+CONFIGURING THE ACP?
+
+\textbf{DIAGRAM OF ACP port, maybe memory span}
+\fi
+
+\section{Accessing HPS Peripheral Pins from the FPGA}
+
+This section describes how to connect HPS peripheral pins as input, output, or inout ports to user-defined HDL modules in the FPGA. 
+
+\subsection{Using the LoanIO Interface in Platform Designer}
+\label{sec:loanio_qsys}
+
+In Figure~\ref{fig:pinmux} you can see that the pin multiplexing can be configured to route the ADXL345 I2C pins to the FPGA side, by setting \textit{GENERALIO7/8} to '0' and \textit{GPLMUX55/56} to '0'. When the multiplexing is configured in such a way, the pins can be accessed through the \textit{LOANIO} port of the Hard Processor System component in Platform Designer. In order to use the \textit{LOANIO} port, you must first configure the HPS component in the \textit{Peripheral Pins} tab of the component wizard. Near the bottom of the tab, you will see a table of peripheral pins, as shown in Figure~\ref{fig:loanio_table}. In the table, you must export the required pins to the \textit{LOANIO} interface by clicking on the \textit{LOANIOXX} button in the corresponding row. Figure~\ref{fig:loanio_table} shows this being done for the pins \textit{trace\_d6} and \textit{trace\_d7}. 
+
+\begin{figure} [H]
+\begin{center}
+\includegraphics[scale = 0.5]{figures/fig_qsys_hps_loanio.png}
+\end{center}
+\caption{Configuring the HPS Platform Designer Component to connect HPS peripheral pins to the \textit{LOANIO} port.}
+\label{fig:loanio_table}
+\end{figure}
+
+Once the HPS component is configured, the HPS component will now have a conduit named \textit{h2f\_loan\_io}, as shown in Figure~\ref{fig:hps_component_loanio_port}. To access this port in your HDL code, you must export it by double clicking the \textit{Double-click to export} text to the right of the \textit{h2f\_loan\_io} conduit. This will result in three additional ports in the top-level module generated by Platform Designer, as shown in Figure~\ref{fig:exported_loanio}. These ports are as wide as the number of HPS peripheral pins that exist in the chip. In the case of the DE1-SoC board, the ports are 67 bits wide corresponding to the 67 HPS peripheral pins. In Figure~\ref{fig:loanio_table}, you can see that the two pins that we exported are sent to \textit{LOANIO55} and \textit{LOANIO56}, meaning that the two pins can be accessed at indices 55 and 56 in the three ports. 
+
+\begin{figure} [H]
+\begin{center}
+\includegraphics[scale = 0.7]{figures/fig_qsys_loanio_export.png}
+\end{center}
+\caption{Exporting the HPS component's \textit{LOANIO} port.}
+\label{fig:hps_component_loanio_port}
+\end{figure}
+
+\begin{figure} [H]
+\begin{center}
+\includegraphics[scale = 0.7]{figures/fig_exported_loanio.png}
+\end{center}
+\caption{The exported \textit{LOANIO} port.}
+\label{fig:exported_loanio}
+\end{figure}
+
+\subsection{Configuring Pin Multiplexing for LoanIO}
+
+Section~\ref{sec:loanio_qsys} described the FPGA-side configuration for using the \textit{LOANIO} port. HPS-side configuration for using the \textit{LOANIO} port is done in a similar way as described in Section~\ref{sec:pinmuxing}. The goal is to configure the pin multiplexers to route the pins to the \textit{LOANIO} port. First, the \textit{GENERALIO} multiplexer corresponding to the pin must be configured to '0' to route the pin to the \textit{GPIO/LOANIO} interface. Then, the corresponding \textit{GPLMUX} multiplexer must be configured to '0', which routes the pin to the \textit{LOANIO} port. 
+
+%\subsection{Setting Up an ARM SD Card for Automatic Pin Multiplexer Configuration}
+
+%Use Academic Monitor Program to develop a baremetal program that configures pin multiplexers then create the SD card.
+
+
+
+\clearpage
+
+\vspace{1in}
+% Copyright and Trademark
+
+\input{\commonPath/Docs/copyright.tex}
+
+\end{document}
+

@@ -1,0 +1,76 @@
+\begin{table}[h]
+
+    \centering
+    \begin{tabular}{|c|c|c|c|p{7cm}|}
+        \hline
+        \multicolumn{5}{|l|}{\textit{\textbf{Table 3. I2C0 Controller Register Address Map (0xFFC04000)}}}
+        \\\hline
+            \textbf{Offset}
+            & \textbf{Register name}
+            & \textbf{Read/Write}
+            & \textbf{Reset Value}
+            & \textbf{Purpose}
+        \\\hline
+            0x0
+            & \texttt{ic\_con}
+            & R/W
+            & 0x7D
+            & Control Register
+        \\\hline
+            0x4
+            & \texttt{ic\_tar}
+            & R/W
+            & 0x1055
+            & Target Address Register
+        \\\hline
+            0x10
+            & \texttt{ic\_data\_cmd}
+            & R/W
+            & 0x0
+            & Tx Rx Data and Command Register
+        \\\hline
+            0x1C
+            & \texttt{ic\_fs\_scl\_hcnt}
+            & R/W
+            & 0x3C
+            & SCL High Count Register (Fast Speed)
+        \\\hline
+            0x20
+            & \texttt{ic\_fs\_scl\_lcnt}
+            & R/W
+            & 0x82
+            & SCL Low Count Register (Fast Speed)
+        \\\hline
+            0x40
+            & \texttt{ic\_clr\_intr}
+            & R
+            & 0x0
+            & Clear All Interrupts Register
+        \\\hline
+            0x6C
+            & \texttt{ic\_enable}
+            & R/W
+            & 0x0
+            & Enable Register
+        \\\hline
+            0x74
+            & \texttt{ic\_txflr}
+            & R
+            & 0x0
+            & Transmit FIFO Level Register
+        \\\hline
+            0x78
+            & \texttt{ic\_rxflr}
+            & R
+            & 0x0
+            & Receive FIFO Level Register
+        \\\hline
+            0x9C
+            & \texttt{ic\_enable\_status}
+            & R
+            & 0x0
+            & Enable Status Register
+        \\\hline
+    \end{tabular}
+    \label{tab:i2c_ctrl_regtable}
+\end{table}

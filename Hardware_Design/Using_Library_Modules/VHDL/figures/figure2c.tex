@@ -1,0 +1,24 @@
+\begin{center} %%%\begin{singlespace}
+
+\parbox{12.5cm}{
+\begin{tabbing}
+ENT\=PORT ( ~\=carryin~~ \= : OUT \=\kill
+ENTITY ~adderk ~IS\\
+\>GENERIC ~( k ~: ~INTEGER := 8 ) ;\\
+\>PORT ( \>carryin \>: ~IN ~STD\_LOGIC ;\\
+\>\>X, Y \>: ~IN ~STD\_LOGIC\_VECTOR(k-1 DOWNTO 0) ;\\
+\>\>S \>: ~OUT ~STD\_LOGIC\_VECTOR(k-1 DOWNTO 0) ;\\
+\>\>carryout \>: ~OUT ~STD\_LOGIC ) ;\\
+END ~adderk ;\\
+\\
+ARCHITECTURE ~Behavior ~OF ~adderk ~IS\\
+\>SIGNAL ~Sum ~: ~STD\_LOGIC\_VECTOR(k DOWNTO 0) ;\\
+BEGIN\\
+\>Sum <= (\textquotesingle0\textquotesingle \& X) + (\textquotesingle0\textquotesingle \& Y) + carryin ;\\
+\>S <= Sum(k-1 DOWNTO 0) ;\\
+\>carryout <= Sum(k) ;\\
+END ~Behavior ;
+\end{tabbing} }
+
+Figure 2.  VHDL code for the circuit in Figure 1 (Part {\it c}).
+\end{center}

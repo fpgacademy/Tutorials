@@ -1,0 +1,40 @@
+\begin{figure}[h]
+
+\begin{center} %%%\begin{singlespace}
+\parbox{12.5cm}{
+\begin{tabbing}
+ZZ\=ZZ\=ZZ\=ZZ\=ZZ\=ZZ\=ZZ\=ZZ\=ZZ\=ZZ\=ZZ\kill
+\#include "altera\_up\_avalon\_parallel\_port.h"\\
+\#include "altera\_up\_avalon\_adc.h"\\
+\\
+{\bf int} main (void)\{\\
+\>{\bf alt\_up\_parallel\_port\_dev} * led;\\
+\>{\bf alt\_up\_adc\_dev} * adc;\\
+\>{\bf unsigned int} data;\\
+\>{\bf int} count;\\
+\>{\bf int} channel;\\
+\>data = 0;\\
+\>count = 0;\\
+\>channel = 0;\\
+\\
+\>led =alt\_up\_parallel\_port\_open\_dev ("/dev/LEDs");\\
+\>adc = alt\_up\_adc\_open\_dev ("/dev/ADC");\\
+\\
+\>{\bf while} (led!=NULL\&\&adc!=NULL)\{\\
+\>\>alt\_up\_adc\_update (adc);\\
+\>\>count += 1;\\
+\>\>data = alt\_up\_adc\_read (adc, channel);\\
+\>\>data = data / 16;\\
+\>\>alt\_up\_parallel\_port\_write\_data (led, data);\\
+\>\>{\bf if} (count==500000)\{\\
+\>\>\>count = 0;\\
+\>\>\>channel = !channel;\\
+\>\>\}\\
+\>\}\\
+\>{\bf return} 0;\\
+\}\\
+\end{tabbing} } %%%\end{singlespace}
+	\caption{C code using HAL to operate the ADC.}
+	\label{fig:hal_code}
+\end{center}
+\end{figure}

@@ -1,0 +1,145 @@
+
+
+\setlength\topmargin{-0.25in}
+\setlength\headheight{0in}
+\setlength\headsep{0.35in}
+\setlength\textheight{8.5in}
+\setlength\textwidth{7in}
+\setlength\oddsidemargin{-0.25in}
+\setlength\evensidemargin{-0.25in}
+\setlength\parindent{0.25in}
+\setlength\parskip{0in} 
+
+\pdfpagewidth 8.5in
+\pdfpageheight 11in
+
+\input{\commonPath/Docs/listingsstyles}
+
+%\usepackage[centering]{geometry}.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Document Settings
+\usepackage[labelsep=period]{caption}
+% we can choose a better font later
+%\usepackage{palatino}
+\usepackage{fourier}
+%\fontencoding{T1}
+% include common used symbols
+\usepackage{textcomp}
+% add support for graphics
+\usepackage{graphicx}
+\usepackage[usenames, dvipsnames]{color}
+% enable to draw thick or thin table hlines
+\setlength{\doublerulesep}{\arrayrulewidth}
+\usepackage{longtable}
+\setlongtables
+%\usepackage{array}
+% It may be better to use PDFLaTeX as it can generate bookmarks for the
+% document
+
+% Add some useful packages
+\usepackage{ae,aecompl}
+\usepackage{epsfig,float,times}
+
+% reset the font for section
+\usepackage{sectsty}
+%\allsectionsfont{\fontfamily{ptm}\selectfont}
+\allsectionsfont{\usefont{OT1}{phv}{bc}{n}\selectfont}
+
+% use compact space for sections
+\usepackage[compact]{titlesec}
+\titlespacing{\section}{0pt}{0.2in}{*0}
+\titlespacing{\subsection}{0pt}{0.1in}{*0}
+\titlespacing{\subsubsection}{0pt}{0.05in}{*0}
+
+% fancyhdr header and footer customization
+\usepackage{layout}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhead{}
+\fancyhead[R]{\textit{\tiny{\textBar}}}
+\fancyfoot{}
+\fancyfoot[LO,
+RE]{\textrm{\href{https://www.fpgacademy.org}{\small \longteamname}} \\ {\small \datePublished }}
+\fancyfoot[RO, LE]{\small \thepage}
+% two-side settings
+%\fancyhead{} % clear all header fields
+%\fancyfoot{} % clear all footer fields
+%\fancyfoot[LE,RO]{\thepage}
+\renewcommand{\headrulewidth}{2pt}
+\renewcommand{\headrule}{{\color{blue} \hrule width\headwidth height\headrulewidth \vskip-\headrulewidth}}
+\renewcommand{\footrulewidth}{0pt}
+
+% Format the footer on page 1
+\fancypagestyle{plain}{
+\fancyhead{}
+\fancyfoot{}
+\fancyfoot[LO,
+RE]{\textrm{\href{https://www.fpgacademy.org}{\small \longteamname}} \\ {\small \datePublished }}
+\fancyfoot[RO, LE]{\small \thepage}
+\renewcommand{\headrulewidth}{0pt}
+}
+% adjust some setting to try to make the figure stay in the same page with text
+% Reference: 	http://www.cs.uu.nl/~piet/floats/node1.html
+%   			http://mintaka.sdsu.edu/GF/bibliog/latex/floats.html
+%   General parameters, for ALL pages:
+\renewcommand{\topfraction}{0.9}	% max fraction of floats at top
+\renewcommand{\bottomfraction}{0.8}	% max fraction of floats at bottom
+%   Parameters for TEXT pages (not float pages):
+\setcounter{topnumber}{3}
+\setcounter{bottomnumber}{3}
+\setcounter{totalnumber}{5}     % 2 may work better
+\setcounter{dbltopnumber}{2}    % for 2-column pages
+\renewcommand{\dbltopfraction}{0.9}	% fit big float above 2-col. text
+\renewcommand{\textfraction}{0.07}	% allow minimal text w. figs
+%   Parameters for FLOAT pages (not text pages):
+\renewcommand{\floatpagefraction}{0.7}	% require fuller float pages
+% N.B.: floatpagefraction MUST be less than topfraction !!
+\renewcommand{\dblfloatpagefraction}{0.7}	% require fuller float pages
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% remember to use [htp] or [htpb] for placement
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% set no indent for paragraph
+\setlength{\parindent}{0em}
+\addtolength{\parskip}{11pt}
+\newcommand{\compact}{[topsep=0pt]}
+% use this package to reduce space
+\usepackage{enumitem}
+\usepackage{multirow}
+\usepackage{rotating}
+\usepackage{pifont}
+\usepackage{dingbat}
+\newcommand{\itemsecond}{$\circ$}
+%
+%%%%%%%%%%%%%%%%%%
+\date{}
+\author{}
+%%%%%%%%%%%%%%%%%%
+\newcommand{\de}{DE-series}
+\newcommand{\up}{FPGAcademy}
+\newcommand{\fabric}{Avalon Switch Fabric}
+\newcommand{\TODO}[1]{\textcolor{red}{\textbf{TODO}: #1}}
+\def\registered{{\ooalign{\hfil\raise .00ex\hbox{\scriptsize R}\hfil\crcr\mathhexbox20D}}}
+
+% enable url and reference(bookmarks) in pdf
+\usepackage{url}
+\usepackage[pdftex, colorlinks]{hyperref}
+\hypersetup{%
+pdftitle={\PDFTitle},
+linkcolor=blue,
+hyperindex=true,
+pdfauthor={\longteamname},
+pdfkeywords={FPGAcademy, Academic Program, Example System},
+bookmarksnumbered,
+bookmarksopen=false,
+filecolor=blue,
+pdfstartview={FitH},
+urlcolor=blue,
+plainpages=false,
+pdfpagelabels=true,
+linkbordercolor={1 1 1} %no color for link border
+}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setlength{\fboxsep}{0.7pt}
+\setlength{\fboxrule}{0.5pt}
+

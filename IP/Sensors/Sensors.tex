@@ -1,0 +1,180 @@
+\documentclass[11pt, twoside, pdftex]{article}
+
+% This include all the settings that we should use for the document
+\newcommand{\PDFTitle}{Using Analog Sensors with DE-Series Boards}
+\newcommand{\commonPath}{../../Common}
+\input{\commonPath/Docs/defaulttext.tex}
+\input{\commonPath/Docs/preamble.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% Add title
+\newcommand{\doctitle}{Using Analog Sensors \\with DE-Series Boards}
+\newcommand{\dochead}{Using Analog Sensors with DE-Series Boards}
+% Usually no need to change these two lines
+\title{\fontfamily{phv}\selectfont{\doctitle} }
+\chead{ \small{\textsc{\bfseries \dochead} } }
+% Customizations
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% Allows multiple figures per page
+
+\renewcommand\floatpagefraction{.9}
+\renewcommand\topfraction{.9}
+\renewcommand\bottomfraction{.9}
+\renewcommand\textfraction{.1}   
+\setcounter{totalnumber}{50}
+\setcounter{topnumber}{50}
+\setcounter{bottomnumber}{50}
+\raggedbottom
+
+%%%%%%%%%%%%%%%%%%
+%%% DOCUMENT START
+%\begin{document}
+\begin{document}
+\begin{table}
+    \centering
+    \begin{tabular}{p{5cm}p{4cm}}
+        \hspace{-3cm}
+        &
+        \raisebox{1\height}{\parbox[h]{0.5\textwidth}{\Large\fontfamily{phv}\selectfont{\textsf{\doctitle}}}}
+    \end{tabular}
+    \label{tab:logo}
+\end{table}
+
+\colorbox[rgb]{0,0.384,0.816}{\parbox[h]{\textwidth}{\color{white}\textsf{\textit{\textBar}}}}
+
+\thispagestyle{plain}
+ 
+\section{Introduction}
+The Analog-to-Digital Converter (ADC) available on some DE-Series boards allow for analog circuitry - such as sensors, microphones or amplifiers - to be connected to the digital electronics of the FPGA. Table~\hyperref[tab:de-boards_width_adcs]{1} lists the DE-Series boards that contain an ADC.
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|l|l|l|}
+        \hline
+        \multicolumn{3}{|l|}{\textit{\textbf{Table 1. DE-Series Boards with Analog-to-Digital Converters}}}
+        \\\hline
+            \textbf{Board}
+            & \textbf{Input Voltage Range}
+            & \textbf{Number of Input Channels}
+        \\\hline
+            DE0-Nano
+            & 0V - 3.3V
+            & 8
+        \\\hline
+            DE1-SoC
+            & 0V - 5V
+            & 8
+        \\\hline
+						DE10-Standard
+						& 0V - 5V
+						& 8
+				\\\hline
+						DE10-Nano
+						& 0V - 5V
+						& 8
+				\\\hline
+						DE10-Lite
+						& 0V - 5V
+						& 6
+				\\\hline
+    \end{tabular}
+    \label{tab:de-boards_width_adcs}
+\end{table}
+
+%Section~\ref{sec:analog_sensor_examples} below shows examples of analog sensors that can be connected to the ADC. This list is not all-inclusive; any analog signal with voltages within the input voltage range of the ADC can be connected. %Instead, this list provides simple examples of potential connections. Using these examples, a wide variety of applications or demonstrations can be performed.
+
+\section{Examples of Analog Sensors}
+\label{sec:analog_sensor_examples}
+
+Some examples of analog sensor circuits that can be connected to the ADC are shown below. This list is not all-inclusive; any analog signal with voltages within the input voltage range of the ADC can be connected.  
+
+The circuits below contain a voltage source with voltage Vdd. Vdd should be set to the maximum of the ADC's input voltage range (3.3 V for the DE0-Nano's ADC, 5 V for the other board's ADC). While it is acceptable for Vdd to be lower than the maximum input voltage, doing so will limit the ADC's ability to detect smaller voltage fluctuations as the input voltage will be compressed to a smaller range. In most cases, you can use a 3.3 V or 5.0 V output voltage pin of the board as the Vdd voltage source. % the ability to resolve fluctuations in the input voltage, as the voltage range will be limited to the range dictated by Vdd.
+
+\pagebreak
+
+\subsection{Photoresistor (Light sensor)}
+A photoresistor acts as a variable resistor, with resistance proportional to the amount of light contacting its surface. As the amount of light decreases, the resistance of the device will increase. When placed in a resistor divider with a constant resistor -- as shown in Figure~\ref{fig:light} -- the output voltage can be used to measure the level of ambient light.
+
+Tested with a {\sf RB-Spa-350} Photoresistor and a 5.1~k$\Omega$ resistor.
+
+\begin{figure} [H]
+\begin{center}
+\includegraphics{figures/light_sensor.pdf}
+\end{center}
+\caption{Circuit including a photoresistor.}
+\label{fig:light}
+\end{figure}
+
+\subsection{Potentiometer (Variable Resistor)}
+Potentiometers are variable resistors which are controlled by a knob or dial. When placed in a resistor divider network, they can be used to control the output voltage.
+
+Tested with a {\sf RB-Dfr-44} Potentiometer and a 5.1~k$\Omega$ resistor.
+
+\begin{figure} [H]
+\begin{center}
+\includegraphics{figures/potentiometer.pdf}
+\end{center}
+\caption{Circuit using a potentiometer.}
+\label{fig:potentio}
+\end{figure}
+
+\pagebreak
+
+\subsection{Simple Switch }
+A Single-Pole Single-Throw (SPST) Switch is a simple on-off switch. When off, it is equivalent to an open circuit, and creates a short circuit when on.
+The circuit in Figure~\ref{fig:switch} detects at state of the switch. The large resistor in parallel with the switch will drive the output low when the switch is open, but will connect the output to V$_{\rm DD}$ when closed.
+
+Tested with a {\sf RB-Inn-08} Bumper Switch, a 10~k$\Omega$ and a 1~M$\Omega$ resistor.
+
+\begin{figure} [H]
+\begin{center}
+\includegraphics{figures/switch.pdf}
+\end{center}
+\caption{Circuit including a SPST switch.}
+\label{fig:switch}
+\end{figure}
+
+\subsection{Magnetic Induction Sensor}
+A Magnetic Induction sensor can be used to detect strong magnetic fields. Simple models function as a magnetically-controlled switch, producing a low voltage in the presence of a magnetic field, and a high voltage otherwise.
+
+Using a {\sf DFR0033} Magnetic Induction sensor, connect Port 3 to Ground, Port 2 to a 3.3V source and Port 1 to the ADC, as shown in Figure~\ref{fig:magnet}.
+\begin{figure} [H]
+\begin{center}
+\includegraphics{figures/mag_sensor.pdf}
+\end{center}
+\caption{Circuit using a DFR0033 Magnetic Induction sensor.}
+\label{fig:magnet}
+\end{figure}
+
+\pagebreak
+
+\subsection{Capacitive Touch Sensor}
+A Capacitive Touch sensor functions as a button which is sensitive to touch. When touched, the capacitance of the sensor changes, which changes the voltage on the output terminal.
+
+Using a {\sf DFR0030} Capacitive Touch sensor, connect Port 3 to Ground, Port 2 to a 3.3V source and Port 1 to the ADC, as shown in Figure~\ref{fig:touch}.
+\begin{figure} [H]
+\begin{center}
+\includegraphics{figures/touch_sensor.pdf}
+\end{center}
+\caption{Circuit using a DFR0030 Capacitive Touch sensor.}
+\label{fig:touch}
+\end{figure}
+
+\subsection{Flame Sensor}
+A Magnetic Induction sensor can be used to sources of heat, such as open flames. The sensor uses a photodiode sensitive to infrared radiation (light with wavelengths in the 760~nm - 1100~nm range) to generate a current across the resistor. 
+
+Using a {\sf DFR0033} Magnetic Induction sensor, connect Port 3 to a 3.3V source, Port 2 to ground and Port 1 to the ADC, as shown in Figure~\ref{fig:flame}.
+\begin{figure} [H]
+\begin{center}
+\includegraphics{figures/flame_sensor.pdf}
+\end{center}
+\caption{Circuit using a DFR0076 Flame sensor.}
+\label{fig:flame}
+\end{figure}
+
+
+% Copyright and Trademark
+
+\input{\commonPath/Docs/copyright.tex}
+
+\end{document}

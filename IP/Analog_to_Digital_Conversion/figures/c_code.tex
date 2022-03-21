@@ -1,0 +1,39 @@
+\begin{figure}[h]
+
+\begin{center} %%%\begin{singlespace}
+\parbox{12.5cm}{
+\begin{tabbing}
+ZZ\=ZZ\=ZZ\=ZZ\=ZZ\=ZZ\=ZZ\=ZZZZ\=ZZZZ\=ZZZZ\=ZZ\kill
+\#define ADC\_ADDR 0x00005000 \hspace{1cm} {\it //Platform Designer defined base address for the ADC}\\
+\#define LED\_ADDR 0x00005020 \hspace{1cm} {\it //Platform Designer defined base address for the LEDs}\\
+%\#define SW\_ADDR 0x00005020\\
+\\
+{\bf int} main (void)\{\\
+\>{\bf volatile int} * adc = ({\bf int*})(ADC\_ADDR);\\
+\>{\bf volatile int} * led = ({\bf int*})(LED\_ADDR);\\
+%\>{\bf volatile int} * sw = ({\bf int*})(SW\_ADDR);\\
+\>{\bf unsigned int} data;\\
+\>{\bf int} count;\\
+\>{\bf int} channel;\\
+\>data = 0;\\
+\>count = 0;\\
+\>channel = 0;\\
+\\
+\>{\bf while} (1)\{\\
+\>\>*(adc) = 0;\>\>\>\>\>\>\>{\it //Start the ADC read}\\
+\>\>count += 1;\\
+\>\>data = *(adc+channel);\>\>\>\>\>\>\>{\it //Get the value of the selected channel}\\
+\>\>data = data/16;\>\>\>\>\>\>\>{\it //Ignore the lowest 4 bits}\\
+\>\>*(led) = data;\>\>\>\>\>\>\>{\it //Display the value on the LEDs}\\
+\>\>{\bf if} (count==500000)\{\\
+\>\>\>count = 0;\\
+\>\>\>channel = !channel;\\
+\>\>\}\\
+\>\}\\
+\>{\bf return} 0;\\
+\}\\
+\end{tabbing} } %%%\end{singlespace}
+	\caption{C code to operate the ADC.}
+	\label{fig:c_code}
+\end{center}
+\end{figure}

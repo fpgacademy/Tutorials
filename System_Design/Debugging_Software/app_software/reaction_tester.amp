@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?><intel_fpga_monitor_program_project version="1.0">
+    <architecture>Nios II</architecture>
+    <system>
+        <sample_system_title>DE2-115 Computer for Nios II</sample_system_title>
+        <board>Not Required</board>
+        <cable>USB-Blaster [USB-0]</cable>
+        <processor>Nios2</processor>
+        <reset_processor_during_load>true</reset_processor_during_load>
+        <terminal>JTAG_UART</terminal>
+    </system>
+    <program>
+        <type>Assembly Program</type>
+        <source_files>
+            <source_file filepath="true">reaction_tester.s</source_file>
+            <source_file filepath="true">nios_macros.s</source_file>
+            <header_file filepath="true">address_map_nios2.s</header_file>
+        </source_files>
+        <options>
+            <start_symbol>_start</start_symbol>
+        </options>
+        <linker_sections type="Exceptions">
+            <linker_section name=".reset">
+                <memory_device>SDRAM.s1</memory_device>
+                <base_address>0x00000000</base_address>
+                <end_address>0x0000001F</end_address>
+                <required_section/>
+                <fixed_base_address/>
+            </linker_section>
+            <linker_section name=".exceptions">
+                <memory_device>SDRAM.s1</memory_device>
+                <base_address>0x00000020</base_address>
+                <end_address>0x000001FF</end_address>
+                <required_section/>
+                <fixed_base_address/>
+            </linker_section>
+            <linker_section name=".text">
+                <memory_device>SDRAM.s1</memory_device>
+                <base_address>0x00000200</base_address>
+                <end_address>0x07FFFFFF</end_address>
+                <required_section/>
+            </linker_section>
+        </linker_sections>
+    </program>
+</intel_fpga_monitor_program_project>

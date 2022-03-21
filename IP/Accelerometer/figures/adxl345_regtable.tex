@@ -1,0 +1,82 @@
+\begin{table}[h]
+
+    \centering
+    \begin{tabular}{|c|c|c|c|p{7cm}|}
+        \hline
+        \multicolumn{5}{|l|}{\textit{\textbf{Table 1. ADXL345 Internal Registers (Abbreviated)}}}
+        \\\hline
+            \textbf{Address}
+            & \textbf{Register name}
+            & \textbf{Read/Write}
+            & \textbf{Reset Value}
+            & \textbf{Purpose}
+        \\\hline
+            0x00
+            & \texttt{DEVID}
+            & R
+            & 11100101
+            & Device ID (0xE5)
+        \\\hline
+            0x2C
+            & \texttt{BW\_RATE}
+            & R/W
+            & 00001010
+            & Data rate and power mode control
+        \\\hline
+            0x2D
+            & \texttt{POWER\_CTL}
+            & R/W
+            & 00000000
+            & Power state control
+        \\\hline
+            0x30
+            & \texttt{INT\_SOURCE}
+            & R
+            & 00000010
+            & Source of interrupts
+        \\\hline
+            0x31
+            & \texttt{DATA\_FORMAT}
+            & R/W
+            & 00000000
+            & Data format control
+        \\\hline
+            0x32
+            & \texttt{DATAX0}
+            & R
+            & 00000000
+            & X-Axis Data 0
+        \\\hline
+            0x33
+            & \texttt{DATAX1}
+            & R
+            & 00000000
+            & X-Axis Data 1
+        \\\hline
+            0x34
+            & \texttt{DATAY0}
+            & R
+            & 00000000
+            & Y-Axis Data 0
+        \\\hline
+            0x35
+            & \texttt{DATAY1}
+            & R
+            & 00000000
+            & Y-Axis Data 1
+        \\\hline
+            0x36
+            & \texttt{DATAZ0}
+            & R
+            & 00000000
+            & Z-Axis Data 0
+        \\\hline
+            0x37
+            & \texttt{DATAZ1}
+            & R
+            & 00000000
+            & Z-Axis Data 1
+        \\\hline
+    \end{tabular}
+    \label{tab:adxl345regtable}
+\end{table}

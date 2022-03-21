@@ -1,0 +1,24 @@
+module reaction_tester (CLOCK_50, KEY, HEX0, HEX1, HEX2, HEX3, LEDG);
+	input CLOCK_50;
+	input [2:0] KEY;
+	output wire [0:6] HEX0, HEX1, HEX2, HEX3;
+	output wire [0:0] LEDG;
+	wire [3:0] BCD3, BCD2, BCD1, BCD0;
+	wire reset, request_test, stop_test, clear;
+	wire run, start_test, test_active, enable_bcd, sec_100th;	
+	assign reset = !KEY[0];
+	assign request_test = !KEY[1];
+	assign stop_test = !KEY[2];
+	assign clear = reset | stop_test;
+	assign enable_bcd = test_active & sec_100th;
+	assign LEDG[0] = test_active;
+	control_ff run_signal (CLOCK_50, request_test, clear, run);
+	control_ff test_signal (CLOCK_50, start_test, clear, test_active);
+	hundredth hundredth_sec (CLOCK_50, enable_bcd, sec_100th);
+	delay_counter foursec_delay (CLOCK_50, clear, run, start_test);
+	BCD_counter bcdcount (CLOCK_50, request_test, enable_bcd, BCD3, BCD2, BCD1, BCD0);
+	bcd7seg digit3 (BCD3, HEX3);
+	bcd7seg digit2 (BCD2, HEX2);
+	bcd7seg digit1 (BCD1, HEX1);
+	bcd7seg digit0 (BCD0, HEX0);
+endmodule

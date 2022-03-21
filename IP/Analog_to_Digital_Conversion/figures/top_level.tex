@@ -1,0 +1,30 @@
+\begin{figure}[h]
+
+\begin{center} %%%\begin{singlespace}
+\parbox{12.5cm}{
+\begin{tabbing}
+ZZZZ\=ZZ\=ZZ\=ZZ\=ZZ\kill
+{\bf module} adc\_demo (CLOCK\_50, KEY, LED, ADC\_SCLK, \\
+\>\>\>\>ADC\_CS\_N, ADC\_SDAT, ADC\_SADDR);\\
+\> {\bf input} CLOCK\_50;\\
+\> {\bf input} [0:0] KEY;\\
+\> {\bf output} [7:0] LED;\\
+\\
+\> {\bf input} ADC\_SDAT;\\
+\> {\bf output}  ADC\_SCLK, ADC\_CS\_N, ADC\_SADDR;\\
+\\
+\>\>nios\_system NIOS (\\
+\>\>\>.clk\_clk (CLOCK\_50),\\
+\>\>\>.reset\_reset\_n (KEY[0]),\\
+\>\>\>.leds\_export (LED),\\
+\>\>\>.adc\_sclk (ADC\_SCLK),\\
+\>\>\>.adc\_cs\_n (ADC\_CS\_N),\\
+\>\>\>.adc\_dout (ADC\_SDAT),\\
+\>\>\>.adc\_din (ADC\_SADDR)\\
+\>\>);\\
+{\bf endmodule}
+\end{tabbing} } %%%\end{singlespace}
+	\caption{Example top-level module for a project using the ADC Controller.}
+	\label{fig:top_level}
+\end{center}
+\end{figure}

@@ -1,0 +1,499 @@
+\documentclass[11pt, twoside, pdftex]{article}
+
+
+\newcommand{\typeName}{Schematic}
+\newcommand{\edition}{Standard}
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Preamble
+\input{../shared_sections/document_preamble.tex}
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% Document Begings
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% Header Logo and Title
+\input{../shared_sections/header_logo_and_text.tex}
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% Table of Contents
+{\tiny \tableofcontents}
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% Introduction
+\input{../shared_sections/section_introduction.tex}
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% Background
+\input{../shared_sections/section_background.tex}
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% Getting Started
+\input{../shared_sections/section_getting_started.tex}
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% Quartus Online Help
+\input{../shared_sections/section_online_help.tex}
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% Starting A New Project
+\input{../shared_sections/section_starting_new_project_std.tex}
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section{Design Entry Using the Graphic Editor}
+
+\noindent
+As a design example, we will use the two-way light controller circuit shown in 
+Figure~\ref{fig:11}. The circuit can be used to control a single light from either of the
+two switches, $x_1$ and $x_2$, where a closed switch corresponds to the logic value 1.
+The truth table for the circuit is also given in the figure. Note that
+this is just the Exclusive-OR function of the inputs $x_1$ and $x_2$,
+but we will implement it using the gates shown.
+ 
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=1]{figures/figure11.png}
+   \caption{The light controller circuit.} 
+	 \label{fig:11}
+	 \end{center}
+\end{figure}
+
+The Quartus Prime Graphic Editor can be used to specify a circuit in the form of a
+block diagram.
+Select {\sf File $>$ New} to get the window in Figure~\ref{fig:12}, 
+choose {\sf Block Diagram/Schematic File}, and click {\sf OK}. 
+This opens the Graphic Editor window. 
+The first step is to specify a name
+for the file that will be created. Select {\sf File $>$ Save As}
+to open the pop-up box depicted in Figure~\ref{fig:13}. 
+In the box labeled {\sf Save as type} choose {\sf Block Diagram/Schematic File (*.bdf)}.
+In the box labeled {\sf File name} type {\it light}, to match the name given
+in Figure~\ref{fig:4}, which was specified when the project was created.
+Put a checkmark in the box {\sf Add file to current project}.
+Click {\sf Save}, which puts the file into the directory
+{\it introtutorial} and leads to the Graphic Editor window displayed in Figure~\ref{fig:14}.
+ 
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.5]{figures/figure12.png}
+   \caption{Choose to prepare a block diagram.} 
+	 \label{fig:12}
+	 \end{center}
+\end{figure}
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.5]{figures/figure13.png}
+   \caption{Name the file.} 
+	 \label{fig:13}
+	 \end{center}
+\end{figure}
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.4]{figures/figure14.png}
+   \caption{Graphic Editor window.} 
+	 \label{fig:14}
+	 \end{center}
+\end{figure}
+
+\subsection{Importing Logic-Gate Symbols}
+The Graphic Editor provides a number of libraries which include circuit elements
+that can be imported into a schematic. 
+Double-click on the blank space in the Graphic Editor window,
+or click on the \includegraphics[scale=0.45]{figures/icon1.png} icon in the toolbar
+that looks like an AND gate.
+A pop-up box in Figure~\ref{fig:15} will appear. Expand the hierarchy 
+in the Libraries box as shown in the figure. First expand {\it libraries}, then
+expand the library {\it primitives}, followed by expanding the library {\it logic} 
+which comprises the logic gates.
+Select {\it and2}, which is a two-input AND gate, and click {\sf OK}.
+Now, the AND gate symbol will appear in the Graphic Editor window.
+Using the mouse, move the symbol to a desirable location and click to place it there.
+Import a second AND gate by repeating the previous steps. Note that you
+can enable the {\sf Repeat-insert mode} in the {\sf Symbol} window
+to quickly add multiple copies of a gate.
+A symbol in the Graphic Editor window can be moved by clicking the
+\includegraphics[scale=0.45]{figures/icon4.png} icon in the toolbar
+that looks like a mouse cursor, then clicking the symbol you want to move
+and dragging it to a new location with the mouse button pressed.
+Next, select {\it or2} from the library and import the OR gate into the diagram.
+Then, select {\it not} and import two instances of the NOT gate. 
+Rotate the NOT gates into proper position by right clicking on the desired gate
+and selecting {\sf Rotate by Degrees $>$ Rotate Left 90}, or by using the 
+``Rotate left 90" icon \includegraphics[scale=0.45]{figures/icon2.png}.
+Arrange the gates as shown in Figure~\ref{fig:16}.
+ 
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.5]{figures/figure15.png}
+   \caption{Choose a symbol from the library.} 
+	 \label{fig:15}
+	 \end{center}
+\end{figure}
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.50]{figures/figure16.png}
+   \caption{Import the gate symbols into the Graphic Editor window.} 
+	 \label{fig:16}
+	 \end{center}
+\end{figure}
+
+\subsection{Importing Input and Output Symbols}
+
+Having entered the logic-gate symbols, it is now necessary to enter the
+symbols that represent the input and output ports of the circuit.
+Use the same procedure as for importing the gates, but choose the port 
+symbols from the library {\it primitives/pin}.
+Import two instances of the input port and one instance of the output port,
+to obtain the image in Figure~\ref{fig:17}.
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.4]{figures/figure17.png}
+   \caption{Import the input and output pins.} 
+	 \label{fig:17}
+	 \end{center}
+\end{figure}
+
+Assign names to the input and output symbols as follows.
+Make sure nothing is selected by clicking on an empty spot in the Graphic Editor window.
+Point to the top input symbol and double-click
+the mouse. The dialog box in Figure~\ref{fig:18} will appear. Type the pin name, $x1$,
+and click {\sf OK}. Similarly, assign the name $x2$ to the other input and $f$
+to the output. Alternatively, it is possible to change the name of an element by
+double-clicking on the name and typing a new one directly.
+ 
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.60]{figures/figure18.png}
+   \caption{Naming of a pin.} 
+	 \label{fig:18}
+	 \end{center}
+\end{figure}
+
+\subsection{Connecting Nodes with Wires}
+
+The symbols in the diagram have to be connected by drawing lines (wires).
+Click on the icon \includegraphics[scale=0.45]{figures/icon3.png} in the toolbar
+to activate the Orthogonal Node Tool.
+Position the mouse pointer over the right edge of the $x1$ input pin.
+Click and hold the mouse button and drag the mouse to the right until the drawn
+line reaches the pinstub on the top input of the AND gate. Release the mouse button when you see a box appear,
+which leaves the line connecting the two pinstubs. Next, draw a wire from the input
+pinstub of the leftmost NOT gate to touch the wire that was drawn above it. 
+Note that a dot will appear indicating a connection between the two wires.
+
+Use the same procedure to draw the remaining wires in the circuit. If a mistake is made,
+a wire can be selected by clicking on it, and
+removed by pressing the Delete key on the keyboard. Upon completing
+the diagram, click on the \includegraphics[scale=0.45]{figures/icon4.png} icon, to activate the Selection
+Tool. Now, changes in the appearance of the diagram can be made by
+selecting a particular symbol or wire and either moving it to a different location or
+deleting it. The final diagram is shown in Figure~\ref{fig:19}; save it.
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.4]{figures/figure19.png}
+   \caption{The completed schematic diagram.} 
+	 \label{fig:19}
+	 \end{center}
+\end{figure}
+
+\section{Compiling the Designed Circuit}
+
+The entered schematic diagram file, {\it light.bdf}, is processed by several 
+Quartus Prime tools that analyze the file, synthesize the circuit,
+and generate an implementation of it for the target chip. 
+These tools are controlled by the application program called the {\it Compiler}.
+
+Run the Compiler by selecting {\sf Processing $>$ Start Compilation}, or by 
+clicking on the toolbar icon \includegraphics[scale=0.45]{figures/icon5.png} that looks like a
+blue triangle. Your project must be saved before compiling. 
+As the compilation moves through various stages, its progress is reported
+in a window on the left side of the Quartus Prime display.
+In the message window, at the bottom of the figure, various messages are displayed
+throughout the compilation process.
+In case of errors, there will be appropriate messages given.
+
+When the compilation is finished, a compilation report is produced.
+A tab showing this report is opened automatically, as seen in Figure~\ref{fig:20}.
+The tab can be closed in the normal way, and it can be opened at any time
+either by selecting {\sf Processing $>$ Compilation Report} or by clicking on 
+the icon \includegraphics[scale=0.45]{figures/icon6.png}.
+The report includes a number of sections listed on the left side.
+Figure~\ref{fig:20} displays the Compiler Flow Summary section, which
+indicates that only one logic element and three pins are needed to implement this 
+tiny circuit on the selected FPGA chip.
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.4]{figures/figure20.png}
+   \caption{Display after a successful compilation.} 
+	 \label{fig:20}
+	 \end{center}
+\end{figure}
+
+\subsection{Errors}
+
+Quartus Prime software displays messages produced during compilation in the Messages window.
+If the block diagram design file is correct, one of the messages will
+state that the compilation was successful and that there are no
+errors.
+
+If the Compiler does not report zero errors, then there is at least one mistake 
+in the schematic entry. In this case a
+message corresponding to each error found will
+be displayed in the Messages window.
+Double-clicking on an error message will highlight the offending
+part of the circuit in the Graphic Editor window. 
+Similarly, the Compiler may display some warning messages. Their details can be
+explored in the same way as in the case of error messages.
+The user can obtain more information about a specific error or warning message
+by selecting the message and pressing the {\sf F1} function key.
+
+To see the effect of an error, open the file {\it light.bdf}.
+Remove the wire connecting the output of the top AND gate to the OR gate.
+To do this, click on the \includegraphics[scale=0.45]{figures/icon4.png} icon,
+click the mouse on the wire to be removed (to select it) and press Delete. 
+Compile the erroneous design by clicking on the \includegraphics[scale=0.45]{figures/icon5.png} icon.
+A pop-up box will ask if the changes made to the {\it light.bdf} file should be saved;
+click {\sf Yes}. After trying to compile the circuit,
+Quartus Prime software will display error messages in the Messages window, and 
+show that the compilation failed in the {\sf Analysis \& Synthesis} stage of the compilation process.
+The compilation report summary, given in Figure~\ref{fig:21}, 
+confirms the failed result. In the Table of Contents panel, expand the {\sf Analysis \& Synthesis} part of the report
+and then select {\sf Messages} to have the messages displayed as shown in Figure~\ref{fig:22}.
+The Compilation Report can be displayed as a separate window as in Figure~\ref{fig:22} 
+by right-clicking its tab and selecting {\sf Detach Window}, and can be reattached by clicking
+{\sf Window > Attach Window}.
+Double-click on the first error message, which states that one of the nodes
+is missing a source.
+Quartus Prime software responds by displaying the {\it light.bdf}
+schematic and highlighting the OR gate which is affected by the error,
+as shown in Figure~\ref{fig:23}.
+Correct the error and recompile the design.
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.4]{figures/figure21.png}
+   \caption{Compilation report for the failed design.} 
+	 \label{fig:21}
+	 \end{center}
+\end{figure}
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.5]{figures/figure22.png}
+   \caption{Error messages.} 
+	 \label{fig:22}
+	 \end{center}
+\end{figure}
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.45]{figures/figure23.png}
+   \caption{Identifying the location of the error.} 
+	 \label{fig:23}
+	 \end{center}
+\end{figure}
+
+\newpage
+\section{Pin Assignment}
+
+During the compilation above, the Quartus Prime Compiler was free to choose any
+pins on the selected FPGA to serve as inputs and outputs. However, the DE-series board
+has hardwired connections between the FPGA pins and the other components on the board.
+We will use two toggle switches, labeled $SW_0$ and $SW_1$, to provide the
+external inputs, $x_1$ and $x_2$, to our example circuit. These switches are connected
+to the FPGA pins listed in Table \ref{tab:pinassign}. We will connect the output $f$ to a
+light-emitting diode on your DE-series board. For the DE2-115 we will use a green LED: $LEDG_0$.
+On the DE0-CV, DE1-SoC, DE10-Lite and DE10-Standard, we will use $LEDR_0$. On the DE0-Nano and DE0-Nano-SoC, we will use $LED_0$
+The FPGA pin assignment for the LEDs can also be found in Table~\ref{tab:pinassign}.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{| c | c | c | c |}
+\hline
+Component & $SW_0$ & $SW_1$ & {\it LEDG}$_0$, {\it LED}$_0$, or {\it LEDR}$_0$ \\
+\hline
+DE0-CV & PIN$\_$U13 & PIN$\_$V13 & PIN$\_$AA2 \\
+\hline
+DE0-Nano & PIN$\_$M1 & PIN$\_$T8 & PIN$\_$A1 \\
+\hline
+DE-Nano-SoC & PIN$\_$L10 & PIN$\_$L9 & PIN$\_$W15 \\
+\hline
+DE2-115 & PIN$\_$AB28 & PIN$\_$AC28 & PIN$\_$E21 \\
+\hline
+DE1-SoC & PIN$\_$AB12 & PIN$\_$AC12 & PIN$\_$V16 \\
+\hline
+DE10-Lite & PIN$\_$C10 & PIN$\_$C11 & PIN$\_$A8 \\
+\hline
+DE10-Standard & PIN$\_$AB30 & PIN$\_$AB28 & PIN$\_$AA24 \\
+\hline
+DE10-Nano & PIN$\_$Y24 & PIN$\_$W24 & PIN$\_$W15 \\
+\hline
+\end{tabular}
+
+\caption{DE-Series Pin Assignments}
+\label{tab:pinassign}
+\end{table}\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.65]{figures/figure24.png}
+   \caption{The Assignment Editor window.} 
+	 \label{fig:24}
+	 \end{center}
+\end{figure}
+
+Pin assignments are made by using the Assignment Editor. 
+Select {\sf Assignments $>$ Assignment Editor} to reach the window in Figure~\ref{fig:24}
+(shown here as a detached window).
+In the {\sf Category} drop-down menu select {\sf All}. Click on the {\sf $<$$<$new$>$$>$} button
+located near the top left corner to make a new item appear in the table. Double click the box
+under the column labeled To so that the Node Finder button \includegraphics[scale=0.65]{figures/icon7.png}
+appears. Click on the button (not the drop down arrow) to reach the window in Figure~\ref{fig:25}. Click on \includegraphics[scale=0.6]{figures/icon12.png} and \includegraphics[scale=0.6]{figures/icon15.png} to show or hide more search options.
+In the {\sf Filter} drop-down menu select {\sf Pins: all}. Then click the {\sf List} button to display
+the input and output pins to be assigned: $f$, $x1$, and $x2$.
+Click on $x1$ as the first pin to be assigned and click the {\sf >} button; this will enter
+$x1$ in the Selected Nodes box.  Click {\sf OK}. $x1$ will now appear in the box under the column
+labeled To. Alternatively, the node name can be entered directly by double-clicking the box
+under the To column and typing in the node name.
+
+Follow this by double-clicking on the box to the right of this new $x1$ entry, in the column
+labeled Assignment Name. Now, the drop-down menu in Figure~\ref{fig:26} appears. Scroll down and select 
+{\sf Location (Accepts wildcards/groups)}. Instead of scrolling down the menu to find the desired item, 
+you can just type the first letter of the item in the Assignment Name box. In this case the desired
+item happens to be the first item beginning with L. Finally, double-click the box in the column labeled Value.
+Type the pin assignment corresponding to $SW_0$ for your DE-series board, as listed in Table \ref{tab:pinassign}.
+
+Use the same procedure to assign input $x2$ and output $f$ to the appropriate pins listed in
+Table \ref{tab:pinassign}. An example using a DE1-SoC board is shown in Figure~\ref{fig:27}.
+To save the assignments made, choose {\sf File $>$ Save}. You can also simply close 
+the Assignment Editor window, in which case a pop-up box will ask if you want to save
+the changes to assignments; click {\sf Yes}.
+Recompile the circuit, so that it will be compiled with the correct pin assignments.
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.65]{figures/figure25.png}
+   \caption{The Node Finder displays the input and output names.} 
+	 \label{fig:25}
+	 \end{center}
+\end{figure}
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.65]{figures/figure26.png}
+   \caption{The available assignment names for a DE-series board.} 
+	 \label{fig:26}
+	 \end{center}
+\end{figure}
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.6]{figures/figure27.png}
+   \caption{The complete assignment.} 
+	 \label{fig:27}
+	 \end{center}
+\end{figure}
+
+The DE-series board has fixed pin assignments. Having finished one design, the user will want
+to use the same pin assignment for subsequent designs. Going through the procedure 
+described above becomes tedious if there are many pins used in the design.
+A useful Quartus Prime feature allows the user to both
+export and import the pin assignments from a special file format, 
+rather than creating them manually
+using the Assignment Editor. A simple file format that can be used for this purpose
+is the {\it Quartus Settings File (QSF)} format. The format for the file for our simple project (on a DE1-SoC board) is
+
+\begin{center} %%%\begin{singlespace}
+\parbox{12.5cm}{
+\begin{tabbing}
+ZZ\=ZZ\=ZZ\=ZZ\=ZZ\=ZZ\kill
+set$\_$location$\_$assignment PIN$\_$AB12 -to x1 \\
+set$\_$location$\_$assignment PIN$\_$AC12 -to x2 \\
+set$\_$location$\_$assignment PIN$\_$V16 -to f \\
+
+\end{tabbing} } %%%\end{singlespace}
+\end{center}
+
+\noindent
+By adding lines to the file, any number of pin assignments can be created.
+Such {\it qsf} files can be imported into any design project.
+
+If you created a pin assignment for a particular project, you can export it
+for use in a different project. To see how this is done, open again the Assignment Editor
+to reach the window in Figure~\ref{fig:27}. Select {\sf Assignments $>$ Export Assignment} which leads to the
+window in Figure~\ref{fig:28}. Here, the file {\it light.qsf} is available for export.
+Click on {\sf OK}.
+If you now look in the directory, you will see that
+the file {\it light.qsf} has been created.
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.6]{figures/figure28.png}
+   \caption{Exporting the pin assignment.} 
+	 \label{fig:28}
+	 \end{center}
+\end{figure}
+
+You can import a pin assignment by choosing {\sf Assignments $>$ Import Assignments}. 
+This opens the dialogue in Figure~\ref{fig:29} to select the file to import. 
+Type the name of the file, including the {\it qsf} extension and the full path
+to the directory that holds the file, in the File Name box and press {\sf OK}.
+Of course, you can also browse to find the desired file.
+ 
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[scale=0.6]{figures/figure29.png}
+   \caption{Importing the pin assignment.} 
+	 \label{fig:29}
+	 \end{center}
+\end{figure}
+
+For convenience when using large designs, all relevant pin assignments for the 
+DE-series board are given in individual files. For example, the DE1-SoC pin assignments 
+can be found in the {\it DE1\_SoC.qsf} file, which is available from Intel's FPGA University
+Program website.
+This file uses the names found in the {\it DE1-SoC User Manual}.
+If we wanted to make the pin assignments for our example circuit by importing
+this file, then we would have to use the same names in our 
+Block Diagram/Schematic design file;
+namely, {\it SW[0]}, {\it SW[1]} and {\it LEDG[0]} for 
+{\it x1}, {\it x2} and {\it f}, respectively.
+Since these signals are specified in the {\it DE1\_SoC.qsf} file
+as elements of vectors {\it SW} and {\it LEDG}, we must refer to them in the same
+way in our design file. For example, in the {\it DE1\_SoC.qsf} 
+file the 10 toggle switches are called {\it SW[9]} to {\it SW[0]}.
+In a design file they can also be referred to as a vector {\it SW[9..0]}.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% Programming and Configuring
+\newpage
+\input{../shared_sections/section_programming_and_configuring_std.tex}
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% Testing Designed Circuit
+\input{../shared_sections/section_testing_the_designed_circuit.tex}
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% Copyright
+
+\input{\commonPath/Docs/copyright.tex}
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\end{document}

@@ -1,0 +1,125 @@
+
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|c|c|c|}
+        \hline
+        \multicolumn{3}{|c|}{\textit{\textbf{Table 1. HPS Devices}}}
+        \\\hline
+            \textbf{Device}
+            & \textbf{Interface}
+            & \textbf{Base Address}
+        \\\hline
+            SD/MMC Controller
+            & sdmmc
+            & \texttt{0xFF704000}
+        \\\hline
+            Quad SPI Flash Controller
+            & qspiregs
+            & \texttt{0xFF705000}
+        \\\cline{2-3}
+            & qspidata
+            & \texttt{0xFFA00000}
+        \\\hline
+            Ethernet Media Access Controller (EMAC)
+            & emac0
+            & \texttt{0xFF700000} 
+        \\\cline{2-3}
+            & emac1
+            & \texttt{0xFF702000}
+        \\\hline
+            General Purpose I/O (GPIO) Controller
+            & gpio0
+            & \texttt{0xFF708000}
+        \\\cline{2-3}
+            & gpio1
+            & \texttt{0xFF709000}
+        \\\cline{2-3}
+            & gpio2
+            & \texttt{0xFF70A000}
+        \\\hline
+            NAND Flash Controller
+            & nanddata
+            & \texttt{0xFF900000}
+        \\\cline{2-3}
+            & nandregs
+            & \texttt{0xFFB80000}
+        \\\hline
+            USB OTG Controller
+            & usb0
+            & \texttt{0xFFB00000} 
+        \\\cline{2-3}
+            & usb1
+            & \texttt{0xFFB40000}
+        \\\hline
+            CAN Controller
+            & can0
+            & \texttt{0xFFC00000} 
+        \\\cline{2-3}
+            & can1
+            & \texttt{0xFFC001FF}
+        \\\hline
+            UART Controller
+            & uart0
+            & \texttt{0xFFC02000} 
+        \\\cline{2-3}
+            & uart1
+            & \texttt{0xFFC03000}
+        \\\hline
+            I2C Controller
+            & i2c0
+            & \texttt{0xFFC04000}
+        \\\cline{2-3}
+            & i2c1
+            & \texttt{0xFFC05000}
+        \\\cline{2-3}
+            & i2c2
+            & \texttt{0xFFC06000}
+        \\\cline{2-3}
+            & i2c3
+            & \texttt{0xFFC07000}
+        \\\hline
+            Timer
+            & sptimer0
+            & \texttt{0xFFC08000}
+        \\\cline{2-3}
+            & sptimer1
+            & \texttt{0xFFC09000}
+        \\\cline{2-3}
+            & osctimer0
+            & \texttt{0xFFD00000}
+        \\\cline{2-3}
+            & osctimer1
+            & \texttt{0xFFD01000}
+        \\\hline
+            SDRAM Controller
+            & sdr
+            & \texttt{0xFFC20000}
+        \\\hline
+            DMA Controller
+            & dmanonsecure
+            & \texttt{0xFFE00000} 
+        \\\cline{2-3}
+            & dmasecure
+            & \texttt{0xFFE01000}
+        \\\hline
+            SPI Controller
+            & spis0
+            & \texttt{0xFFE02000}
+        \\\cline{2-3}
+            & spis1
+            & \texttt{0xFFE03000}
+        \\\cline{2-3}
+            & spim0
+            & \texttt{0xFFF00000}
+        \\\cline{2-3}
+            & spim1
+            & \texttt{0xFFF01000}
+        \\\hline
+            On-Chip Memory
+            & ocram
+            & \texttt{0xFFFF0000}
+        \\\hline
+    \end{tabular}
+    \label{tab:builtindevices}
+\end{table}
