@@ -74,7 +74,7 @@ implemented within the FPGA in the SoC device.
 {\bf Requirements:}
 \begin{itemize}
 \item One of the DE-series development and education boards mentioned above. These boards are 
-described on Intel's FPGA University Program website, and are available from the manufacturer 
+described on the {\it FPGAcademy} website, and are available from the manufacturer 
 Terasic Technologies.
 
 \item Host computer, running either Microsoft* Windows* (version 10 is recommended) or Linux 
@@ -121,8 +121,9 @@ distribution that includes a graphical user interface (GUI). Linux distributions
 in the \textit{.img} (image) file format, which can be written onto a microSD card and booted 
 on the DE-series board. For this tutorial we will assume that the reader is using the 
 \textit{DE1-SoC-UP} Linux distribution for the DE1-SoC board. The corresponding image 
-file \textit{DE1-SoC-UP-Linux.img} can be downloaded from the Intel FPGA University Program 
-website (look for the latest version under \texttt{Materials > Embedded Systems > Linux SD Card Images}). 
+file \textit{DE1-SoC-UP-Linux-ROS.img} can be downloaded from the {\it FPGAcademy} website 
+(look for \texttt{Linux SD Card Images} in the \texttt{Tutorials} 
+tab under \texttt{Embedded Linux}).
 If you are using a different board, then you will need to use the specific version of the 
 Linux image that is provided for that board.
 
@@ -145,7 +146,8 @@ Program website.
 \subsection{Preparing the Linux* MicroSD* Card}
 
 The DE1-SoC board is designed to boot Linux from an inserted microSD card. In this section, 
-you will learn how to prepare a Linux microSD card by storing the \textit{DE1-SoC-UP-Linux.img}
+you will learn how to prepare a Linux microSD card by storing the
+\textit{DE1-SoC-UP-Linux-ROS.img}
 image file onto a microSD card. This section of the tutorial assumes that you have access to a 
 computer with a microSD card reader/writer. To write the image into the microSD card, we will 
 use the free-to-use \textit{Win32 Disk Imager} tool which you can download and install from 
@@ -164,7 +166,7 @@ and then launch the Win32 Disk Imager program.
 \end{figure}
 \item Select the drive letter corresponding to the microSD card under \texttt{Device}, as indicated 
 in Figure~\ref{fig:win32_disk_imager}.
-\item Select the \textit{DE1-SoC-UP-Linux.img} image under \texttt{Image File}, as shown in 
+\item Select the \textit{DE1-SoC-UP-Linux-ROS.img} image under \texttt{Image File}, as shown in 
 Figure~\ref{fig:win32_disk_imager}. This image file can be found on the Intel FPGA University 
 Program webpage alongside this tutorial.
 \item Click \texttt{Write} to write the microSD card. If prompted to confirm the overwrite, 
@@ -316,11 +318,15 @@ Type a Linux command such as \texttt{ls}, which shows a listing of directories a
 \subsection{Connecting to the Host Computer using a Network}
 \label{sec:conn_network}
 
-The Linux image has been configured to include a graphical user interface
-(GUI), and a virtual network computing (VNC*) server. The VNC server transmits a copy of
-the GUI to a network port, which allows the host computer to use the GUI via a network 
-connection to the DE-series board. The network port used by the VNC server is 5901, and the
-password for the VNC server is set to {\it password}.
+It is useful to establish a network connection that supports higher bandwidth
+transfers between your computer and DE-series board. Examples of how you may want to use 
+such a connection are performing {\it FTP}-based transfers of files between the host
+computer and DE-series board, and using a 
+{\it VNC Viewer}, described below.  The Linux image has been configured to include 
+a graphical user interface (GUI), and a virtual network computing (VNC*) server. The 
+VNC server transmits a copy of the GUI to a network port, which allows the host computer 
+to use the GUI via a network connection to the DE-series board. The network port used 
+by the VNC server is 5901, and the password for the VNC server is set to {\it password}.
 
 There are two ways to establish a network connection to the DE-series board: using an
 Ethernet cable, and using a WiFi adapter. Both methods are discussed below.
@@ -348,26 +354,51 @@ of the Ethernet cable into the RJ45 port on the DE-series board. The other end o
 can either be plugged directly into an Ethernet port on the host computer, or plugged
 into an Ethernet switch on the same network as the host computer. The DE-series board is set 
 up to use either of two {\it IPv4} network addresses via Ethernet: \texttt{192.168.0.123} and 
-\texttt{192.168.1.123}. For the 
-host computer to connect to the DE-series board, the host computer's network address must be on the
-same {\it subnet}. This means that the host computer's network address must be of the form
-\texttt{192.168.0.}{\it xxx} or \texttt{192.168.1.}{\it xxx}. The steps required to complete 
-the Ethernet connection to the VNC server are described below.
+\texttt{192.168.1.123}. For an Ethernet port on the host computer to connect to the DE-series
+board, this Ethernet port's network address must be on the same {\it subnet}. This means 
+that the Ethernet port's network address must be of the form \texttt{192.168.0.}{\it xxx} 
+or \texttt{192.168.1.}{\it xxx}. The steps required to complete the Ethernet connection 
+are described below.
 
-You first need to determine your host computer's IP address. If you are using Windows on 
-the host computer, 
+You first need to determine the IP addresses of any Ethernet ports on your host
+computer. If you are using Windows on the host computer, 
 open a Command (CMD) prompt window and execute \texttt{ipconfig}. In the output produced by 
-this command look for the computer's {\it IPv4 Address}. If you are running Linux on your
-host computer, open a Terminal window and run the command \texttt{ifconfig}. In the output
-look for an {\it inet addr} that is associated with an Ethernet port, such as {\it eth0}.
+this command look for each Ethernet port's \texttt{IPv4 Address}. If you are running Linux 
+on your host computer, open a Terminal window and run the command \texttt{ifconfig}. In 
+the output look for an {\it inet addr} that is associated with each Ethernet port, such 
+as {\it eth0}.
 
-If your host address is on subnet \texttt{192.168.0} or \texttt{192.168.1}, then skip to 
-Section~\ref{sec:VNC}.  Otherwise, you need to change either the IP address of your host 
-computer, or the IP address of the DE-series
-board. In most cases the best option is to change the IP address of the DE-series board so 
-that it uses the same subnet as the host computer. But it is also possible 
-to change the IP address of your host computer is that is preferred. The procedures for 
-changing IP addresses are described below.
+If the Ethernet port that you are using to connect to your DE-series board is on 
+subnet \texttt{192.168.0} or \texttt{192.168.1}, then skip to 
+Section~\ref{sec:VNC}.  Otherwise, you need to change either the IP address of your
+Ethernet port, or the IP address of the DE-series board. If your computer is connected to
+the Internet using an Ethernet port, then you probably do not want to change any
+settings related to this port. However, if you have an additional Ethernet port that
+is currently not in use, then you can modify this port's settings to make a connection to
+the DE-series board. The procedure for accessing {\it Network Settings} in your
+Microsoft Windows system can be easily found by seaching for it on the Internet. Using these
+procedures, open the \texttt{Network Settings} on your host computer. 
+Configure the Ethernet port that you 
+are using to connect to your DE-series board to have a {\it manually-set IPv4} 
+address (the default setting is usually to have an address set automatically by using a 
+{\it Dynamic Name Server} (DNS)). Set the \texttt{IPv4} address 
+to \texttt{192.168.0.xxx}, and set the
+\texttt{Subnet} mask to \texttt{255.255.255.0}. For \texttt{xxx} use any address that is not 
+already assigned to a device on your network (for example, use \texttt{xxx} = 111).
+Leave the \texttt{Default gateway} field blank.
+
+If you are using Linux on the host computer, the IP address of an Ethernet port 
+can be changed by using the
+\texttt{ifconfig} command. If your Ethernet adapter were called {\it eth0}, then the command 
+would be \texttt{ifconfig eth0 192.168.0.}{\it xxx} 
+(or \texttt{192.168.1.}{\it xxx}), where {\it xxx} is a number
+of your choosing (that is not already being used in the subnet). If your Ethernet adapter
+is not called {\it eth0}, then replace this field with the actual name of your Ethernet port.
+
+Once you have established the correct IP address, you can connect to the VNC server as
+described in Section~\ref{sec:VNC}. But if 
+you don't have an unused Ethernet port on your host computer, then you can
+change the address of your DE-series board as described below.
 
 \subsubsection*{Changing the IP address of a DE-series Board}
 
@@ -381,39 +412,6 @@ use the command \texttt{ifconfig eth0 192.168.86.123} to change your board's IP 
 In this command \texttt{123} is just an example---it can be any number that is not
 already being used in your router's subnet. Note that \texttt{eth0} is the name of an ethernet
 port that is available to Linux.
-
-Once you have established the correct IP address, you can connect to the VNC server as
-described in Section~\ref{sec:VNC}.
-
-\subsubsection*{Changing the IP address of your Host Computer}
-
-Changing the IP address of your host computer is not usually the preferred approach, but
-we describe it here for completeness.
-Note that if you are currently connected to the Internet on your host computer, and wish
-to maintain this connection, then you probably do not want to change your host computer's
-IP address. This is because your host computer's IP address would be set to allow it to
-communicate with your Internet modem or router. But if you are not using the Internet on 
-the host computer, then the procedure below may be used to change its IP address.
-
-If you are using Windows, the IP address of the host computer can be changed by using the
-Windows {\it Control Panel}. In the {\it Control Panel}, open the {\it Network and Sharing
-Center} item. Click on {\it Change adapter settings}, then right-click on your Ethernet
-adapter and open the {\it Properties} dialog. Highlight the {\it Internet Protocol Version 4
-(TCP/IPv4)} item and click {\it Properties}. In the {\it General} tab click {\it Use the
-following IP address}. In the {\it IP address} field enter \texttt{192.168.0.}{\it xxx} (or 
-\texttt{192.168.1.}{\it xxx}), where {\it xxx} is a number of your choosing (that is not 
-already being used in the subnet). In the {\it Subnet mask} field enter 255.255.255.0. Leave the 
-{\it Default gateway} field blank.
-
-If you are using Linux on the host computer, the IP address can be changed by using the
-\texttt{ifconfig} command. If your Ethernet adapter were called {\it eth0}, then the command 
-would be \texttt{ifconfig eth0 192.168.0.}{\it xxx} 
-(or \texttt{192.168.1.}{\it xxx}), where {\it xxx} is a number
-of your choosing (that is not already being used in the subnet). If your Ethernet adapter
-is not called {\it eth0}, then replace this field with the actual name of your Ethernet port.
-
-Once you have established the correct IP address, you can connect to the VNC server as
-described in Section~\ref{sec:VNC}.
 
 \subsubsection{Connecting to the Host Computer using a WiFi Adapter}
 \label{sec:WiFi}
