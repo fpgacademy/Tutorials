@@ -375,7 +375,8 @@ Ethernet port, or the IP address of the DE-series board. If your computer is con
 the Internet using an Ethernet port, then you probably do not want to change any
 settings related to this port. However, if you have an additional Ethernet port that
 is currently not in use, then you can modify this port's settings to make a connection to
-the DE-series board. The procedure for accessing {\it Network Settings} in your
+the DE-series board. (One easy way to add an Ethernet port to your computer is to plug in
+a USB-to-Ethernet adaptor.) The procedure for accessing {\it Network Settings} in your
 Microsoft Windows system can be easily found by seaching for it on the Internet. Using these
 procedures, open the \texttt{Network Settings} on your host computer. 
 Configure the Ethernet port that you 
@@ -396,9 +397,9 @@ of your choosing (that is not already being used in the subnet). If your Etherne
 is not called {\it eth0}, then replace this field with the actual name of your Ethernet port.
 
 Once you have established the correct IP address, you can connect to the VNC server as
-described in Section~\ref{sec:VNC}. But if 
-you don't have an unused Ethernet port on your host computer, then you can
-change the address of your DE-series board as described below.
+described in Section~\ref{sec:VNC}. But if you were not able to set an appropriate address
+for any Ethernet port on your host computer, you can instead change the address of your DE-series 
+board, as described below.
 
 \subsubsection*{Changing the IP address of a DE-series Board}
 
@@ -600,7 +601,8 @@ in \textit{/home/root/tutorial\_files/helloworld/helloworld.c} of the Linux file
 \begin{lstlisting}
 #include <stdio.h>
 
-int main(void){
+int main(void)
+{
    printf("Hello World!\n");
    return 0;
 }
@@ -619,7 +621,7 @@ In your {\it Terminal} window change the working directory to
 \textit{/home/root/tutorial\_files/helloworld}. 
 Compile the program using the command \texttt{gcc helloworld.c -o helloworld}, as 
 shown in Figure~\ref{fig:helloworld_native}. The \texttt{gcc} command invokes 
-the \textit{GNU C Compiler}, which is an open-source compiler that is widely used to compile 
+the \textit{GNU C Compiler}, which is a popular C compiler.
 Linux programs. In our \texttt{gcc} command, we supply two arguments. The first is the source-code 
 file, \texttt{helloworld.c}. The second is \texttt{-o helloworld} which 
 tells the compiler to output an executable file named \textit{helloworld}. Once the compilation 
@@ -787,11 +789,9 @@ one, then writes the incremented value back to the register.
 \begin{minipage}[t]{16 cm}
 \begin{lstlisting}
 /* Open /dev/mem to give access to physical addresses */
-int open_physical (int fd)
-{
+int open_physical (int fd) {
    if (fd == -1) // check if already open
-      if ((fd = open( "/dev/mem", (O_RDWR | O_SYNC))) == -1)
-      {
+      if ((fd = open( "/dev/mem", (O_RDWR | O_SYNC))) == -1) {
          printf ("ERROR: could not open \"/dev/mem\"...\n");
          return (-1);
       }
@@ -799,20 +799,17 @@ int open_physical (int fd)
 }
 
 /* Close /dev/mem to give access to physical addresses */
-void close_physical (int fd)
-{
+void close_physical (int fd) {
    close (fd);
 }
 
 /* Establish a virtual address mapping for the physical addresses starting 
  * at base and extending by span bytes  */
-void* map_physical(int fd, unsigned int base, unsigned int span)
-{
+void* map_physical(int fd, unsigned int base, unsigned int span) {
    void *virtual_base;
    // Get a mapping from physical addresses to virtual addresses
    virtual_base = mmap (NULL, span, (PROT_READ | PROT_WRITE), MAP_SHARED, fd, base);
-   if (virtual_base == MAP_FAILED) 
-   {
+   if (virtual_base == MAP_FAILED) {
       printf ("ERROR: mmap() failed...\n");
       close (fd);
       return (NULL);
@@ -828,13 +825,11 @@ void* map_physical(int fd, unsigned int base, unsigned int span)
 
 \lstset{language=C,numbers=none}
 \begin{center}
-\begin{minipage}[t]{12.5 cm}
+\begin{minipage}[t]{15 cm}
 \begin{lstlisting}
 /* Close the previously-opened virtual address mapping */
-int unmap_physical(void * virtual_base, unsigned int span)
-{
-   if (munmap (virtual_base, span) != 0) 
-   {
+int unmap_physical(void * virtual_base, unsigned int span) {
+   if (munmap (virtual_base, span) != 0) {
       printf ("ERROR: munmap() failed...\n");
       return (-1);
    }
@@ -949,15 +944,14 @@ the \texttt{free\_irq(...)} function.
 void * LW_virtual;                 // Lightweight bridge base address
 volatile int *LEDR_ptr, *KEY_ptr;  // virtual addresses
 
-irq_handler_t irq_handler(int irq, void *dev_id, struct pt_regs *regs)
-{
+irq_handler_t irq_handler(int irq, void *dev_id, struct pt_regs *regs) {
    *LEDR_ptr = *LEDR_ptr + 1;
    // Clear the Edgecapture register (clears current interrupt)
    *(KEY_ptr + 3) = 0xF; 
    return (irq_handler_t) IRQ_HANDLED;
 }
-static int __init initialize_pushbutton_handler(void)
-{
+
+static int __init initialize_pushbutton_handler(void) {
    int value;
    // generate a virtual address for the FPGA lightweight bridge
    LW_virtual = ioremap_nocache (LW_BRIDGE_BASE, LW_BRIDGE_SPAN);
@@ -974,12 +968,13 @@ static int __init initialize_pushbutton_handler(void)
       "pushbutton_irq_handler", (void *) (irq_handler));
    return value;
 }
-static void __exit cleanup_pushbutton_handler(void)
-{
+
+static void __exit cleanup_pushbutton_handler(void) {
    *LEDR_ptr = 0; // Turn off LEDs and de-register irq handler
    iounmap (LW_virtual);
    free_irq (KEYS_IRQ, (void*) irq_handler);
 }
+
 module_init(initialize_pushbutton_handler);
 module_exit(cleanup_pushbutton_handler);
 \end{lstlisting}
