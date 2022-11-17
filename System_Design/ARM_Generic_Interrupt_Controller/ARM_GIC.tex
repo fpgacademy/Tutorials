@@ -27,7 +27,6 @@
 \widowpenalty 10000
 \clubpenalty 10000
 \raggedbottom
-
 %%%%%%%%%%%%%%%%%%
 %%% DOCUMENT START
 %\begin{document}
@@ -393,6 +392,45 @@ this subroutine is provided in the Appendix B.
 Figure \ref{fig:C_code}. An example of C code that configures the GIC (Part $b$).
 \end{center}
 
+\newpage
+\section{Example Platform Designer System}
+\label{sec:PF_Sys} This section describes how to configure components capable of producing interrupts in a Platform Designer system. Only the parts of Platform Designer that are essential for interrupts are explained. Please refer to {\it Introduction to the Platform Designer} and {\it Making Platform Designer Components} available on the Intel FPGA University Program website for more details on using Platform Designer. The system used in this example is the {\it DE1-SoC Computer System}. Installing the  Monitor Program allows you to easily view and modify this system in \path{C:\intelFPGA_lite\version\University_Program\Computer_Systems}. Please refer to {\it Monitor Program Tutorial for the ARM Processor} on the University Program website for more details on installing and using the Monitor Program with the ARM processor.
+
+Peripherals that are a part of the HPS on DE-series boards are already connected to the ARM processor and do not require any additional configuration within Platform Designer to produce interrupts. Components on the FPGA side of the board must be configured within Platform Designer to produce interrupts. Figure \ref{fig:fig_PF} shows the DE1-SoC Computer system. The components of interest are
+the Cyclone V Hard Processor system and the input PIO peripherals such as the pushbuttons. Although this example is configuring the pushbuttons, it is possible to configure any IP in Platform Designer with an interrupt sender to produce interrupts with the same procedure.
+
+
+\begin{figure}[h!]
+   \begin{center}
+       \includegraphics[width=6in, height=4in]{figures/PFsys}
+   \end{center}
+   \caption{The DE1-SoC Computer System.}
+	\label{fig:fig_PF}
+\end{figure}
+
+\newpage
+
+The Hard Processor System component must be configured to accept interrupt requests from FPGA side components. Double click the component to open the settings for the HPS IP core. Scroll down to the Interrupts option and check the "Enable FPGA-to-HPS Interrupts"  option. The HPS component should now have 1 or more f2h{\_}irq lines depending on the number of cores in the HPS. The DE1-SoC ARM processor has two cores so there are 2 new lines available in the system. Figure \ref{fig:fig_PFsys_settings} shows what the system should look like with the relevant settings selected.
+
+\begin{figure}[h!]
+   \begin{center}
+       \includegraphics[width=6in, height=3in]{figures/settings}
+   \end{center}
+   \caption{HPS IP core settings for enabling FPGA interrupts.}
+	\label{fig:fig_PFsys_settings}
+\end{figure}
+
+The components that will produce the interrupts must be connected to these new f2h{\_}irq lines. For single threaded applications, connect all the interrupt senders to the f2h{\_}irq0 line. f2h{\_}irq0 line is connected to the first (default) core within the ARM processor. If you wish to use different cores to process different interrupts, you must connect the interrupt sender port to the appropriate f2h{\_}irq line. Please note that the interrupt handler in software may behave differently depending on which core is executing the handler as each core has a seperate interrupt ID for each interrupt source that does not have to be the same for each core. In this example, we connect the interrupt sender ports from the pushbuttons to the interrupt reciever line f2h{\_}irq0. Each interrupt sender must be assigned a unique Interrupt ID. This ID can be changed under the IRQ column in Platform Designer. In this example the pushbuttons are assigned an interrupt ID of 1. If your system has multiple IRQ lines, make sure that you are editing the interrupt ID coresponding to the correct processor core. Figure \ref{fig:fig_PFsys_int} shows the pushbutton IRQ port connected and the Interrupt ID of 1 assigned.
+
+\begin{figure}[h!]
+   \begin{center}
+       \includegraphics[width=6in, height=2in]{figures/intID}
+   \end{center}
+   \caption{Pushbutton interrupts connected and assigned an interrupt ID of 1.}
+	\label{fig:fig_PFsys_int}
+\end{figure}
+
+Now that the interrupts have been configured in hardware, you can proceed with writing interrupt service routines in software as shown in sections 5 and 6. There is one important detail regarding interrupt IDs to note. The interrupt ID assigned in Platform Designer is not the same number that you will assign a service routine to in software. This means that although we assigned an interrupt ID of 1 to the pushbuttons in Platform Designer, they will not produce that same interrupt ID in software. The interrupt ID that you should look for in software is {\it First{\_}FPGA{\_}Interrupt{\_}ID} + {\it ID{\_}in{\_}Platform{\_}Designer}. An example of this can be seen in Figure \ref{fig:C_code}. The pushbuttons are configured to correspond to interrupt ID 73 even though we assigned the interrupt ID of 1 in Platform Designer. This is because the first FPGA interrupt on the DE1-SoC coresponds to 72 so the interrupt ID to look for in software is 72 + 1 = 73. In the DE1-SoC Computer System, the interval timer is assigned an ID of 0 in Platform Designer. Therefore, we would look for interrupt 72 + 0 = 72 in software to determine if the interrupt came from the interval timer. You should read the manual for the board you are using to determine what the first FPGA interrupt ID is.
 \newpage
 \appendix{\LARGE{\bf {Appendix A: Example Assembly Language Program}}}
 

@@ -1,0 +1,1045 @@
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.8.28) (preloaded format=pdflatex 2022.9.12)  12 SEP 2022 16:20
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**./Accelerometer.tex
+(Accelerometer.tex
+LaTeX2e <2022-06-01> patch level 5
+L3 programming layer <2022-08-30>
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/base\article.cls
+Document Class: article 2021/10/04 v1.4n Standard LaTeX document class
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/base\size11.clo
+File: size11.clo 2021/10/04 v1.4n Standard LaTeX file (size option)
+)
+\c@part=\count185
+\c@section=\count186
+\c@subsection=\count187
+\c@subsubsection=\count188
+\c@paragraph=\count189
+\c@subparagraph=\count190
+\c@figure=\count191
+\c@table=\count192
+\abovecaptionskip=\skip47
+\belowcaptionskip=\skip48
+\bibindent=\dimen138
+)
+(../../Common/Docs/defaulttext.tex) (../../Common/Docs/preamble.tex
+(../../Common/Docs/listingsstyles.tex
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/listings\listings.sty
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/graphics\keyval.sty
+Package: keyval 2022/05/29 v1.15 key=value parser (DPC)
+\KV@toks@=\toks16
+)
+\lst@mode=\count193
+\lst@gtempboxa=\box51
+\lst@token=\toks17
+\lst@length=\count194
+\lst@currlwidth=\dimen139
+\lst@column=\count195
+\lst@pos=\count196
+\lst@lostspace=\dimen140
+\lst@width=\dimen141
+\lst@newlines=\count197
+\lst@lineno=\count198
+\lst@maxwidth=\dimen142
+
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstmisc.sty
+File: lstmisc.sty 2020/03/24 1.8d (Carsten Heinz)
+\c@lstnumber=\count199
+\lst@skipnumbers=\count266
+\lst@framebox=\box52
+)
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/listings\listings.cfg
+File: listings.cfg 2020/03/24 1.8d listings configuration
+))
+Package: listings 2020/03/24 1.8d (Carsten Heinz)
+
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphicx.sty
+Package: graphicx 2021/09/16 v1.2d Enhanced LaTeX Graphics (DPC,SPQR)
+
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphics.sty
+Package: graphics 2022/03/10 v1.4e Standard LaTeX Graphics (DPC,SPQR)
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/graphics\trig.sty
+Package: trig 2021/08/11 v1.11 sin cos tan (DPC)
+)
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\graphics
+.cfg
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: pdftex.def on input line 107.
+
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/graphics-def\pdftex.d
+ef
+File: pdftex.def 2020/10/05 v1.2a Graphics/color driver for pdftex
+))
+\Gin@req@height=\dimen143
+\Gin@req@width=\dimen144
+)
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/graphics\color.sty
+Package: color 2022/01/06 v1.3d Standard LaTeX Color (DPC)
+
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\color.cf
+g
+File: color.cfg 2016/01/02 v1.6 sample color configuration
+)
+Package color Info: Driver file: pdftex.def on input line 149.
+
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/graphics\dvipsnam.def
+File: dvipsnam.def 2016/06/17 v3.0m Driver-dependent file (DPC,SPQR)
+)
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex-dev/graphics\mathcolo
+r.ltx)))
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/caption\caption.sty
+Package: caption 2022/03/01 v3.6b Customizing captions (AR)
+
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/caption\caption3.sty
+Package: caption3 2022/03/17 v2.3b caption3 kernel (AR)
+\caption@tempdima=\dimen145
+\captionmargin=\dimen146
+\caption@leftmargin=\dimen147
+\caption@rightmargin=\dimen148
+\caption@width=\dimen149
+\caption@indent=\dimen150
+\caption@parindent=\dimen151
+\caption@hangindent=\dimen152
+Package caption Info: Standard document class detected.
+)
+\c@caption@flags=\count267
+\c@continuedfloat=\count268
+Package caption Info: listings package is loaded.
+) (C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/fourier\fourier.sty
+Package: fourier 2022/02/05 2.3 fourier-GUTenberg package
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/generic/iftex\iftex.sty
+Package: iftex 2022/02/03 v1.0f TeX engine tests
+)
+Now handling font encoding FML ...
+... no UTF-8 mapping file for font encoding FML
+Now handling font encoding FMS ...
+... no UTF-8 mapping file for font encoding FMS
+Now handling font encoding FMX ...
+... no UTF-8 mapping file for font encoding FMX
+
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/base\fontenc.sty
+Package: fontenc 2021/04/29 v2.0v Standard LaTeX package
+LaTeX Font Info:    Trying to load font information for T1+futs on input line 1
+12.
+
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/fourier\t1futs.fd
+File: t1futs.fd 2004/03/02 Fontinst v1.926 font definitions for T1/futs.
+))
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/base\textcomp.sty
+Package: textcomp 2020/02/02 v2.0n Standard LaTeX package
+)
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/fourier\fourier-orns.
+sty
+Package: fourier-orns 2022/02/05 2.3 fourier-ornaments package
+)
+LaTeX Font Info:    Redeclaring symbol font `operators' on input line 63.
+LaTeX Font Info:    Encoding `OT1' has changed to `T1' for symbol font
+(Font)              `operators' in the math version `normal' on input line 63.
+LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
+(Font)                  OT1/cmr/m/n --> T1/futs/m/n on input line 63.
+LaTeX Font Info:    Encoding `OT1' has changed to `T1' for symbol font
+(Font)              `operators' in the math version `bold' on input line 63.
+LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
+(Font)                  OT1/cmr/bx/n --> T1/futs/m/n on input line 63.
+LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
+(Font)                  T1/futs/m/n --> T1/futs/b/n on input line 64.
+LaTeX Font Info:    Redeclaring symbol font `letters' on input line 72.
+LaTeX Font Info:    Encoding `OML' has changed to `FML' for symbol font
+(Font)              `letters' in the math version `normal' on input line 72.
+LaTeX Font Info:    Overwriting symbol font `letters' in version `normal'
+(Font)                  OML/cmm/m/it --> FML/futmi/m/it on input line 72.
+LaTeX Font Info:    Encoding `OML' has changed to `FML' for symbol font
+(Font)              `letters' in the math version `bold' on input line 72.
+LaTeX Font Info:    Overwriting symbol font `letters' in version `bold'
+(Font)                  OML/cmm/b/it --> FML/futmi/m/it on input line 72.
+\symotherletters=\mathgroup4
+LaTeX Font Info:    Overwriting symbol font `letters' in version `bold'
+(Font)                  FML/futmi/m/it --> FML/futmi/b/it on input line 74.
+LaTeX Font Info:    Overwriting symbol font `otherletters' in version `bold'
+(Font)                  FML/futm/m/it --> FML/futm/b/it on input line 75.
+LaTeX Font Info:    Redeclaring math symbol \Gamma on input line 76.
+LaTeX Font Info:    Redeclaring math symbol \Delta on input line 77.
+LaTeX Font Info:    Redeclaring math symbol \Theta on input line 78.
+LaTeX Font Info:    Redeclaring math symbol \Lambda on input line 79.
+LaTeX Font Info:    Redeclaring math symbol \Xi on input line 80.
+LaTeX Font Info:    Redeclaring math symbol \Pi on input line 81.
+LaTeX Font Info:    Redeclaring math symbol \Sigma on input line 82.
+LaTeX Font Info:    Redeclaring math symbol \Upsilon on input line 83.
+LaTeX Font Info:    Redeclaring math symbol \Phi on input line 84.
+LaTeX Font Info:    Redeclaring math symbol \Psi on input line 85.
+LaTeX Font Info:    Redeclaring math symbol \Omega on input line 86.
+LaTeX Font Info:    Redeclaring symbol font `symbols' on input line 126.
+LaTeX Font Info:    Encoding `OMS' has changed to `FMS' for symbol font
+(Font)              `symbols' in the math version `normal' on input line 126.
+LaTeX Font Info:    Overwriting symbol font `symbols' in version `normal'
+(Font)                  OMS/cmsy/m/n --> FMS/futm/m/n on input line 126.
+LaTeX Font Info:    Encoding `OMS' has changed to `FMS' for symbol font
+(Font)              `symbols' in the math version `bold' on input line 126.
+LaTeX Font Info:    Overwriting symbol font `symbols' in version `bold'
+(Font)                  OMS/cmsy/b/n --> FMS/futm/m/n on input line 126.
+LaTeX Font Info:    Redeclaring symbol font `largesymbols' on input line 127.
+LaTeX Font Info:    Encoding `OMX' has changed to `FMX' for symbol font
+(Font)              `largesymbols' in the math version `normal' on input line 1
+27.
+LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `normal'
+(Font)                  OMX/cmex/m/n --> FMX/futm/m/n on input line 127.
+LaTeX Font Info:    Encoding `OMX' has changed to `FMX' for symbol font
+(Font)              `largesymbols' in the math version `bold' on input line 127
+.
+LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `bold'
+(Font)                  OMX/cmex/m/n --> FMX/futm/m/n on input line 127.
+LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 128.
+LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
+(Font)                  OT1/cmr/bx/n --> T1/futs/bx/n on input line 128.
+LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `bold'
+(Font)                  OT1/cmr/bx/n --> T1/futs/bx/n on input line 128.
+LaTeX Font Info:    Redeclaring math alphabet \mathrm on input line 129.
+LaTeX Font Info:    Redeclaring math alphabet \mathit on input line 130.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
+(Font)                  OT1/cmr/m/it --> T1/futs/m/it on input line 130.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
+(Font)                  OT1/cmr/bx/it --> T1/futs/m/it on input line 130.
+LaTeX Font Info:    Redeclaring math alphabet \mathcal on input line 131.
+LaTeX Font Info:    Redeclaring math symbol \parallel on input line 147.
+LaTeX Font Info:    Redeclaring math symbol \hbar on input line 161.
+LaTeX Font Info:    Redeclaring math symbol \varkappa on input line 199.
+LaTeX Font Info:    Redeclaring math symbol \varvarrho on input line 200.
+LaTeX Font Info:    Redeclaring math delimiter \Vert on input line 223.
+LaTeX Font Info:    Redeclaring math delimiter \vert on input line 228.
+LaTeX Font Info:    Redeclaring math delimiter \Downarrow on input line 238.
+LaTeX Font Info:    Redeclaring math delimiter \backslash on input line 240.
+LaTeX Font Info:    Redeclaring math delimiter \rangle on input line 242.
+LaTeX Font Info:    Redeclaring math delimiter \langle on input line 244.
+LaTeX Font Info:    Redeclaring math delimiter \rbrace on input line 246.
+LaTeX Font Info:    Redeclaring math delimiter \lbrace on input line 248.
+LaTeX Font Info:    Redeclaring math delimiter \rceil on input line 250.
+LaTeX Font Info:    Redeclaring math delimiter \lceil on input line 252.
+LaTeX Font Info:    Redeclaring math delimiter \rfloor on input line 254.
+LaTeX Font Info:    Redeclaring math delimiter \lfloor on input line 256.
+LaTeX Font Info:    Redeclaring math accent \acute on input line 260.
+LaTeX Font Info:    Redeclaring math accent \grave on input line 261.
+LaTeX Font Info:    Redeclaring math accent \ddot on input line 262.
+LaTeX Font Info:    Redeclaring math accent \tilde on input line 263.
+LaTeX Font Info:    Redeclaring math accent \bar on input line 264.
+LaTeX Font Info:    Redeclaring math accent \breve on input line 265.
+LaTeX Font Info:    Redeclaring math accent \check on input line 266.
+LaTeX Font Info:    Redeclaring math accent \hat on input line 267.
+LaTeX Font Info:    Redeclaring math accent \dot on input line 268.
+LaTeX Font Info:    Redeclaring math accent \mathring on input line 269.
+\symUfutm=\mathgroup5
+)
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/tools\longtable.sty
+Package: longtable 2021-09-01 v4.17 Multi-page Table package (DPC)
+\LTleft=\skip49
+\LTright=\skip50
+\LTpre=\skip51
+\LTpost=\skip52
+\LTchunksize=\count269
+\LTcapwidth=\dimen153
+\LT@head=\box53
+\LT@firsthead=\box54
+\LT@foot=\box55
+\LT@lastfoot=\box56
+\LT@gbox=\box57
+\LT@cols=\count270
+\LT@rows=\count271
+\c@LT@tables=\count272
+\c@LT@chunks=\count273
+\LT@p@ftn=\toks18
+)
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/ae\ae.sty
+Package: ae 2001/02/12 1.3 Almost European Computer Modern
+
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/base\fontenc.sty
+Package: fontenc 2021/04/29 v2.0v Standard LaTeX package
+))
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/ae\aecompl.sty
+Package: aecompl 1998/07/23 0.9 T1 Complements for AE fonts (D. Roegel)
+)
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/graphics\epsfig.sty
+Package: epsfig 2017/06/25 v1.7b (e)psfig emulation (SPQR)
+\epsfxsize=\dimen154
+\epsfysize=\dimen155
+)
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/float\float.sty
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count274
+\float@exts=\toks19
+\float@box=\box58
+\@float@everytoks=\toks20
+\@floatcapt=\box59
+)
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\times.sty
+Package: times 2020/03/25 PSNFSS-v9.3 (SPQR) 
+)
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/sectsty\sectsty.sty
+Package: sectsty 2002/02/25 v2.0.2 Commands to change all sectional heading sty
+les
+
+
+LaTeX Warning: Command \underbar  has changed.
+               Check if current package is valid.
+
+
+LaTeX Warning: Command \underline  has changed.
+               Check if current package is valid.
+
+)
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/titlesec\titlesec.sty
+Package: titlesec 2021/07/05 v2.14 Sectioning titles
+\ttl@box=\box60
+\beforetitleunit=\skip53
+\aftertitleunit=\skip54
+\ttl@plus=\dimen156
+\ttl@minus=\dimen157
+\ttl@toksa=\toks21
+\titlewidth=\dimen158
+\titlewidthlast=\dimen159
+\titlewidthfirst=\dimen160
+) (C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/tools\layout.sty
+Package: layout 2021-03-10 v1.2e Show layout parameters
+\oneinch=\count275
+\cnt@paperwidth=\count276
+\cnt@paperheight=\count277
+\cnt@hoffset=\count278
+\cnt@voffset=\count279
+\cnt@textheight=\count280
+\cnt@textwidth=\count281
+\cnt@topmargin=\count282
+\cnt@oddsidemargin=\count283
+\cnt@evensidemargin=\count284
+\cnt@headheight=\count285
+\cnt@headsep=\count286
+\cnt@marginparsep=\count287
+\cnt@marginparwidth=\count288
+\cnt@marginparpush=\count289
+\cnt@footskip=\count290
+\fheight=\count291
+\ref@top=\count292
+\ref@hoffset=\count293
+\ref@voffset=\count294
+\ref@head=\count295
+\ref@body=\count296
+\ref@foot=\count297
+\ref@margin=\count298
+\ref@marginwidth=\count299
+\ref@marginpar=\count300
+\Interval=\count301
+\ExtraYPos=\count302
+\PositionX=\count303
+\PositionY=\count304
+\ArrowLength=\count305
+)
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/fancyhdr\fancyhdr.sty
+Package: fancyhdr 2022/05/18 v4.0.3 Extensive control of page headers and foote
+rs
+\f@nch@headwidth=\skip55
+\f@nch@O@elh=\skip56
+\f@nch@O@erh=\skip57
+\f@nch@O@olh=\skip58
+\f@nch@O@orh=\skip59
+\f@nch@O@elf=\skip60
+\f@nch@O@erf=\skip61
+\f@nch@O@olf=\skip62
+\f@nch@O@orf=\skip63
+)
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/enumitem\enumitem.sty
+Package: enumitem 2019/06/20 v3.9 Customized lists
+\labelindent=\skip64
+\enit@outerparindent=\dimen161
+\enit@toks=\toks22
+\enit@inbox=\box61
+\enit@count@id=\count306
+\enitdp@description=\count307
+)
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/multirow\multirow.sty
+Package: multirow 2021/03/15 v2.8 Span multiple rows of a table
+\multirow@colwidth=\skip65
+\multirow@cntb=\count308
+\multirow@dima=\skip66
+\bigstrutjot=\dimen162
+)
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/graphics\rotating.sty
+Package: rotating 2016/08/11 v2.16d rotated objects in LaTeX
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/base\ifthen.sty
+Package: ifthen 2022/04/13 v1.1d Standard LaTeX ifthen package (DPC)
+)
+\c@r@tfl@t=\count309
+\rotFPtop=\skip67
+\rotFPbot=\skip68
+\rot@float@box=\box62
+\rot@mess@toks=\toks23
+)
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\pifont.sty
+Package: pifont 2020/03/25 PSNFSS-v9.3 Pi font support (SPQR) 
+LaTeX Font Info:    Trying to load font information for U+pzd on input line 63.
+
+
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\upzd.fd
+File: upzd.fd 2001/06/04 font definitions for U/pzd.
+)
+LaTeX Font Info:    Trying to load font information for U+psy on input line 64.
+
+
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\upsy.fd
+File: upsy.fd 2001/06/04 font definitions for U/psy.
+))
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/dingbat\dingbat.sty
+Package: dingbat 2001/04/27 v1.00 Hands and other dingbats
+)
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/url\url.sty
+\Urlmuskip=\muskip16
+Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
+)
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hyperref.sty
+Package: hyperref 2022-06-20 v7.00s Hypertext links for LaTeX
+
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/generic/ltxcmds\ltxcmds.sty
+Package: ltxcmds 2020-05-10 v1.25 LaTeX kernel commands for general use (HO)
+)
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/generic/pdftexcmds\pdftexcm
+ds.sty
+Package: pdftexcmds 2020-06-27 v0.33 Utility functions of pdfTeX for LuaTeX (HO
+)
+
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/generic/infwarerr\infwarerr
+.sty
+Package: infwarerr 2019/12/03 v1.5 Providing info/warning/error messages (HO)
+)
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+Package pdftexcmds Info: \pdfdraftmode found.
+)
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/generic/kvsetkeys\kvsetkeys
+.sty
+Package: kvsetkeys 2019/12/15 v1.18 Key value parser (HO)
+)
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/generic/kvdefinekeys\kvdefi
+nekeys.sty
+Package: kvdefinekeys 2019-12-19 v1.6 Define keys (HO)
+)
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/generic/pdfescape\pdfescape
+.sty
+Package: pdfescape 2019/12/09 v1.15 Implements pdfTeX's escape features (HO)
+)
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/hycolor\hycolor.sty
+Package: hycolor 2020-01-27 v1.10 Color options for hyperref/bookmark (HO)
+)
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/letltxmacro\letltxmac
+ro.sty
+Package: letltxmacro 2019/12/03 v1.6 Let assignment for LaTeX macros (HO)
+)
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/auxhook\auxhook.sty
+Package: auxhook 2019-12-17 v1.6 Hooks for auxiliary files (HO)
+)
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\nameref.sty
+Package: nameref 2022-05-17 v2.50 Cross-referencing by name of section
+
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/refcount\refcount.sty
+Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
+)
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/generic/gettitlestring\gett
+itlestring.sty
+Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
+
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/kvoptions\kvoptions.s
+ty
+Package: kvoptions 2022-06-15 v3.15 Key value format for package options (HO)
+))
+\c@section@level=\count310
+)
+\@linkdim=\dimen163
+\Hy@linkcounter=\count311
+\Hy@pagecounter=\count312
+
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\pd1enc.def
+File: pd1enc.def 2022-06-20 v7.00s Hyperref: PDFDocEncoding definition (HO)
+Now handling font encoding PD1 ...
+... no UTF-8 mapping file for font encoding PD1
+)
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/generic/intcalc\intcalc.sty
+Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
+)
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/generic/etexcmds\etexcmds.s
+ty
+Package: etexcmds 2019/12/15 v1.7 Avoid name clashes with e-TeX commands (HO)
+)
+\Hy@SavedSpaceFactor=\count313
+
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\puenc.def
+File: puenc.def 2022-06-20 v7.00s Hyperref: PDF Unicode definition (HO)
+Now handling font encoding PU ...
+... no UTF-8 mapping file for font encoding PU
+)
+Package hyperref Info: Option `colorlinks' set `true' on input line 4045.
+Package hyperref Info: Hyper figures OFF on input line 4162.
+Package hyperref Info: Link nesting OFF on input line 4167.
+Package hyperref Info: Hyper index ON on input line 4170.
+Package hyperref Info: Plain pages OFF on input line 4177.
+Package hyperref Info: Backreferencing OFF on input line 4182.
+Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
+Package hyperref Info: Bookmarks ON on input line 4408.
+\c@Hy@tempcnt=\count314
+LaTeX Info: Redefining \url on input line 4746.
+\XeTeXLinkMargin=\dimen164
+
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/generic/bitset\bitset.sty
+Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
+
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/generic/bigintcalc\bigintca
+lc.sty
+Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO
+)
+))
+\Fld@menulength=\count315
+\Field@Width=\dimen165
+\Fld@charsize=\dimen166
+Package hyperref Info: Hyper figures OFF on input line 6024.
+Package hyperref Info: Link nesting OFF on input line 6029.
+Package hyperref Info: Hyper index ON on input line 6032.
+Package hyperref Info: backreferencing OFF on input line 6039.
+Package hyperref Info: Link coloring ON on input line 6042.
+Package hyperref Info: Link coloring with OCG OFF on input line 6049.
+Package hyperref Info: PDF/A mode OFF on input line 6054.
+
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/base\atbegshi-ltx.sty
+Package: atbegshi-ltx 2021/01/10 v1.0c Emulation of the original atbegshi
+package with kernel methods
+)
+\Hy@abspage=\count316
+\c@Item=\count317
+\c@Hfootnote=\count318
+)
+Package hyperref Info: Driver: hpdftex.
+
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hpdftex.def
+File: hpdftex.def 2022-06-20 v7.00s Hyperref driver for pdfTeX
+
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/base\atveryend-ltx.st
+y
+Package: atveryend-ltx 2020/08/19 v1.0a Emulation of the original atveryend pac
+kage
+with kernel methods
+)
+\Fld@listcount=\count319
+\c@bookmark@seq@number=\count320
+
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/rerunfilecheck\rerunf
+ilecheck.sty
+Package: rerunfilecheck 2022-07-10 v1.10 Rerun checks for auxiliary files (HO)
+
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/generic/uniquecounter\uniqu
+ecounter.sty
+Package: uniquecounter 2019/12/15 v1.4 Provide unlimited unique counter (HO)
+)
+Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
+85.
+)
+\Hy@SectionHShift=\skip69
+)
+
+Package hyperref Warning: Option `hyperindex' has already been used,
+(hyperref)                setting the option has no effect on input line 141.
+
+Package hyperref Info: Option `bookmarksnumbered' set `true' on input line 141.
+
+Package hyperref Info: Option `bookmarksopen' set `false' on input line 141.
+Package hyperref Info: Option `plainpages' set `false' on input line 141.
+
+Package hyperref Warning: Option `pdfpagelabels' has already been used,
+(hyperref)                setting the option has no effect on input line 141.
+
+)
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/placeins\placeins.sty
+Package: placeins 2005/04/18  v 2.2
+)
+LaTeX Font Info:    Trying to load font information for T1+ptm on input line 34
+.
+ (C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\t1ptm.fd
+File: t1ptm.fd 2001/06/04 font definitions for T1/ptm.
+)
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-p
+dftex.def
+File: l3backend-pdftex.def 2022-08-30 L3 backend support: PDF output (pdfTeX)
+\l__color_backend_stack_int=\count321
+\l__pdf_internal_box=\box63
+)
+No file Accelerometer.aux.
+\openout1 = `Accelerometer.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 34.
+LaTeX Font Info:    ... okay on input line 34.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 34.
+LaTeX Font Info:    ... okay on input line 34.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 34.
+LaTeX Font Info:    ... okay on input line 34.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 34.
+LaTeX Font Info:    ... okay on input line 34.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 34.
+LaTeX Font Info:    ... okay on input line 34.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 34.
+LaTeX Font Info:    ... okay on input line 34.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 34.
+LaTeX Font Info:    ... okay on input line 34.
+LaTeX Font Info:    Checking defaults for FML/futm/m/it on input line 34.
+LaTeX Font Info:    Trying to load font information for FML+futm on input line 
+34.
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/fourier\fmlfutm.fd
+File: fmlfutm.fd 2004/10/30 Fontinst v1.926 font definitions for FML/futm.
+)
+LaTeX Font Info:    ... okay on input line 34.
+LaTeX Font Info:    Checking defaults for FMS/futm/m/n on input line 34.
+LaTeX Font Info:    Trying to load font information for FMS+futm on input line 
+34.
+
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/fourier\fmsfutm.fd
+File: fmsfutm.fd 2004/10/30 Fontinst v1.926 font definitions for FMS/futm.
+)
+LaTeX Font Info:    ... okay on input line 34.
+LaTeX Font Info:    Checking defaults for FMX/futm/m/n on input line 34.
+LaTeX Font Info:    Trying to load font information for FMX+futm on input line 
+34.
+
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/fourier\fmxfutm.fd
+File: fmxfutm.fd futm-extension
+)
+LaTeX Font Info:    ... okay on input line 34.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 34.
+LaTeX Font Info:    ... okay on input line 34.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 34.
+LaTeX Font Info:    ... okay on input line 34.
+\c@lstlisting=\count322
+
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pdf.
+mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count323
+\scratchdimen=\dimen167
+\scratchbox=\box64
+\nofMPsegments=\count324
+\nofMParguments=\count325
+\everyMPshowfont=\toks24
+\MPscratchCnt=\count326
+\MPscratchDim=\dimen168
+\MPnumerator=\count327
+\makeMPintoPDFobject=\count328
+\everyMPtoPDFconversion=\toks25
+)
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/epstopdf-pkg\epstopdf
+-base.sty
+Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
+Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
+85.
+
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/00miktex\epstopdf-sys
+.cfg
+File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
+))
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: float package is loaded.
+Package caption Info: hyperref package is loaded.
+Package caption Info: longtable package is loaded.
+
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/caption\ltcaption.sty
+Package: ltcaption 2021/01/08 v1.4c longtable captions (AR)
+)
+Package caption Info: rotating package is loaded.
+Package caption Info: End \AtBeginDocument code.
+Package hyperref Info: Link coloring ON on input line 34.
+\@outlinefile=\write3
+\openout3 = `Accelerometer.out'.
+
+LaTeX Font Info:    Trying to load font information for FML+futmi on input line
+ 37.
+ (C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/fourier\fmlfutmi.fd
+File: fmlfutmi.fd 2004/10/30 Fontinst v1.926 font definitions for FML/futmi.
+)
+LaTeX Font Info:    Font shape `FMX/futm/m/n' will be
+(Font)              scaled to size 10.07397pt on input line 37.
+LaTeX Font Info:    Font shape `FMX/futm/m/n' will be
+(Font)              scaled to size 7.63599pt on input line 37.
+LaTeX Font Info:    Font shape `FMX/futm/m/n' will be
+(Font)              scaled to size 5.51999pt on input line 37.
+LaTeX Font Info:    Font shape `U/futm/m/n' will be
+(Font)              scaled to size 10.07397pt on input line 37.
+LaTeX Font Info:    Font shape `U/futm/m/n' will be
+(Font)              scaled to size 7.63599pt on input line 37.
+LaTeX Font Info:    Font shape `U/futm/m/n' will be
+(Font)              scaled to size 5.51999pt on input line 37.
+LaTeX Font Info:    Trying to load font information for T1+phv on input line 40
+.
+ (C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\t1phv.fd
+File: t1phv.fd 2020/03/25 scalable font definitions for T1/phv.
+)
+Overfull \hbox (139.13397pt too wide) in paragraph at lines 40--41
+[][]| 
+ []
+
+LaTeX Font Info:    Font shape `T1/phv/m/it' in size <10.95> not available
+(Font)              Font shape `T1/phv/m/sl' tried instead on input line 45.
+LaTeX Font Info:    Font shape `T1/phv/m/it' in size <8.3> not available
+(Font)              Font shape `T1/phv/m/sl' tried instead on input line 45.
+LaTeX Font Info:    Trying to load font information for TS1+phv on input line 4
+5.
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\ts1phv.fd
+File: ts1phv.fd 2020/03/25 scalable font definitions for TS1/phv.
+)
+LaTeX Font Info:    Font shape `TS1/phv/m/it' in size <8.3> not available
+(Font)              Font shape `TS1/phv/m/sl' tried instead on input line 45.
+
+Overfull \hbox (1.4pt too wide) in paragraph at lines 45--46
+[][][][][][][] 
+ []
+
+LaTeX Font Info:    Trying to load font information for OT1+phv on input line 4
+9.
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\ot1phv.fd
+File: ot1phv.fd 2020/03/25 scalable font definitions for OT1/phv.
+)
+Underfull \hbox (badness 10000) in paragraph at lines 53--56
+
+ []
+
+LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 5
+8.
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\ts1ptm.fd
+File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
+)
+
+LaTeX Warning: Hyper reference `tab:adxl345regtable' on page 1 undefined on inp
+ut line 85.
+
+(figures/adxl345_regtable.tex
+LaTeX Font Info:    Trying to load font information for T1+pcr on input line 15
+.
+
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\t1pcr.fd
+File: t1pcr.fd 2001/06/04 font definitions for T1/pcr.
+)
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+) [1{C:/Users/fkostic/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}
+
+]
+
+Package fancyhdr Warning: \headheight is too small (0.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-13.59999pt}.
+
+[2]
+Overfull \hbox (1.79036pt too wide) in paragraph at lines 264--265
+[]\T1/ptm/m/n/10.95 These reg-is-ters al-low you to con-fig-ure in-ter-rupts ba
+sed on ac-tiv-ity (changes in ac-cel-er-a-tion data). The THRESH_ACT
+ []
+
+
+Package fancyhdr Warning: \headheight is too small (0.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-13.59999pt}.
+
+[3]
+
+LaTeX Warning: Reference `fig:fig_block_diagram' on page 4 undefined on input l
+ine 272.
+
+
+LaTeX Warning: Reference `fig:pin_mux' on page 4 undefined on input line 272.
+
+
+
+pdfTeX warning: pdflatex (file ./figures/fig_block_diagram_hps.pdf): PDF inclus
+ion: found PDF version <1.6>, but at most version <1.5> allowed
+<figures/fig_block_diagram_hps.pdf, id=47, 299.39343pt x 207.5474pt>
+File: figures/fig_block_diagram_hps.pdf Graphic file (type pdf)
+<use figures/fig_block_diagram_hps.pdf>
+Package pdftex.def Info: figures/fig_block_diagram_hps.pdf  used on input line 
+276.
+(pdftex.def)             Requested size: 299.39268pt x 207.54688pt.
+
+
+pdfTeX warning: pdflatex (file ./figures/fig_pinmux.pdf): PDF inclusion: found 
+PDF version <1.6>, but at most version <1.5> allowed
+<figures/fig_pinmux.pdf, id=48, 291.82819pt x 215.50914pt>
+File: figures/fig_pinmux.pdf Graphic file (type pdf)
+<use figures/fig_pinmux.pdf>
+Package pdftex.def Info: figures/fig_pinmux.pdf  used on input line 287.
+(pdftex.def)             Requested size: 291.82747pt x 215.5086pt.
+
+LaTeX Warning: Reference `sec:i2c_controller' on page 4 undefined on input line
+ 296.
+
+
+Package fancyhdr Warning: \headheight is too small (0.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-13.59999pt}.
+
+[4 <./figures/fig_block_diagram_hps.pdf> <./figures/fig_pinmux.pdf>]
+
+LaTeX Warning: Reference `fig:pin_mux' on page 5 undefined on input line 338.
+
+
+LaTeX Warning: Hyper reference `tab:pinmux_registers' on page 5 undefined on in
+put line 338.
+
+
+LaTeX Warning: Reference `fig:pin_muxing_code' on page 5 undefined on input lin
+e 338.
+
+
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstlang1.sty
+File: lstlang1.sty 2020/03/24 1.8d listings language file
+)
+(C:\Users\fkostic\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstmisc.sty
+File: lstmisc.sty 2020/03/24 1.8d (Carsten Heinz)
+)
+
+LaTeX Warning: Hyper reference `tab:i2c_ctrl_regtable' on page 5 undefined on i
+nput line 374.
+
+(figures/i2c_controller_regtable.tex
+
+Package fancyhdr Warning: \headheight is too small (0.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-13.59999pt}.
+
+[5])
+
+Package fancyhdr Warning: \headheight is too small (0.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-13.59999pt}.
+
+[6]
+
+Package fancyhdr Warning: \headheight is too small (0.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-13.59999pt}.
+
+[7]
+
+LaTeX Warning: Reference `sec:configure_i2c0' on page 8 undefined on input line
+ 544.
+
+
+LaTeX Warning: Reference `sec:configure_i2c0' on page 8 undefined on input line
+ 568.
+
+
+Package fancyhdr Warning: \headheight is too small (0.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-13.59999pt}.
+
+[8]
+
+Package fancyhdr Warning: \headheight is too small (0.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-13.59999pt}.
+
+[9]
+
+LaTeX Warning: Reference `sec:pinmux_background' on page 10 undefined on input 
+line 713.
+
+
+LaTeX Warning: Reference `fig:pin_muxing_code_2' on page 10 undefined on input 
+line 713.
+
+
+LaTeX Warning: Reference `fig:pin_mux' on page 10 undefined on input line 713.
+
+
+LaTeX Warning: Reference `fig:i2c0_init_code' on page 10 undefined on input lin
+e 735.
+
+LaTeX Font Info:    Font shape `T1/pcr/m/it' in size <10> not available
+(Font)              Font shape `T1/pcr/m/sl' tried instead on input line 769.
+
+Package fancyhdr Warning: \headheight is too small (0.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-13.59999pt}.
+
+[10]
+
+Package fancyhdr Warning: \headheight is too small (0.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-13.59999pt}.
+
+[11]
+
+LaTeX Warning: Reference `fig:read_function' on page 12 undefined on input line
+ 806.
+
+
+LaTeX Warning: Reference `fig:write_function' on page 12 undefined on input lin
+e 832.
+
+
+Package fancyhdr Warning: \headheight is too small (0.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-13.59999pt}.
+
+[12]
+
+LaTeX Warning: Reference `fig:multi_read_function' on page 13 undefined on inpu
+t line 855.
+
+
+LaTeX Warning: Reference `fig:config_adxl345' on page 13 undefined on input lin
+e 891.
+
+
+Package fancyhdr Warning: \headheight is too small (0.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-13.59999pt}.
+
+[13]
+
+LaTeX Warning: Reference `fig:read_accel_data' on page 14 undefined on input li
+ne 930.
+
+
+Package fancyhdr Warning: \headheight is too small (0.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-13.59999pt}.
+
+[14]
+
+LaTeX Warning: Reference `fig:check_data_ready' on page 15 undefined on input l
+ine 953.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+LaTeX Warning: Reference `fig:arm_c_code' on page 15 undefined on input line 10
+28.
+
+
+Overfull \hbox (3.75165pt too wide) in paragraph at lines 1031--1032
+[]\T1/ptm/m/n/10.95 Line 1 in-cludes the header file \T1/pcr/m/n/10.95 ADXL345.
+h\T1/ptm/m/n/10.95 , which con-tains all of the func-tions for work-ing with th
+e ADXL345
+ []
+
+
+Overfull \hbox (7.68326pt too wide) in paragraph at lines 1032--1033
+[]\T1/ptm/m/n/10.95 Line 11 calls the func-tion \T1/pcr/m/n/10.95 Pinmux_Config
+() \T1/ptm/m/n/10.95 which con-fig-ures the Pin Mux block to con-nect the ADXL3
+45's
+ []
+
+
+Package fancyhdr Warning: \headheight is too small (0.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-13.59999pt}.
+
+[15] (../../Common/Docs/copyright.tex
+
+Package fancyhdr Warning: \headheight is too small (0.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-13.59999pt}.
+
+[16])
+
+Package fancyhdr Warning: \headheight is too small (0.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-13.59999pt}.
+
+[17
+
+] (Accelerometer.aux)
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+
+Package rerunfilecheck Warning: File `Accelerometer.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+Package rerunfilecheck Info: Checksums for `Accelerometer.out':
+(rerunfilecheck)             Before: <no file>
+(rerunfilecheck)             After:  941EA16BFAA1EEE6E49B959FFA829FBB;6638.
+ ) 
+Here is how much of TeX's memory you used:
+ 14450 strings out of 475389
+ 233895 string characters out of 2776056
+ 816912 words of memory out of 3000000
+ 35292 multiletter control sequences out of 15000+600000
+ 550209 words of font info for 105 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 77i,15n,80p,1124b,1459s stack positions out of 10000i,1000n,20000p,200000b,80000s
+{C:/Users/fkostic/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/8r.enc}<
+C:/Users/fkostic/AppData/Local/Programs/MiKTeX/fonts/type1/public/fourier/fouri
+er-mlit.pfb><C:/Users/fkostic/AppData/Local/Programs/MiKTeX/fonts/type1/public/
+fourier/fourier-ms.pfb><C:/Users/fkostic/AppData/Local/Programs/MiKTeX/fonts/ty
+pe1/adobe/utopia/putr8a.pfb><C:/Users/fkostic/AppData/Local/Programs/MiKTeX/fon
+ts/type1/adobe/utopia/putri8a.pfb><C:/Users/fkostic/AppData/Local/Programs/MiKT
+eX/fonts/type1/urw/courier/ucrb8a.pfb><C:/Users/fkostic/AppData/Local/Programs/
+MiKTeX/fonts/type1/urw/courier/ucrr8a.pfb><C:/Users/fkostic/AppData/Local/Progr
+ams/MiKTeX/fonts/type1/urw/courier/ucrro8a.pfb><C:/Users/fkostic/AppData/Local/
+Programs/MiKTeX/fonts/type1/urw/helvetic/uhvb8ac.pfb><C:/Users/fkostic/AppData/
+Local/Programs/MiKTeX/fonts/type1/urw/helvetic/uhvr8a.pfb><C:/Users/fkostic/App
+Data/Local/Programs/MiKTeX/fonts/type1/urw/helvetic/uhvro8a.pfb><C:/Users/fkost
+ic/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmb8a.pfb><C:/Users/fko
+stic/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmbi8a.pfb><C:/Users/
+fkostic/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmr8a.pfb><C:/User
+s/fkostic/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmri8a.pfb>
+Output written on Accelerometer.pdf (17 pages, 368816 bytes).
+PDF statistics:
+ 483 PDF objects out of 1000 (max. 8388607)
+ 252 named destinations out of 1000 (max. 500000)
+ 11 words of extra memory for PDF output out of 10000 (max. 10000000)
+
