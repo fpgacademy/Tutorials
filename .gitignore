@@ -4,3 +4,5 @@ release/
 # iv Files
 *.swp
 
+Linux/.DS_Store
+.DS_Store

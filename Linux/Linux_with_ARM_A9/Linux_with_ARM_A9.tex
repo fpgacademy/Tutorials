@@ -49,58 +49,63 @@
 \section{Introduction}
 
 This tutorial describes a release of Linux* which is available for a variety of embedded systems 
-that feature an Intel\textsuperscript{\textregistered} Cyclone\textsuperscript{\textregistered} V SoC device. This Linux distribution can be used on the 
-following development and education (DE-series) boards: DE1-SoC, DE10-Standard, and DE10-Nano.
-For this tutorial we will assume that the reader is using the DE1-SoC board. If you are using 
-a different board, then some minor adjustments to the instructions given in the tutorial 
-may be needed. We will make note of such cases in various sections of the tutorial.
+that feature an Intel\textsuperscript{\textregistered} 
+Cyclone\textsuperscript{\textregistered} V System-on-Chip (SoC) device. This Linux distribution 
+can be used on the following development and education (DE-series) boards: 
+DE1-SoC, DE10-Standard, and DE10-Nano.  For this tutorial we will assume that the reader 
+is using the DE1-SoC board. If you are using a different board, then some minor adjustments 
+to the instructions given in the tutorial may be needed; we will make note of such cases in 
+various parts of the tutorial.
 
 Linux runs on the ARM* processor that is part of the 
 Cyclone~V SoC device. In this tutorial we show how Linux can be stored onto a microSD* memory that 
-can be inserted into the DE-series board and booted by the 
+can be inserted into the DE1-SoC board and booted by the 
 ARM processor. We also show how software programs can be developed that run on the ARM 
-processor under Linux, and make use of the hardware resources on the DE-series board. These 
-resources include peripherals in the hard processor system (HPS), and custom hardware peripherals 
-implemented within the FPGA in the SoC device.
+processor under Linux, and make use of the hardware resources on the DE1-SoC board. These 
+resources include peripherals in the Hard Processor System (HPS), and custom hardware peripherals 
+implemented within the Field-Programmable Gate Array (FPGA) in the SoC device.
 
 {\bf Contents:}
 \begin{itemize}
 \item Getting Started with Linux on the board
 \item Developing Linux Applications that use FPGA Hardware Devices
-\item Developing Linux Drivers for FPGA Hardware
+\item Developing Linux Device Drivers for Hardware Devices
 \item Configuring the FPGA from Linux
 \end{itemize}
 
 {\bf Requirements:}
 \begin{itemize}
 \item One of the DE-series development and education boards mentioned above. These boards are 
-described on the {\it FPGAcademy} website, and are available from the manufacturer 
-Terasic Technologies.
+described in the \texttt{Boards} tab of the {\small \href{https://www.fpgacademy.org/boards.html}
+{FPGAcademy}} website, 
+and are available from the manufacturer Terasic Technologies.
 
-\item Host computer, running either Microsoft* Windows* (version 10 is recommended) or Linux 
-(Ubuntu, or a similar Linux distribution). The host computer would typically be either a
+\item Host computer, running either Microsoft* Windows*, macOS*, or Linux 
+(Ubuntu, or similar). The host computer would typically be either a
 desktop computer or laptop. The host computer provides a user-interface for connecting to
-your DE-series board. You will use the host computer to send commands to the Linux
-running on the DE-series board, and to see the results produced by those commands.
+your DE-series board. You will use the host computer to provide a user interface for connecting
+to Linux on the DE-series board.
 
-\item Mini-USB cable, Ethernet cable, and/or WiFi USB adaptor for connecting the DE-series board
-to the host computer 
+\item Ethernet cable (preferred), or WiFi USB adaptor (optional), or Mini-USB cable (optional), 
+for connecting the DE-series board to the host computer. 
 
 \item MicroSD card (8 GB or larger)
 \end{itemize}
 
 {\bf Optional:}
 \begin{itemize}
-\item Intel FPGA SoC Embedded Design Suite (required for Appendix G).
-\item Intel Quartus\textsuperscript{\textregistered} Prime Software (required for Appendix H).
+\item Intel FPGA SoC Embedded Design Suite (required only for Appendix G).
+\item Intel Quartus\textsuperscript{\textregistered} Prime Software (required only for 
+Appendix H).
 \end{itemize}
 
-\section{Running Linux* on the DE-Series Board}
+\section{Running Linux* on the DE1-SoC Board}
 
 Linux is an operating system (OS) that is found in a wide variety of computing products such 
 as personal computers, servers, and mobile devices. Standard distributions of Linux 
 include device drivers for a vast array of hardware devices. In this tutorial we make use of 
-some existing drivers, and also show how the user can make drivers for their own hardware. 
+some existing drivers, and also show how the user can make device driver software
+for their own hardware components. 
 
 \subsection{Intel Cyclone\textsuperscript{\textregistered} V SoC Devices}
 
@@ -114,6 +119,7 @@ bridges that allow bidirectional communication. Later in the tutorial, we will s
 to write Linux programs that access hardware devices implemented in the FPGA.
 
 \subsection{The Linux* Distribution Image}
+\label{sec:image}
 
 A number of Linux distributions are available for the DE-series boards. These Linux distributions 
 range from a simple command-line only version to the more full-featured Ubuntu* Linux 
@@ -121,41 +127,50 @@ distribution that includes a graphical user interface (GUI). Linux distributions
 in the \textit{.img} (image) file format, which can be written onto a microSD card and booted 
 on the DE-series board. For this tutorial we will assume that the reader is using the 
 \textit{DE1-SoC-UP} Linux distribution for the DE1-SoC board. The corresponding image 
-file \textit{DE1-SoC-UP-Linux-ROS.img} can be downloaded from the {\it FPGAcademy} website 
-(look for \texttt{Linux SD Card Images} in the \texttt{Tutorials} 
-tab under \texttt{Embedded Linux}).
+file \textit{DE1-SoC-UP-Linux.img} can be found under \texttt{Embedded Systems} in 
+the \texttt{Courses} tab of the
+{\small \href{https://www.fpgacademy.org/courses.html/}
+{FPGAcademy}} website.
 If you are using a different board, then you will need to use the specific version of the 
 Linux image that is provided for that board.
 
 The \textit{DE1-SoC-UP} Linux distribution contains a number of key features that we will use 
 in this tutorial. First, it provides a GNU* Compiler toolchain allowing you to compile C programs.
 We will make extensive use of this toolchain to compile programs in 
-Section~\ref{sec:linux_programs}. Another feature is the automatic programming of the Cyclone~V SoC
-device that takes place during the process of booting the \textit{DE1-SoC-UP} operating system
-(OS). The OS configures the SoC device into a circuit called the \textit{DE1-SoC Computer} system.
-This computer system contains a dual-core ARM Cortex A9 processor, as well as IP cores that 
+Section~\ref{sec:linux_programs}. Another feature is the automatic programming of the Cyclone~V
+FPGA that takes place during the process of booting the \textit{DE1-SoC-UP} Linux operating 
+system (OS). Linux configures the FPGA device into a circuit called the 
+\textit{DE1-SoC Computer} system.
+This computer system includes the dual-core ARM Cortex A9 processor, as well as IP cores that 
 communicate with the peripheral devices found on the DE1-SoC board, such as the switches, 
 LEDs, pushbuttons, VGA, audio, Ethernet, and USB. In 
 Section~\ref{sec:program_with_fpga_communication}, we will 
-show how to write programs that communicate with Parallel I/O cores of the 
-\textit{DE1-SoC Computer} to access the LEDs and pushbuttons on the board. 
+show how to write programs that communicate with Parallel I/O ports of the 
+\textit{DE1-SoC Computer} to access the LEDs and switches on the board. 
 The \textit{DE1-SoC Computer} system is described in detail in the document 
-\textit{DE1-SoC Computer with ARM}, which is available from the Intel FPGA University
-Program website.
+``\textit{DE1-SoC Computer with ARM Cortex* A9},'' which is available under 
+\texttt{Embedded Systems} in the \texttt{Courses} tab of the 
+{\small \href{https://www.fpgacademy.org/courses.html} {FPGAcademy}} website.
 
 \subsection{Preparing the Linux* MicroSD* Card}
 
 The DE1-SoC board is designed to boot Linux from an inserted microSD card. In this section, 
 you will learn how to prepare a Linux microSD card by storing the
-\textit{DE1-SoC-UP-Linux-ROS.img}
-image file onto a microSD card. This section of the tutorial assumes that you have access to a 
-computer with a microSD card reader/writer. To write the image into the microSD card, we will 
-use the free-to-use \textit{Win32 Disk Imager} tool which you can download and install from 
-the Internet. The instructions for using this tool are provided below:
+\textit{DE1-SoC-UP-Linux.img} image file onto the card. 
+This section of the tutorial assumes that you have access to a 
+computer with an SD-card reader/writer. Tools available for writing image files vary
+for different computer operating systems. We discuss some available tools for Microsoft
+Windows, macOS, and Linux systems below.
+
+\subsubsection{Preparing a MicroSD Card Using MS Windows}
+
+A popular program for writing a disk image under Microsoft Windows is 
+the \textit{Win32 Disk Imager} tool. It can be freely downloaded and installed from
+the Internet. Some instructions for using this tool are provided below:
 
 \begin{enumerate}
 
-\item Insert a microSD card (8 GB or larger) into your computer's microSD card reader/writer,
+\item Insert a microSD card (8 GB or larger) into your computer's SD-card reader/writer,
 and then launch the Win32 Disk Imager program.
 \begin{figure} [h]
 \begin{center}
@@ -164,11 +179,11 @@ and then launch the Win32 Disk Imager program.
 \caption{The Win32 Disk Imager program.}
 \label{fig:win32_disk_imager}
 \end{figure}
-\item Select the drive letter corresponding to the microSD card under \texttt{Device}, as indicated 
-in Figure~\ref{fig:win32_disk_imager}.
-\item Select the \textit{DE1-SoC-UP-Linux-ROS.img} image under \texttt{Image File}, as shown in 
-Figure~\ref{fig:win32_disk_imager}. This image file can be found on the Intel FPGA University 
-Program webpage alongside this tutorial.
+\item Select the drive letter corresponding to the SD-card under \texttt{Device}, 
+as indicated in Figure~\ref{fig:win32_disk_imager}.
+\item Select the \textit{DE1-SoC-UP-Linux.img} image under \texttt{Image File}, as shown in 
+Figure~\ref{fig:win32_disk_imager}. This image file can be found following the
+instructions in Section~\ref{sec:image}.
 \item Click \texttt{Write} to write the microSD card. If prompted to confirm the overwrite, 
 press \texttt{yes}. Once the writing is complete, you will see the success dialog shown in 
 Figure~\ref{fig:win32_disk_imager_4}.
@@ -182,13 +197,42 @@ Figure~\ref{fig:win32_disk_imager_4}.
 
 \end{enumerate}
 
-\subsection{Setting up your DE-series Board for use with Linux}
+\subsubsection{Preparing a MicroSD Card Using macOS or Linux}
 
-First ensure that your DE-series board is powered off, and then insert the Linux 
+Another popular program for writing disk images is {\it Etcher}, which can be freely
+downloaded and installed from \texttt{https://www.balena.io/etcher}. This program is 
+available for both macOS and Linux (and also for MS Windows). Some instructions for using 
+this tool are provided below:
+
+\begin{enumerate}
+
+\item Insert a microSD card (8 GB or larger) into your computer's SD-card reader/writer,
+and then launch the etcher (also called {\it balenaEtcher}) program, as illustrated in
+Figure~\ref{fig:etcher}.
+
+\begin{figure} [b]
+\begin{center}
+\includegraphics[scale = 0.45]{figures/etcher.png}
+\end{center}
+\caption{The Etcher application program.}
+\label{fig:etcher}
+\end{figure}
+\item Click on \texttt{Flash from file} and browse to select the 
+\textit{DE1-SoC-UP-Linux.img} image file.  This image file can be found following the
+instructions in Section~\ref{sec:image}.
+\item Click on \texttt{Select target} to choose your flash drive.
+\item Click on \texttt{Flash!}. Once the writing is complete, you can remove the disk from
+the host computer.
+
+\end{enumerate}
+
+\subsection{Setting up your DE1-SoC Board for use with Linux}
+
+First ensure that your DE1-SoC board is powered off, and then insert the Linux 
 microSD card into the microSD card slot. Before turning on the board, ensure that the
-MODE SELECT (MSEL) switches found on the underside of the board match the settings shown 
+\texttt{Mode Select} (MSEL) switches found on the underside of the board match the settings shown 
 in Figure~\ref{fig:msel}. These settings configure the Cyclone V SoC chip so as to allow the 
-ARM processor to program the FPGA. It is necessary to have these settings because our Linux 
+ARM processor to program the FPGA. It is necessary to have these settings because the Linux 
 image programs the FPGA as part of its boot-up process. We should note that making this
 change to the MSEL switches does not prevent the FPGA from being programmed using other
 methods, such as via the Intel Quartus Prime Programming tool.
@@ -197,42 +241,45 @@ methods, such as via the Intel Quartus Prime Programming tool.
 \begin{center}
 \includegraphics[scale = 1.00]{figures/MSEL.png}
 \end{center}
-\caption{Configuring the MSEL switches of your DE-series board.}
+\caption{Configuring the MSEL switches of your DE1-SoC board.}
 \label{fig:msel}
 \end{figure}
 
-\subsection{Connecting your DE-series Board to a Host Computer}
+\section{Connecting your DE1-SoC Board to a Host Computer}
 
-Before booting Linux, you should first connect your DE-series board to a host computer.
-There are two main methods of communicating between the DE-series board and the host
-computer: using a {\it USB cable}, and using a {\it network} to connection. Each method is 
-described below.
+Before booting Linux, you should first connect your DE1-SoC board to a host computer.
+There are two main methods of communicating between the DE1-SoC board and the host
+computer: using a {\it USB-to-UART} serial connection, and using a {\it network} connection.
+We will first discuss the serial connection, because when Linux boots it prints status
+messages to the {\it serial console terminal}. Network connections are discussed in 
+Section~\ref{sec:conn_network}.
 
-\subsection{Connecting to the Host Computer using a USB Cable}
+\subsection{Connecting to the Host Computer using a USB-to-UART Connection}
 \label{sec:conn_USB}
 
 The Linux image has been configured to send and receive text to/from a host computer via a 
-USB cable. The USB cable is connected to a {\it UART-to-USB} port, which can be used to 
-send/receive text characters. On the host computer, we can use a \textit{terminal} program 
-to display this text. Various \textit{terminal} programs are available; we will be using
-\texttt{putty}, which is available for free download on the Internet for both Windows and 
-Linux host computers. 
+USB-to-UART cable. The USB cable is connected to a {\it UART-to-USB} port, which can be used to 
+send and receive text messages. Via the host computer, we can access a \textit{serial terminal
+console} to display this text. Various programs are available for connecting to serial
+ports, depending on your host computer operating system.
 
-In the following discussion we assume that you have installed Putty on your host computer.
+\subsubsection{Connecting to a Serial Port using a Microsoft* Windows* Host Computer}
+
+Under MS Windows a popular program for accessing serial ports is {\it putty}, which is
+free to download and install from the Internet. 
+In the following discussion we assume that you have installed {\it putty} on your host computer.
 If you use a different terminal program, then the instructions below
-would need to be modified accordingly. Connect the UART-to-USB port of your DE-series board 
-to your host computer using the mini-USB cable supplied with the board. To identify the
+would need to be modified accordingly. Connect the UART-to-USB port of your DE1-SoC board 
+to your host computer; you can use the mini-USB cable that is normally supplied with the 
+board, or an equivalent cable. To identify the
 correct port, look for a small label on the board that reads \texttt{UART}. It can be found 
-in the area of the board near the RJ45 Ethernet port. If this is your first time connecting to 
-the UART-to-USB port, then you may have to install its device driver on your host computer. If 
-your host computer's operating system does not automatically install the driver, then you 
-can search for it on the Internet. An appropriate search string is {\sf FT232R UART USB 
+in the area of the board near the \texttt{RJ45} Ethernet port. If this is your first 
+time connecting to the UART-to-USB port, then you may have to install its device driver 
+on your host computer. If your host computer's operating system does not automatically 
+install the driver, then you can search for it on the Internet. An appropriate search 
+string is {\sf FT232R UART USB 
 Driver}, which should locate the driver on a website called {\it ftdichip.com}.
 
-\subsubsection{Using a Microsoft* Windows* Host Computer}
-
-You should read this section if your host computer is running a Microsoft Windows
-operating system, such as {\it Windows 10}. 
 On a Windows host computer, serial communication ports such as the UART-to-USB 
 are treated as \texttt{COM} ports. Since a host computer may have multiple COM ports, 
 each one is assigned a unique identifying number. The number assigned can be 
@@ -251,29 +298,9 @@ disappears, then reappears, in the list.
 	\label{fig:putty_0}
 \end{figure}
 
-\subsubsection{Using a Linux* Host Computer}
-
-You should read this section if your host computer is running a version of Linux.
-On a Linux host computer, serial communication devices such as the UART-to-USB are treated 
-as \textit{teletype} (TTY) devices. Since there can be multiple TTY devices connected to
-the host computer, each TTY device is assigned a unique identifier. The name assigned to your 
-UART-to-USB connection
-can be determined by running the command \texttt{dmesg | grep tty} as shown in 
-Figure~\ref{fig:dmesg}. In the figure, you can see that the UART-to-USB chip (the manufacturer's
-name for this device is \textit{FTDI USB Serial Device converter}) has been assigned the name 
-ttyUSB0.
-
-\begin{figure}[H]
-   \begin{center}
-       \includegraphics[scale=0.5]{figures/new_tty.png}
-   \end{center}
-   \caption{Determining the TTY device that corresponds to the UART-to-USB connection.}
-	\label{fig:dmesg}
-\end{figure}
-
 \subsubsection{Using Putty}
 
-Start the Putty program. Now that the serial device (COM port or TTY device) corresponding to the 
+Start the Putty program. Now that the serial device (COM port) corresponding to the 
 UART-to-USB connection is known, Putty can be configured to connect to it. 
 Figure \ref{fig:putty_1} shows the
 main window of Putty. In this window, the {\it Connection type} has been set to
@@ -296,15 +323,16 @@ UART. As shown in the figure set the speed (baud rate) to 115200 bits per second
 bits to 8, stop bits to 1, and parity and flow control to \textit{none}. 
 
 Once all of the serial-line settings have been entered, press \texttt{Open} to start the
-{\it Terminal}. Now, turn on the power to your DE-series board. You should now see a stream 
+{\it Terminal}. Now, turn on the power to your DE1-SoC board. You should now see a stream 
 of text in the Putty terminal that shows the status of the Linux boot process, as displayed in 
 Figures~\ref{fig:putty_3} and~\ref{fig:putty_4}. Once Linux has finished booting, you will be 
-logged in to the Linux {\it command line interface} (CLI) as the \textit{root} user. Being logged 
+logged in to the Linux serial console terminal as the \textit{root} user. Being logged 
 in as root means that you that have administrator-level privileges, which allow you to modify 
 settings and execute privileged programs.
 
-In the {\it Terminal} window press \texttt{Enter} on your keyboard to see that the CLI responds. 
-Type a Linux command such as \texttt{ls}, which shows a listing of directories and files. 
+In the {\it Terminal} window press \texttt{Enter} on your keyboard to see that the
+terminal responds.  Type a Linux command such as \texttt{ls}, which shows a listing of 
+directories and files. 
 
 ~\\
 \begin{figure}[H]
@@ -314,22 +342,6 @@ Type a Linux command such as \texttt{ls}, which shows a listing of directories a
    \caption{Putty's configuration window for serial communication settings.}
 	\label{fig:putty_2}
 \end{figure}
-
-\subsection{Connecting to the Host Computer using a Network}
-\label{sec:conn_network}
-
-It is useful to establish a network connection that supports higher bandwidth
-transfers between your computer and DE-series board. Examples of how you may want to use 
-such a connection are performing {\it FTP}-based transfers of files between the host
-computer and DE-series board, and using a 
-{\it VNC Viewer}, described below.  The Linux image has been configured to include 
-a graphical user interface (GUI), and a virtual network computing (VNC*) server. The 
-VNC server transmits a copy of the GUI to a network port, which allows the host computer 
-to use the GUI via a network connection to the DE-series board. The network port used 
-by the VNC server is 5901, and the password for the VNC server is set to {\it password}.
-
-There are two ways to establish a network connection to the DE-series board: using an
-Ethernet cable, and using a WiFi adapter. Both methods are discussed below.
 
 \begin{figure}[H]
    \begin{center}
@@ -347,64 +359,142 @@ Ethernet cable, and using a WiFi adapter. Both methods are discussed below.
 	\label{fig:putty_4}
 \end{figure}
 
+\subsubsection{Using a Linux* Host Computer}
+
+You should read this section if your host computer is running a version of Linux.
+On a Linux host computer, serial communication devices such as the UART-to-USB are treated 
+as \textit{teletype} (tty) devices. Since there can be multiple tty devices connected to
+the host computer, each tty device is assigned a unique identifier. The name assigned to your 
+UART-to-USB connection
+can be determined by running the command \texttt{dmesg | grep tty} as shown in 
+Figure~\ref{fig:dmesg}. In the figure, you can see that the UART-to-USB chip (the manufacturer's
+name for this device is \textit{FTDI USB Serial Device converter}) has been assigned the name 
+ttyUSB0.
+
+\begin{figure}[H]
+   \begin{center}
+       \includegraphics[scale=0.5]{figures/new_tty.png}
+   \end{center}
+   \caption{Determining the tty device that corresponds to the UART-to-USB connection.}
+	\label{fig:dmesg}
+\end{figure}
+
+Once you have determined which tty port is connected to your DE1-SoC board, you can run a
+serial communications program to connect to the Linux serial console terminal on the
+board. If you use the putty program, which is available for Linux, then you can follow
+similar instructions given above for MS Windows computers. But if you choose a different
+serial communications program (several alternative programs are available), then you will
+need to adapt your procedures accordingly.
+
+\subsubsection{Using a macOS Host Computer}
+
+You should read this section if your host computer is running a version of macOS.
+On a macOS host computer, serial communication devices such as the UART-to-USB are treated 
+as \textit{teletype} (tty) devices. Since there can be multiple tty devices connected to
+your computer,  each one is assigned a unique identifier.
+To determine which tty port corresponds to your USB-to-UART port, open the macOS 
+{\it Terminal} application and then type the command \texttt{ls /dev/tty.*}. An example of
+the output produced by this command is shown in Figure~\ref{fig:macOSTerminal}. It shows
+a USB-to-UART tty device called \texttt{/dev/tty.usbserial-AL04C11T.}
+
+\begin{figure}[H]
+   \begin{center}
+       \includegraphics[scale=0.5]{figures/macOSTerminal.png}
+   \end{center}
+   \caption{Determining the tty device under macOS.}
+	\label{fig:macOSTerminal}
+\end{figure}
+
+A number of application programs are available under macOS to connect to tty ports. Here
+we will use the built-in application called {\it screen}. To connect to the identified
+serial port, we need to specify its identifier and baud rate, which can be done by
+executing in a macOS Terminal the command
+
+\texttt{screen /dev/tty.usbserial-AL04C11T 115200}.
+
+This command makes a connection to the Linux serial console terminal on the DE1-SoC board. 
+If you turn on the DE1-SoC board after running this \texttt{screen} command, then you will
+see the status messages that are printed to the serial console while Linux boots. After
+the boot process is finished, press the \texttt{return} keyboard key to see the Linux
+prompt from the DE1-SoC board, and then execute a command such as \texttt{ls} to see 
+the files and directories that are available.
+
+You can execute the command \texttt{man screen} to learn how to control the
+\texttt{screen} application. To execute a \texttt{screen} command you have to first type
+the {\it escape} sequence \texttt{control-A} (abbreviated here as \texttt{C-A}), 
+followed by the command. For example, to see a list of all \texttt{screen} commands you can 
+type \texttt{C-A ?}. To quit a \texttt{screen} session that is connected to Linux on the
+DE1-SoC board you can type \texttt{C-A k}, and then type \texttt{y} in answer to the
+prompt from \texttt{screen} ``\texttt{Really kill this window [y/n]}''.
+
+\subsection{Connecting to the Host Computer using a Network}
+\label{sec:conn_network}
+
+As discussed in the previous section, it is useful to establish a USB-to-UART connection 
+to the DE1-SoC board, because this connection provides access to the Linux serial console 
+terminal.  However, this serial connection offers limited functionality, because of its 
+relatively slow speed of operation. In this section we show how to establish a high-bandwidth 
+communication link between your host computer and the DE1-SoC board, by using a 
+{\it network connection}. The network connection allows useful capabilities, such as 
+{\it secure shell} (ssh), {\it virtual network computing} (VNC), and {\it file transfer
+protocol} (FTP) to used with Linux on the DE1-SoC board. There are two ways to establish 
+the network connection: using an Ethernet cable, and using a WiFi adapter. 
+Both methods are discussed below.
+
 \subsubsection{Connection using an Ethernet Cable}
 
-To establish a network connection to your host computer using an Ethernet cable, plug one end 
-of the Ethernet cable into the RJ45 port on the DE-series board. The other end of this cable
-can either be plugged directly into an Ethernet port on the host computer, or plugged
-into an Ethernet switch on the same network as the host computer. The DE-series board is set 
-up to use either of two {\it IPv4} network addresses via Ethernet: \texttt{192.168.0.123} and 
-\texttt{192.168.1.123}. For an Ethernet port on the host computer to connect to the DE-series
-board, this Ethernet port's network address must be on the same {\it subnet}. This means 
-that the Ethernet port's network address must be of the form \texttt{192.168.0.}{\it xxx} 
-or \texttt{192.168.1.}{\it xxx}. The steps required to complete the Ethernet connection 
-are described below.
+Although many types of network setups can be created with Ethernet cables, for this discussion
+we assume that your DE1-SoC board is directly plugged into an Ethernet port on your host
+computer, via either a built-in Ethernet port or a USB-to-Ethernet adaptor. Use the
+\texttt{RJ45} port on the DE1-SoC board to make the Ethernet connection. If you
+have some other type of Ethernet setup, then the instructions provided here might
+have to be modified somewhat. If there is no Ethernet port available on your host computer, 
+then you have to connect to the board by using a USB-to-UART serial connection, as discussed
+in Section \ref{sec:conn_USB}. It is recommended to use an Ethernet connection, as 
+functionality is limited when using only a serial connection to the board. 
 
-You first need to determine the IP addresses of any Ethernet ports on your host
-computer. If you are using Windows on the host computer, 
-open a Command (CMD) prompt window and execute \texttt{ipconfig}. In the output produced by 
-this command look for each Ethernet port's \texttt{IPv4 Address}. If you are running Linux 
-on your host computer, open a Terminal window and run the command \texttt{ifconfig}. In 
-the output look for an {\it inet addr} that is associated with each Ethernet port, such 
-as {\it eth0}.
+The DE1-SoC board is set up to use either of two {\it IPv4} network addresses via 
+Ethernet: \texttt{192.168.0.123} and \texttt{192.168.1.123}. For an Ethernet port on 
+the host computer to connect to the DE1-SoC board, this Ethernet port's network address 
+must be on the same {\it subnet}. This means that the Ethernet port's network address must 
+be of the form \texttt{192.168.0.}{\it xxx} or \texttt{192.168.1.}{\it xxx}. 
+The steps required to complete the Ethernet connection are described below.
 
-If the Ethernet port that you are using to connect to your DE-series board is on 
-subnet \texttt{192.168.0} or \texttt{192.168.1}, then skip to 
-Section~\ref{sec:VNC}.  Otherwise, you need to change either the IP address of your
-Ethernet port, or the IP address of the DE-series board. If your computer is connected to
-the Internet using an Ethernet port, then you probably do not want to change any
-settings related to this port. However, if you have an additional Ethernet port that
-is currently not in use, then you can modify this port's settings to make a connection to
-the DE-series board. The procedure for accessing {\it Network Settings} in your
-Microsoft Windows system can be easily found by seaching for it on the Internet. Using these
-procedures, open the \texttt{Network Settings} on your host computer. 
-Configure the Ethernet port that you 
-are using to connect to your DE-series board to have a {\it manually-set IPv4} 
-address (the default setting is usually to have an address set automatically by using a 
-{\it Dynamic Name Server} (DNS)). Set the \texttt{IPv4} address 
-to \texttt{192.168.0.xxx}, and set the
-\texttt{Subnet} mask to \texttt{255.255.255.0}. For \texttt{xxx} use any address that is not 
-already assigned to a device on your network (for example, use \texttt{xxx} = 111).
-Leave the \texttt{Default gateway} field blank.
+You first need to determine the {\it IPv4} address of the Ethernet port that is connected to your
+DE1-SoC board. The procedures for making network settings for Ethernet
+ports varies for different host computer operating systems, but these procedure can 
+be easily found by searching for them on the Internet. Using these procedures, open the 
+network settings user interface on your host computer. 
 
-If you are using Linux on the host computer, the IP address of an Ethernet port 
-can be changed by using the
-\texttt{ifconfig} command. If your Ethernet adapter were called {\it eth0}, then the command 
-would be \texttt{ifconfig eth0 192.168.0.}{\it xxx} 
-(or \texttt{192.168.1.}{\it xxx}), where {\it xxx} is a number
-of your choosing (that is not already being used in the subnet). If your Ethernet adapter
-is not called {\it eth0}, then replace this field with the actual name of your Ethernet port.
+If your host computer has more than one Ethernet port, then you will see multiple ports in
+your network settings user interface. To determine which port is plugged into the DE1-SoC board,
+a workable approach is to unplug/re-plug the cable that is connected to the board,
+and observe which Ethernet port is
+affected. Once your have identified the correct Ethernet port, examine its {\it IPv4} address.
+If the address is on subnet \texttt{192.168.0} or \texttt{192.168.1}, then you do not need
+to modify the address of the port and can skip to Section~\ref{sec:connecting}. 
+Otherwise, you need to change the {\it IPv4} address of your Ethernet port, as discussed
+below. 
 
-Once you have established the correct IP address, you can connect to the VNC server as
-described in Section~\ref{sec:VNC}. But if 
-you don't have an unused Ethernet port on your host computer, then you can
-change the address of your DE-series board as described below.
+Configure the Ethernet port that you are using to connect to your DE1-SoC board to 
+have a {\it manually-set IPv4} address (the default setting is usually to have an address 
+set automatically by using a {\it Dynamic Name Server} (DNS)). Set the \texttt{IPv4} address 
+to \texttt{192.168.0.xxx}, and set the \texttt{Subnet} mask to \texttt{255.255.255.0}. 
+For \texttt{xxx} use any address that is not already assigned to a device on your network
+(for example, use \texttt{xxx} = 111 if this address is not already in use). If a
+\texttt{Default gateway} is shown in the settings, leave this field blank.
 
-\subsubsection*{Changing the IP address of a DE-series Board}
+Once you have established the correct {\it IPv4} address, you can connect to the DE1-SoC
+board as described in Section~\ref{sec:connecting}. In some situations it is possible that
+you might not have an available Ethernet port whose address can be set as needed.
+In such an instance, an alternative approach is to modify the 
+{\it IPv4} address of the DE1-SoC board, using the procedure discussed below.
 
-To change the IP address of your DE-series board you have to first connect your host computer
-to the board via a USB cable, as described in section~\ref{sec:conn_USB}. Then, using a 
-{\it Terminal} window connected to Linux on the DE-series board execute the \texttt{ifconfig} 
+\subsubsection*{Changing the IP address of a DE1-SoC Board}
+
+To change the IP address of your DE1-SoC board you have to first connect your host computer
+to the board via a USB cable, as described in Section~\ref{sec:conn_USB}. Then, using the 
+Linux serial console terminal on the DE1-SoC board execute the \texttt{ifconfig} 
 command. The \texttt{ifconfig} command shows you the current IP address(es) that are
 assigned to the board. You can use \texttt{ifconfig} to change the IP address. For example, 
 let's assume that your host computer's IP address is \texttt{192.168.86.33}. Then, you could 
@@ -415,24 +505,25 @@ port that is available to Linux.
 
 \subsubsection{Connecting to the Host Computer using a WiFi Adapter}
 \label{sec:WiFi}
-
-To make a network connection to your DE-series board using a WiFi adapter, you first have to 
-connect your host computer to the board via a USB cable, as described in 
-section~\ref{sec:conn_USB}. Then, you can use a Terminal window connected to Linux on 
-the DE-series board to connect to the desired WiFi network. 
+If you wish to make a network connection to your DE1-SoC board using a WiFi adapter, then 
+you first have to connect your host computer to the board via a USB cable
+as discussed in Section~\ref{sec:conn_USB}. Then, you can use the Linux serial console
+terminal to make the needed settings. The discussion below assumes that you have 
+successfully opened the required console window. 
 
 Linux supports a variety of USB WiFi adapters. At the time of writing this
 tutorial WiFi adapters supported by Linux kernel version 3.18 have been tested. Other WiFi
 adapters may also be usable, but drivers may need to be manually installed.
 
-Plug your WiFi adapter into a USB port on your DE-series board. To join a desired WiFi network, 
-you can run the following script: \texttt{connect\_wpa <ssid> <password>.} This script can be found 
-in the directory {\it /home/root/misc} in the Linux filesystem. Your DE-series board should 
-become connected to your WiFi network after a few moments.
+Plug your WiFi adapter into a USB port on your DE1-SoC board. To join a desired WiFi network, 
+you can run the following script in the Linux Terminal 
+window: \texttt{connect\_wpa <ssid> <password>.} This script can 
+be found in the directory {\it /home/root/misc} in the Linux filesystem. Your DE1-SoC 
+board should become connected to your WiFi network after a few moments.
 
 Instead of using the \texttt{connect\_wpa} script, it is possible to run the Linux commands
 included in the script manually. First, using the Terminal window connected to Linux on
-your DE-series board, create an ASCII text file in a directory of your choosing. Give the file 
+your DE1-SoC board, create an ASCII text file in a directory of your choosing. Give the file 
 a name ending in .{\it conf}, such as {\it mywifi.conf}. This file has to contain the lines
 
 \begin{lstlisting}
@@ -442,7 +533,7 @@ network={
 }
 \end{lstlisting}
 
-Note that the first character on each of the second and third lines is a {\it tab} character.
+The first character on each of the second and third lines is a {\it tab} character.
 Now, run the following Linux commands:
 
 \begin{lstlisting}
@@ -451,28 +542,63 @@ wpa_supplicant -B -iwlan0 -c./mywifi.conf -Dnl80211
 dhclient wlan0
 \end{lstlisting}
 
-~\\
-Note that the wireless interface on your DE-series board might not be {\it wlan0}. To
+The wireless interface on your DE1-SoC board might not be {\it wlan0}. To
 determine the correct name, use the Linux command \texttt{iwconfig}. You can check the IP address 
 assigned by the WiFi router using the Linux \texttt{ifconfig} command. Then, you can then use 
 this IP address, as described in Section~\ref{sec:VNC}, to connect to the VNC server from a 
 host computer on the same WiFi network.
 
+\subsection{Using the Network Connection to Your DE1-SoC Board}
+\label{sec:connecting}
+
+This section assumes that you have set up a working Ethernet or WiFi network connection 
+between your host computer and Linux on the DE1-SoC board.  As a first step to verify that
+the network connection is established, use the \texttt{ping} command, as illustrated by the
+example in Figure~\ref{fig:ping}. If this command fails, then you should revisit the procedures
+described above to make a working network connection.
+
+\begin{figure}[H]
+   \begin{center}
+       \includegraphics[scale=0.4]{figures/ping.png}
+   \end{center}
+   \caption{Using the \texttt{ping} command.}
+	\label{fig:ping}
+\end{figure}
+
+\subsubsection{Using Secure Shell (ssh)}
+\label{sec:ssh}
+
+The {\it secure shell} (ssh) application allows you to login to Linux on the DE1-SoC
+board via your network connection.  An example of an \texttt{ssh} command is
+
+\texttt{ssh -l root 192.168.0.123}
+
+Upon executing this command, Linux on the DE1-SoC board should prompt for the \texttt{root} 
+login password. Type \texttt{password} in response and then press the \texttt{return} key. 
+Once logged in to the DE1-SoC board you can execute any Linux command via its command line 
+interface (CLI).  When finished, you can log out by typing \texttt{exit}.
+
 \subsubsection{Using the VNC Server}
 \label{sec:VNC}
-After you have set up a network connection between your host computer and the DE-series
-board, you can use a {\it VNC Viewer} application on your host computer to connect to 
-the Linux GUI. For this tutorial we will be using the {\it RealVNC* Viewer} that is available 
-for no charge for Windows computers. For Linux host computers you can
-use a VNC Viewer such as the {\it Remmina} application that is included with some Linux
-distributions.
+The DE1-SoC-UP Linux image has been configured to include 
+a graphical user interface (GUI) via a virtual network computing (VNC) server. The 
+VNC server transmits a copy of the GUI to a network port, which allows the host computer 
+to use the GUI via a network connection. The network port used 
+by the VNC server is \texttt{5901}, and the password for the VNC server is set to
+\texttt{password}.
 
-Figure~\ref{fig:VNC_1} shows the opening dialog of the {\it RealVNC Viewer} application. 
-The VNC Server address is specified assuming that the default IP address
+A variety of client programs are available for communicating with a VNC server, depending
+on your host computer operating system, as discussed below.
+
+\subsubsection{Using VNC on MS Windows}
+
+One popular VNC program for use with MS Windows is the {\it RealVNC* Viewer}, which is 
+free to use. Installing and running this program opens the dialog shown in Figure~\ref{fig:VNC_1}.
+The VNC Server address is specified assuming that the default DE1-SoC {\it IPv4} address
 \texttt{192.168.0.123} is being used, and port \texttt{5901} is specified as required. Clicking 
 on the {\it Connect} button opens another dialog that prompts for the 
-password. Providing the password (which is just set to {\it password} in our case) opens the 
-RealVNC window shown in Figure~\ref{fig:VNC_2}. In the figure we have opened the {\it Terminal}
+password. Providing the password (which is just set to \texttt{password} in our case) opens the 
+VNC window shown in Figure~\ref{fig:VNC_2}. In the figure we have opened the {\it Terminal}
 command prompt window inside the VNC Viewer and typed the Linux command \texttt{pwd}.
 
 The VNC Server supports four different screen sizes. Using a {\it Terminal} command prompt 
@@ -480,10 +606,10 @@ window in the VNC Viewer the screen size can be changed with the \texttt{xrandr}
 You can type \texttt{xrandr~-s~0} to select the smallest screen size, and \texttt{xrandr -s 3}
 to choose the largest size.
 
-The Linux image includes many application programs. It provides several text
-editors, including {\it gedit}, {\it Emacs}, {\it vim}, and {\it gvim}.  It also includes
-the {\it Code::Blocks} integrated development environment. This tool provides a 
-source-level debugger that can be used to develop applications programs. In
+The Linux image includes many application programs that can be accessed via using VNC.
+It provides several text editors, including {\it gedit}, {\it Emacs}, {\it vim}, and 
+{\it gvim}.  It also includes the {\it Code::Blocks} integrated development environment. 
+This tool provides a source-level debugger that can be used to develop applications programs. In
 Appendix A we provide a short tutorial that shows how to use {\it Code::Blocks} to develop
 C programs that run on the ARM processor under Linux. 
 
@@ -504,41 +630,43 @@ C programs that run on the ARM processor under Linux.
 	\label{fig:VNC_2}
 \end{figure}
 
+\subsubsection{Using VNC on Linux}
+
+For Linux host computers a popular application is the {\it Remmina} VNC viewer.
+Instructions for installing and using this program are available on the Internet.
+
+\subsubsection{Using VNC on macOS}
+
+For macOS there is a built-in VNC viewer. Executing the command
+
+\texttt{open vnc://192.168.0.123:5901}
+
+causes Linux on the DE1-SoC board to prompt for the VNC password. Responding with
+\texttt{password} establishes a VNC logon and opens a VNC window similar to the one 
+illustrated in Figure~\ref{fig:VNC_2}.
+
 \subsubsection{Transferring Files to/from the Host Computer}
 \label{sec:ftp}
 
+Files can be transferred between the host computer and Linux on the DE1-SoC board over the
+network connection. One simple method of copying files is to use the {\it secure copy} (scp)
+program. Instructions for using scp can be obtained from the Internet or, on macOS and
+Linux, by executing \texttt{man scp}. Another method of copying files is to use the 
+{\it file transfer protocol} (FTP), described below.  
+
 The Linux image includes an {\it FTP} Server that can be used to transfer files
-between the host computer and the DE-series board. The FTP server uses the secure FTP
+between the host computer and the DE1-SoC board. The FTP server uses the secure FTP
 (SFTP) protocol and uses {\it Port 22} for the network connection. The login 
 {\it Username} for the FTP Server is {\it root}, and the password is {\it password}. An
-easy-to-use FTP client for both Windows and Linux host computers is {\it FileZilla}, 
+easy-to-use FTP client for Windows, macOS, and Linux host computers is {\it FileZilla}, 
 available from {\it https://filezilla-project.org/}.
 
-\subsubsection{Accessing the Internet}
-
-After connecting your DE-series board to a network, it is possible to provide Internet access 
-to Linux applications. For example, the Linux image includes the 
-{\it Mozilla* Firefox*} browser, which can be used to browse web pages. If you are connected
-to the network using WiFi as discussed in Section~\ref{sec:WiFi}, then the Internet 
-access provided by your WiFi router is already 
-enabled. But if you have connected using an Ethernet cable, then the following commands have 
-to be used to enable the Internet access provided by your router:
-
-\begin{lstlisting}
-ifconfig eth0 0.0.0.0 0.0.0.0
-dhclient eth0
-\end{lstlisting}
-These commands set up the {\it eth0} port as a DHCP client of the router. The {\it eth0} port will
-obtain an automatically-assigned IP address that allows Internet access. You can use this 
-IP address to connect to the VNC server as described in Section~\ref{sec:VNC}, and can run
-Linux applications that access the Internet.
-
-\section{Developing Linux* Programs for your DE-series Board}
+\section{Developing Linux* Programs for your DE1-SoC Board}
 \label{sec:linux_programs}
 
 In this section you will learn how to develop programs that can run under Linux on 
-your DE-series board. There are two options for developing a Linux program in a language such
-as C for your DE-series board. The first is to compile the C code by using the \texttt{gcc}
+your DE1-SoC board. There are two options for developing a Linux program in a language such
+as C for your DE1-SoC board. The first is to compile the C code by using the \texttt{gcc}
 compiler that is provided with the Linux running on the board. This approach is called 
 \textit{native compilation}. This is the method that we use in this tutorial. The second option is 
 to compile your program on a host computer, and then transfer the resulting executable onto 
@@ -560,10 +688,10 @@ the right-hand side. In the figure we are running the {\it Filezilla*} program, 
 ftp client on the host computer can be used. Finally, the figure depicts a {\it Terminal} 
 window connected to Linux. The Terminal provides access to the Linux 
 {\it command line interface} (CLI). The CLI allows you to execute Linux programs, such 
-as the C-compiler, on the DE-series board. The Terminal window in this case is provided 
-by {\it putty}. It communicates with the DE-series board via a USB cable, discussed in 
+as the C-compiler, on the DE1-SoC board. The Terminal window in this case is provided 
+by {\it putty}. It communicates with the DE1-SoC board via a USB cable, discussed in 
 section~\ref{sec:conn_USB}. The ftp program communicates with the board
-via a Network connection, discussed in section~\ref{sec:conn_network}
+via a Network connection, discussed in Section~\ref{sec:conn_network}
 
 An alternative to the setup in Figure~\ref{fig:dev_setup} is to use the VNC Viewer as
 depicted in Figure~\ref{fig:VNC_2}. In this case you would not need to use the Terminal
@@ -1040,7 +1168,7 @@ The \texttt{make} tool provides a convenient mechanism for compiling and buildin
 because \texttt{make} only compiles the parts of a program that have been updated since the 
 last time the program was compiled. This mechanism relies on the ability of \texttt{make} 
 to check the time- and date-stamp of files and compare them to the current time and date of
-the Linux system. On your DE-series board this mechanism can fail to work properly, because the 
+the Linux system. On your DE1-SoC board this mechanism can fail to work properly, because the 
 board does not have a battery that would allow it to save the current date and time when 
 powered off. If the board is reset by pressing the power button, then the Linux system 
 will reboot and the date and time will be reverted to to the "Linux epoch", which is 
@@ -1166,7 +1294,7 @@ driver, and corresponding wrappers, is named \texttt{LED}.
 \newpage
 \section*{Appendix A~~~~ Using \texttt{Code::Blocks}}
 
-If you have a network connection to your DE-series board, as described in
+If you have a network connection to your DE1-SoC board, as described in
 Section~\ref{sec:conn_network}, then you can make use of the \texttt{Code::Blocks} tool for
 developing and debugging application programs. In this appendix we provide a simple example 
 that shows how to create a \texttt{Code::Blocks} {\it project}.
@@ -1209,8 +1337,8 @@ click the \texttt{Open} button. In the dialog that opens, illustrated in
 Figure~\ref{fig:cb7}, select \texttt{OK}. Now you can open the \texttt{increment\_leds} item
 under \texttt{Workspace}, then open the \texttt{Sources} sub-menu, and double-click to open 
 the {\it increment\_leds.c} file inside the \texttt{Code::Blocks} window. You can change
-the size of the displayed text by holding down the \texttt{CTRL} key and rolling the mouse
-wheel.
+the size of the displayed text by holding down the \texttt{CTRL} key and scrolling with
+the mouse.
 
 \begin{figure} [h]
 \begin{center}
@@ -1457,7 +1585,7 @@ the FPGA interrupt line numbers in the DE1-SoC Computer.
 
 When a program is compiled for an architecture that is different from that of the system 
 doing the compiling, the process is called {\it cross-compilation}. In this section we will 
-cross-compile a program for the ARM architecture, to run on your DE-series board, from a 
+cross-compile a program for the ARM architecture, to run on your DE1-SoC board, from a 
 host computer which typically runs on the x86 architecture. To do this, we will use a 
 {\it gcc} toolchain that comes with the {\it Altera\textsuperscript{\textregistered} SoC EDS} suite. Specifically, we will use 
 the \texttt{arm-linux-eabihf-} toolchain, which can be found in 
@@ -1506,7 +1634,7 @@ Compile the code using the command
 \texttt{arm-linux-gnueabihf-gcc helloworld.c -o helloworld}, as shown in 
 Figure~\ref{fig:embedded_shell_2}. This command creates the output file \textit{helloworld}, which 
 is an ARM binary executable that we can copy to our Linux microSD card and execute 
-on your DE-series board. To copy the executable file you can either use an {\it ftp} program as
+on your DE1-SoC board. To copy the executable file you can either use an {\it ftp} program as
 discussed in Section~\ref{sec:ftp}, or another method of your choosing.
 
 \begin{figure}[H]
@@ -1527,7 +1655,7 @@ copy (\textit{objcopy}).
 
 You may wish to copy over files (such as a program that you want to run on the board) from 
 your host PC to the Linux filesystem. If you have a network connection between your host
-computer and DE-series board, then an easy way to transfer files is to use the FTP server,
+computer and DE1-SoC board, then an easy way to transfer files is to use the FTP server,
 as discussed in Section~\ref{sec:ftp}. Otherwise, you can copy files directly onto your
 microSD card using the procedures described below. Note that the host computer must have a 
 microSD card reader.
@@ -1537,7 +1665,7 @@ microSD card reader.
 When the microSD card is plugged into a Windows host PC, the FAT32 partition of the
 microSD card is detected. Any files that you move to this partition can be found in the
 \textit{/media/fat\_partition/} directory of the Linux filesystem once Linux boots on your
-DE-series board. Note that this partition will by default contain the files
+DE1-SoC board. Note that this partition will by default contain the files
 \textit{soc\_system.rbf} (an intermediate FPGA programming file used during boot up),
 \textit{socfpga.dtb} (the device tree file), and \textit{uImage} (the Linux kernel). {\it Never}
 delete these files, as they are required to boot Linux.
