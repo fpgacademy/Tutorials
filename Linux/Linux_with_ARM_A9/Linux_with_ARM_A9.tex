@@ -548,7 +548,7 @@ assigned by the WiFi router using the Linux \texttt{ifconfig} command. Then, you
 this IP address, as described in Section~\ref{sec:VNC}, to connect to the VNC server from a 
 host computer on the same WiFi network.
 
-\subsection{Using the Network Connection to Your DE1-SoC Board}
+\subsection{Using the Network Connection}
 \label{sec:connecting}
 
 This section assumes that you have set up a working Ethernet or WiFi network connection 
@@ -632,8 +632,22 @@ C programs that run on the ARM processor under Linux.
 
 \subsubsection{Using VNC on Linux}
 
-For Linux host computers a popular application is the {\it Remmina} VNC viewer.
-Instructions for installing and using this program are available on the Internet.
+The {\it Remmina} application is a popular VNC viewer for Linux host computers.
+Figure~\ref{fig:Remmina} gives an example of a Remmina GUI window. In the figure we have 
+selected the \texttt{VNC} protocol and specified the address and port number 
+(\texttt{192.168.0.123:5901}) needed for the DE1-SoC board. These settings
+open the VNC server window as discussed above for Figure~\ref{fig:VNC_2}.
+Remmina can be freely downloaded from the Internet and is included by default in many
+Linux distributions.
+
+~\\
+\begin{figure}[H]
+   \begin{center}
+       \includegraphics[scale=.8]{figures/remmina.png}
+   \end{center}
+   \caption{The Remmina window.}
+	\label{fig:Remmina}
+\end{figure}
 
 \subsubsection{Using VNC on macOS}
 
@@ -642,7 +656,7 @@ For macOS there is a built-in VNC viewer. Executing the command
 \texttt{open vnc://192.168.0.123:5901}
 
 causes Linux on the DE1-SoC board to prompt for the VNC password. Responding with
-\texttt{password} establishes a VNC logon and opens a VNC window similar to the one 
+\texttt{password} establishes a VNC logon and opens the VNC server window 
 illustrated in Figure~\ref{fig:VNC_2}.
 
 \subsubsection{Transferring Files to/from the Host Computer}

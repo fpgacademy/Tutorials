@@ -6,3 +6,5 @@ release/
 
 Linux/.DS_Store
 .DS_Store
+*.un~
+*.tex~
