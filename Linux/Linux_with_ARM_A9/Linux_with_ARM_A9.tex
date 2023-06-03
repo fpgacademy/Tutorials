@@ -410,7 +410,7 @@ we will use the built-in application called {\it screen}. To connect to the iden
 serial port, we need to specify its identifier and baud rate, which can be done by
 executing in a macOS Terminal the command
 
-\texttt{screen /dev/tty.usbserial-AL04C11T 115200}.
+\texttt{screen /dev/tty.usbserial-AL04C11T 115200}
 
 This command makes a connection to the Linux serial console terminal on the DE1-SoC board. 
 If you turn on the DE1-SoC board after running this \texttt{screen} command, then you will
@@ -553,8 +553,9 @@ host computer on the same WiFi network.
 
 This section assumes that you have set up a working Ethernet or WiFi network connection 
 between your host computer and Linux on the DE1-SoC board.  As a first step to verify that
-the network connection is established, use the \texttt{ping} command, as illustrated by the
-example in Figure~\ref{fig:ping}. If this command fails, then you should revisit the procedures
+the network connection is established, execute the \texttt{ping} command on your host
+computer, as illustrated by the example in Figure~\ref{fig:ping}. If no data bytes are 
+returned to the host computer from the DE1-SoC board, then you should revisit the procedures
 described above to make a working network connection.
 
 \begin{figure}[H]
@@ -675,6 +676,22 @@ between the host computer and the DE1-SoC board. The FTP server uses the secure 
 easy-to-use FTP client for Windows, macOS, and Linux host computers is {\it FileZilla}, 
 available from {\it https://filezilla-project.org/}.
 
+\subsubsection{Accessing the Internet}
+\label{sec:internet}
+
+It is possible to access external IP addresses on the Internet from your DE1-SoC board. 
+To do so, connect your DE1-SoC board using an Ethernet cable directly (or through an
+Ethernet switch) to your Internet router. Open a serial port connection to your DE1-SoC
+board, as described in Section~\ref{sec:conn_USB}, and execute the commands
+
+\begin{verbatim}
+ifconfig eth0 0.0.0.0 0.0.0.0
+dhclient eth0
+\end{verbatim}
+
+These commands set up the {\it eth0} port as a DHCP client of the router. The {\it eth0} port 
+will obtain an automatically-assigned IP address that allows Internet access.
+
 \section{Developing Linux* Programs for your DE1-SoC Board}
 \label{sec:linux_programs}
 
@@ -684,8 +701,8 @@ as C for your DE1-SoC board. The first is to compile the C code by using the \te
 compiler that is provided with the Linux running on the board. This approach is called 
 \textit{native compilation}. This is the method that we use in this tutorial. The second option is 
 to compile your program on a host computer, and then transfer the resulting executable onto 
-the Linux filesystem (microSD card). This approach is called \textit{cross compilation}, and 
-is described briefly in Appendix G.
+the Linux filesystem (microSD card). This approach, which is called \textit{cross compilation}, 
+is not used in this tutorial.
 
 To perform native compilation you need to compile your C code by using the \texttt{gcc} compiler 
 provided with Linux that is running on the board. However, this process does not require you to
@@ -704,8 +721,10 @@ window connected to Linux. The Terminal provides access to the Linux
 {\it command line interface} (CLI). The CLI allows you to execute Linux programs, such 
 as the C-compiler, on the DE1-SoC board. The Terminal window in this case is provided 
 by {\it putty}. It communicates with the DE1-SoC board via a USB cable, discussed in 
-section~\ref{sec:conn_USB}. The ftp program communicates with the board
-via a Network connection, discussed in Section~\ref{sec:conn_network}
+Section~\ref{sec:conn_USB}. You might instead use an {\it ssh} connection to the DE1-SoC board
+via a terminal on your host computer. An {\it ssh} connection gives a much higher bandwidth in
+comparison to {\it putty}, because {\it ssh} (as well as {\it ftp}) communicates with the board
+via a network connection, discussed in Section~\ref{sec:conn_network}
 
 An alternative to the setup in Figure~\ref{fig:dev_setup} is to use the VNC Viewer as
 depicted in Figure~\ref{fig:VNC_2}. In this case you would not need to use the Terminal
@@ -929,11 +948,9 @@ one, then writes the incremented value back to the register.
 \begin{minipage}[t]{16 cm}
 \begin{lstlisting}
 /* Open /dev/mem to give access to physical addresses */
-int open_physical (int fd)
-{
+int open_physical (int fd) {
    if (fd == -1) // check if already open
-      if ((fd = open( "/dev/mem", (O_RDWR | O_SYNC))) == -1)
-      {
+      if ((fd = open( "/dev/mem", (O_RDWR | O_SYNC))) == -1) {
          printf ("ERROR: could not open \"/dev/mem\"...\n");
          return (-1);
       }
@@ -941,20 +958,17 @@ int open_physical (int fd)
 }
 
 /* Close /dev/mem to give access to physical addresses */
-void close_physical (int fd)
-{
+void close_physical (int fd) {
    close (fd);
 }
 
 /* Establish a virtual address mapping for the physical addresses starting 
  * at base and extending by span bytes  */
-void* map_physical(int fd, unsigned int base, unsigned int span)
-{
+void* map_physical(int fd, unsigned int base, unsigned int span) {
    void *virtual_base;
    // Get a mapping from physical addresses to virtual addresses
    virtual_base = mmap (NULL, span, (PROT_READ | PROT_WRITE), MAP_SHARED, fd, base);
-   if (virtual_base == MAP_FAILED) 
-   {
+   if (virtual_base == MAP_FAILED) {
       printf ("ERROR: mmap() failed...\n");
       close (fd);
       return (NULL);
@@ -970,13 +984,11 @@ void* map_physical(int fd, unsigned int base, unsigned int span)
 
 \lstset{language=C,numbers=none}
 \begin{center}
-\begin{minipage}[t]{12.5 cm}
+\begin{minipage}[t]{13.5 cm}
 \begin{lstlisting}
 /* Close the previously-opened virtual address mapping */
-int unmap_physical(void * virtual_base, unsigned int span)
-{
-   if (munmap (virtual_base, span) != 0) 
-   {
+int unmap_physical(void * virtual_base, unsigned int span) {
+   if (munmap (virtual_base, span) != 0) {
       printf ("ERROR: munmap() failed...\n");
       return (-1);
    }
@@ -1091,15 +1103,13 @@ the \texttt{free\_irq(...)} function.
 void * LW_virtual;                 // Lightweight bridge base address
 volatile int *LEDR_ptr, *KEY_ptr;  // virtual addresses
 
-irq_handler_t irq_handler(int irq, void *dev_id, struct pt_regs *regs)
-{
+irq_handler_t irq_handler(int irq, void *dev_id, struct pt_regs *regs) {
    *LEDR_ptr = *LEDR_ptr + 1;
    // Clear the Edgecapture register (clears current interrupt)
    *(KEY_ptr + 3) = 0xF; 
    return (irq_handler_t) IRQ_HANDLED;
 }
-static int __init initialize_pushbutton_handler(void)
-{
+static int __init initialize_pushbutton_handler(void) {
    int value;
    // generate a virtual address for the FPGA lightweight bridge
    LW_virtual = ioremap_nocache (LW_BRIDGE_BASE, LW_BRIDGE_SPAN);
@@ -1116,8 +1126,7 @@ static int __init initialize_pushbutton_handler(void)
       "pushbutton_irq_handler", (void *) (irq_handler));
    return value;
 }
-static void __exit cleanup_pushbutton_handler(void)
-{
+static void __exit cleanup_pushbutton_handler(void) {
    *LEDR_ptr = 0; // Turn off LEDs and de-register irq handler
    iounmap (LW_virtual);
    free_irq (KEYS_IRQ, (void*) irq_handler);
@@ -1595,108 +1604,7 @@ the FPGA interrupt line numbers in the DE1-SoC Computer.
 \lstinputlisting{PyDE/examples/draw_lines/draw_lines.py}
 
 \newpage
-\section*{Appendix G~~~~Cross Compiling}
-
-When a program is compiled for an architecture that is different from that of the system 
-doing the compiling, the process is called {\it cross-compilation}. In this section we will 
-cross-compile a program for the ARM architecture, to run on your DE1-SoC board, from a 
-host computer which typically runs on the x86 architecture. To do this, we will use a 
-{\it gcc} toolchain that comes with the {\it Altera\textsuperscript{\textregistered} SoC EDS} suite. Specifically, we will use 
-the \texttt{arm-linux-eabihf-} toolchain, which can be found in 
-the \textit{/embedded/ds-5/sw/gcc/bin} folder in the Altera SoC EDS installation directory.
-
-We will compile a simple {\it helloworld} program, the code for which is shown below in 
-Figure~\ref{fig:helloworld_code_2}. Save this code as \texttt{helloworld.c} in a folder of 
-your choice on your host computer.
-
-\lstset{language=C,numbers=left}
-\begin{figure}[H]
-\begin{center}
-\begin{minipage}[t]{16 cm}
-\begin{lstlisting}
-#include <stdio.h>
-
-int main(void)
-{
-    printf("Hello World!\n");
-    
-    return 0;
-}
-\end{lstlisting}
-\end{minipage}
-\end{center}
-\vspace{-0.33in}\caption{The helloworld program}
-\label{fig:helloworld_code_2}
-\end{figure}
-
-As mentioned, we will be using the \texttt{arm-linux-gnueabihf-} toolchain to compile this 
-program.  To start up a shell that includes this toolchain in its path, run the 
-\textit{Embedded Command Shell} batch script, located at 
-\textit{/altera\-/15.0/embed\-ded/Em\-bedded\_Comm\-and\_Sh\-ell.bat}. This will open up
-the shell, similar to what is shown in Figure~\ref{fig:embedded_shell_1}. Navigate to the
-folder that contains the helloworld.c file by using the \texttt{cd} command.
-
-\begin{figure}[H]
-   \begin{center}
-       \includegraphics[scale=0.7]{figures/embedded_shell_1}
-   \end{center}
-	\vspace{-0.5cm}\caption{The Embedded Command Shell}
-	\label{fig:embedded_shell_1}
-\end{figure}
-
-Compile the code using the command 
-\texttt{arm-linux-gnueabihf-gcc helloworld.c -o helloworld}, as shown in 
-Figure~\ref{fig:embedded_shell_2}. This command creates the output file \textit{helloworld}, which 
-is an ARM binary executable that we can copy to our Linux microSD card and execute 
-on your DE1-SoC board. To copy the executable file you can either use an {\it ftp} program as
-discussed in Section~\ref{sec:ftp}, or another method of your choosing.
-
-\begin{figure}[H]
-   \begin{center}
-       \includegraphics[scale=0.7]{figures/embedded_shell_2}
-   \end{center}
-   \caption{Cross-compiling the helloworld program}
-	\label{fig:embedded_shell_2}
-\end{figure}
-
-In addition to \texttt{arm-linux-gnueabihf-gcc}, the \texttt{arm-linux-gnueabihf-} toolchain 
-contains the typical suite of gnu compilation tools such as the C++ compiler (\textit{g++}), 
-linker (\textit{ld}), assembler (\textit{as}), object dump (\textit{objdump}), and object 
-copy (\textit{objcopy}).
-
-\subsection*{Transferring Files to the Linux* Filesystem}
-\label{sec:transfer_files}
-
-You may wish to copy over files (such as a program that you want to run on the board) from 
-your host PC to the Linux filesystem. If you have a network connection between your host
-computer and DE1-SoC board, then an easy way to transfer files is to use the FTP server,
-as discussed in Section~\ref{sec:ftp}. Otherwise, you can copy files directly onto your
-microSD card using the procedures described below. Note that the host computer must have a 
-microSD card reader.
-
-\subsubsection*{From a Windows* Host PC}
-
-When the microSD card is plugged into a Windows host PC, the FAT32 partition of the
-microSD card is detected. Any files that you move to this partition can be found in the
-\textit{/media/fat\_partition/} directory of the Linux filesystem once Linux boots on your
-DE1-SoC board. Note that this partition will by default contain the files
-\textit{soc\_system.rbf} (an intermediate FPGA programming file used during boot up),
-\textit{socfpga.dtb} (the device tree file), and \textit{uImage} (the Linux kernel). {\it Never}
-delete these files, as they are required to boot Linux.
-
-\subsubsection*{From a Linux* Host PC}
-
-When the microSD card is plugged into a Linux host PC, two partitions of the microSD card
-are detected. The first is the Linux filesystem partition, where you have access to any
-directory in the Linux directory tree. The second is the FAT32 partition, which gets
-mounted to \textit{/media/fat\_partition/} in the Linux directory tree. You can copy over
-files from your host PC to either of these partitions. Note that the FAT32 partition will
-by default contain the files \textit{soc\_system.rbf} (an intermediate FPGA programming
-file used during boot up), \textit{socfpga.dtb} (the device tree file), and
-\textit{uImage} (the Linux kernel). {\it Never} delete these files, as they are required to boot Linux. 
-
-\newpage
-\section*{Appendix H~~~~FPGA Configuration}
+\section*{Appendix G~~~~FPGA Configuration}
 
 A special mechanism built into the Cyclone V SoC allows software running on the ARM processor
 (such as the Linux OS) to program the FPGA. The \textit{DE1-SoC-UP} Linux distribution contains 
