@@ -294,6 +294,9 @@ If you are using the DE0-CV, DE0-Nano, DE2-115, or DE10-Lite there should be onl
 select {\sf Processing > Start Compilation} and indicate that you want to save the changes to the file by clicking {\sf Yes}.
 After compilation, go to {\sf Tools > Programmer} and load
 the project onto the DE-series board.
+
+Note: If you do not see a chip named SOCVHPS in the programmer window and click "Start", Quartus will crash. To fix this, click "Auto Detect" in the programmer window to 
+include this device in the tool chain and then click "Start" to continue loading the design to the board.
 \end{enumerate}
 
 \section{Probing the Design Using SignalTap}

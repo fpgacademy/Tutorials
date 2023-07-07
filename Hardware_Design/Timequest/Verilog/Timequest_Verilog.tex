@@ -328,6 +328,8 @@ made when the (default) 1 ns constraint was used. In particular, the optimizatio
 algorithms will likely take less time to execute, because once the generated circuit has
 sufficient positive slack to meet the constraint, the algorithms can terminate. 
 Figure~\ref{fig:SB9} shows the results of timing analysis, with a positive slack of 0.718 ns. 
+If the constraint is not in effect after recompilation, you need to add the saved SDC file to the project.
+On the left side under Task section, expand Timing Analysis and click on Edit Setting to add the saved SDC file to the project and then recompile and follow the previous steps.
 
 \begin{figure}[H]
 \begin{center}
