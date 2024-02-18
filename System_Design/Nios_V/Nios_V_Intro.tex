@@ -73,8 +73,8 @@ systems, which are Nios~V/m or Nios~V/g.
 \item Instruction Set
 \item Assembler Directives
 \item Example Program
+\item Nios~V Machine Timer and Software Interrupt Registers
 \item Exception and Interrupt Processing
-\item Nios~V Internal Timer
 \end{itemize}
 \clearpage
 \newpage
@@ -457,9 +457,7 @@ The instruction
 \end{center}
 \noindent
 multiplies the values of registers {\it rs1} and {\it rs2}, and places the {\it low-order}
-32 bits of the product into register {\it rd}.
-
-The instruction
+32 bits of the product into register {\it rd}.  The instruction
 \vspace{-\baselineskip}
 \begin{center}
 {\sf mulh~~rd, rs1, rs2}
@@ -506,11 +504,21 @@ division.
 
 \subsection{Logic Instructions}
 
-The logic instructions provide the AND, OR, XOR, and NOT operations. They operate on data
-that is either in the general purpose registers or given as an immediate value in the instruction. 
-These instructions are of R-type or I-type, respectively.
-
-\noindent
+The logic instructions implement the AND, OR, exclusive OR, and NOT logical operators. They 
+operate on data that is either in the general purpose registers or given as an immediate
+value. These instructions are of R-type or I-type, respectively. The logic instructions are:
+\vspace{-\baselineskip}
+\begin{ctabbing}
+~~~~\={\sf XORi}~~\={\sf rd, rs1, imm}~~~~\=\kill
+\>{\sf and} \>{\sf rd, rs1, rs2}\>(AND)\\
+\>{\sf andi} \>{\sf rd, rs1, imm}\>(AND immediate)\\
+\>{\sf or} \>{\sf rd, rs1, rs2}\>(OR)\\
+\>{\sf ori} \>{\sf rd, rs1, imm}\>(OR immediate)\\
+\>{\sf xor} \>{\sf rd, rs1, rs2}\>(Exclusive OR)\\
+\>{\sf xori} \>{\sf rd, rs1, imm}\>(Exclusive OR immediate)\\
+\>{\sf not} \>{\sf rd, rs1}\>(NOT)\\
+\end{ctabbing}
+\vspace{-\baselineskip}
 The instruction
 \vspace{-\baselineskip}
 \begin{center}
@@ -519,10 +527,7 @@ The instruction
 \noindent
 performs a bitwise logical AND of the values of registers {\it rs1} and {\it rs2}, and stores 
 the result in register {\it rd}. Similarly, the instructions {\sf or} and {\sf xor}
-perform the bitwise logical OR and XOR operations, respectively.
-
-\noindent
-The instruction
+perform the bitwise logical OR and XOR operations, respectively.  The instruction
 \vspace{-\baselineskip}
 \begin{center}
 {\sf andi~~rd, rs1, imm} 
@@ -532,8 +537,6 @@ performs a bitwise logical AND of the value of register {\it rs1} and the 12-bit
 operand, which is sign-extended to 32 bits, and stores the result in register {\it rd}.
 Similarly, the instructions {\sf ori} and {\sf xori} perform the OR and XOR operations 
 with immediate data, respectively.
- 
-\noindent
 The instruction
 \vspace{-\baselineskip}
 \begin{center}
@@ -546,9 +549,7 @@ implemented as {\sf xori~~rd, rs1, -1}.
 
 These instructions shift the value of a register either to the right or to the left.
 They are of R-type or I-type. They correspond to the shift operators $>$> and $<$< in the C 
-programming language. 
-
-The shift instructions are:
+programming language.  The shift instructions are:
 \vspace{-\baselineskip}
 \begin{ctabbing}
 ~~~~\={\sf srai}~~\={\sf rd, rs1, imm}~~~~\=\kill
@@ -588,7 +589,6 @@ A number of instructions are provided for moving data into registers. Examples a
 \begin{ctabbing}
 ~~~~\={\sf auipc}~~\={\sf rd, imm}~~~~\=\kill
 \>{\sf mv} \>{\sf rd, rs1} \>(move register)\\
-\>{\sf nop} \>\>(no operation)\\
 \>{\sf lui} \>{\sf rd, imm} \>(load upper immediate)\\
 \>{\sf auipc} \>{\sf rd, imm} \>(add upper immediate and pc)\\
 \>{\sf li} \>{\sf rd, imm} \>(load immediate)\\
@@ -597,9 +597,6 @@ A number of instructions are provided for moving data into registers. Examples a
 \vspace{-\baselineskip}
 The {\sf mv} instruction copies the value of register {\it rs1} into {\it rd}.
 It is a pseudoinstruction implemented by using {\sf addi} with a zero operand.
-The {\sf nop} instruction doesn't have any effect and simply advances the program counter. 
-It is a pseudoinstruction implemented as {\sf addi x0, x0, 0}.
-
 The instruction
 \vspace{-\baselineskip}
 \begin{center}
@@ -624,9 +621,7 @@ same way as for the {\sf lui}
 instruction. This means that {\it imm} is padded with 12 zeros in the least-significant bit 
 positions before being added to {\it pc}. The {\sf auipc} instruction is not normally used
 directly by a programmer. Instead, it is used by the Assembler to implement pseudoinstructions
-like {\sf li} and {\sf la}, described below. 
-
-The instruction
+like {\sf li} and {\sf la}.  The instruction
 \vspace{-\baselineskip}
 \begin{center}
 {\sf li~~rd, imm}
@@ -635,16 +630,13 @@ The instruction
 sets {\it rd} to the value of {\it imm}. This pseudoinstruction can be used to initialize
 {\it rd} to any 32-bit value. In a case where {\it imm} fits into a 12-bit signed number, 
 the pseudoinstruction is implemented as
-\vspace{-\baselineskip}
-\begin{tabbing}
+\begin{ctabbing}
 ~~~~\={\sf addi}~~\={\sf rd, rd, \%high(imm)}~~~~\=\kill
 \>{\sf addi~~rd, x0, imm}
-\end{tabbing}
+\end{ctabbing}
 \vspace{-\baselineskip}
 But if {\it imm} is too large to be used as a 12-bit signed value, then
 {\sf li} is implemented as the sequence of instructions
-
-\vspace{-\baselineskip}
 \begin{ctabbing}
 ~~~~\={\sf addi}~~\={\sf rd, rd, \%low(imm)}~~~~\=\kill
 \>{\sf lui} \>{\sf rd, \%high(imm)} \>(initialize the upper 20 bits)\\
@@ -734,7 +726,6 @@ the S-type encoding. Its 12-bit signed immediate is encoded in a particular way 
 during execution as an offset that is added to the {\it pc} to reach the {\it label}.
 The range of branch instructions is $\pm 4$KB.
 
-\newpage
 There are also several jump and branch pseudoinstructions. Examples are:
 \begin{ctabbing}
 ~~~~\={\sf bgeu}~~\={\sf rs1, rs2, label}~~~~\=\kill
@@ -744,6 +735,7 @@ There are also several jump and branch pseudoinstructions. Examples are:
 \>{\sf beqz} \>{\sf rs1, label} \>(branch if equal to zero)\\
 \>{\sf bnez} \>{\sf rs1, label} \>(branch if not equal to zero)\\
 \>{\sf bgtz} \>{\sf rs1, label} \>(branch if greater than zero)\\
+\>{\sf bgez} \>{\sf rs1, label} \>(branch if greater than or equal to zero)\\
 \>{\sf bltz} \>{\sf rs1, label} \>(branch if less than zero)\\
 \>{\sf blez} \>{\sf rs1, label} \>(branch if less than or equal to zero)\\
 \>{\sf bgt} \>{\sf rs1, rs2, label} \>(branch if greater than)\\
@@ -761,20 +753,35 @@ The {\sf ret} pseudoinstruction is used to return from a subroutine to its calle
 implemented as {\sf jalr x0, ra, 0}.
 
 The conditional branch instructions that end with {\sf z} compare {\it rs1} to the value 0.
-For example, {\sf beqz} branches to {\it label} iff the value of {\it rs1} is equal to 0. 
+For example, {\sf beqz} branches to {\it label} if the value of {\it rs1} is equal to 0. 
 It is implemented as {\sf beq rs1, x0, label}. Similarly, the {\sf bnez}, {\sf bgtz},
 {\sf bltz}, and {\sf blez} instructions provide other conditions that compare {\it rs1} to 0.
 The instructions {\sf bgt}, {\sf bgtu}, {\sf ble}, and {\sf bleu} provide additional 
 conditions that compare {\it rs1} and {\it rs2}. 
 
-Other than the jump and branch instructions, one more way to change the flow of program 
-execution is to execute an {\it environment call}. The instruction
+\subsection{Miscellaneous Instructions}
+\label{sec:misc}
+
+Some miscellaneous Nios~V instruction that do not fit within the above categories are:
+\begin{ctabbing}
+~~~~\={\sf ecall}~~~~\=\kill
+\>{\sf ecall} \>(environment call)\\
+\>{\sf mret} \>(machine return)\\
+\>{\sf nop} \>(no operation)\\
+\>{\sf wfi} \>(wait for interrupt)\\
+\end{ctabbing}
 \vspace{-\baselineskip}
-\begin{center}
-{\sf ecall}
-\end{center}
-causes an exception to occur, with the exception code set to the value 3. Exceptions are
-discussed in Section~\ref{sec:exceptions}.
+The {\sf ecall} instruction causes an exception to occur, with the exception code set to 
+the value 3. 
+
+The {\sf mret} instruction is used at the end of a trap handler routine to return to the 
+interrupted program.  
+
+The {\sf wfi} instruction simply pauses the execution of a program until an interrupt
+occurs. Exceptions and interrupts are discussed in Section~\ref{sec:traps}.
+
+The {\sf nop} instruction doesn't have any effect and simply advances the program counter. 
+It is a pseudoinstruction implemented as {\sf addi x0, x0, 0}.
 
 \section{Control Registers}
 \label{sec:control}
@@ -793,7 +800,7 @@ The control registers are used as follows:
 \item The {\it mstatus} (machine status) register reports and controls the
 processor operating state:
 \begin{itemize}
-\item {\it MPP} (machine previous priviledge): these bits have 
+\item {\it MPP} (machine previous privilege): these bits have 
 the value \texttt{11} for Nios~V. This setting represents {\it machine mode}, which is
 the only processor {\it mode} implemented in Nios~V. Other RISC-V modes that may be
 implemented in different processors are described in the document {\it The RISC-V Instruction
@@ -847,8 +854,8 @@ mode, and to \texttt{01} for the vectored interrupt mode. Example code using the
 \end{itemize}
 \item The {\it mepc} (machine exception program counter) register holds the address of
 the instruction that was executing when an interrupt or other type of exception occurred.
-This register is used by the {\it mret} instruction to effect a return to an interrupted
-program, as described in Section~\ref{sec:exceptions}.
+This register is used by the {\it mret} instruction to effect a return from a trap handler
+routine, as described in Section~\ref{sec:exceptions}.
 \item The {\it mcause} (machine cause) register provides information that identifies the
 cause of an exception or interrupt. There are two bit-fields:
 \begin{itemize}
@@ -891,9 +898,7 @@ The Nios~V control registers can be read and written by the special instructions
 \vspace{-\baselineskip}
 \noindent
 Each of these instructions refers to a control register by its address, {\it csr}, as
-given in Figure~\ref{fig:control}.
-
-The instruction
+given in Figure~\ref{fig:control}.  The instruction
 \vspace{-\baselineskip}
 \begin{center}
 {\sf csrrw~~rd, csr, rs1} 
@@ -902,7 +907,7 @@ reads the value of the selected control register and copies it into {\it rd}. Th
 instruction writes the value of {\it rs1} into the control register bits (that are
 writable). The {\sf csrrwi} instruction works in the same manner, except using an unsigned
 immediate operand.
- 
+\newpage 
 The instruction
 \vspace{-\baselineskip}
 \begin{center}
@@ -915,16 +920,21 @@ except using an unsigned immediate operand.
 Analogously, the {\sf csrrc} and {\sf csrrci} 
 instructions are used to clear bits selected by the bit-mask in {\it rs1}. 
 
-There are also several pseudoinstructions for manipulating control registers. Examples are:
+There are also several pseudoinstructions for use with control registers, which avoid the
+need to specify the {\it zero} register when it would just serve as a placeholder:
 \begin{ctabbing}
 ~~~~\={\sf csrrwi}~~\={\sf rs1, csr, uimm}~~~~\=\kill
+\>{\sf csrc} \>{\sf csr, rs1} \>(CSR clear)\\
+\>{\sf csrci} \>{\sf csr, uimm} \>(CSR clear immediate)\\
 \>{\sf csrr} \>{\sf rd, csr} \>(CSR read)\\
+\>{\sf csrs} \>{\sf csr, rs1} \>(CSR set)\\
+\>{\sf csrsi} \>{\sf csr, uimm} \>(CSR set immediate)\\
 \>{\sf csrw} \>{\sf csr, rs1} \>(CSR write)\\
 \>{\sf csrwi} \>{\sf csr, uimm} \>(CSR write immediate)\\
 \end{ctabbing}
 \vspace{-\baselineskip}
 
-\subsection{Nios~V Timer and Software Interrupt Registers}
+\subsection{Nios~V Machine Timer and Software Interrupt Registers}
 \label{sec:timer}
 Nios~V includes a 64-bit internal timer that is available to application programmers. 
 The timer is reset to 0 when the processor is powered on, and then monotonically
@@ -962,6 +972,7 @@ the {\it ACLINT} base address is system dependent.
 	 \end{center}
 \end{figure}
 
+\newpage
 \subsubsection{Carry and Overflow Detection}
 \label{sec:overflow}
 
@@ -1044,94 +1055,63 @@ Thus, a conditional branch based on the arithmetic overflow can be achieved as f
 The Nios~V Assembler conforms to the widely used GNU* Assembler, which is 
 software available in the public domain. Thus, the GNU Assembler directives can
 be used in Nios~V programs. Assembler directives begin with a period. 
-We describe some of the more frequently used assembler directives below.
+We describe some of the more frequently used assembler directives in
+Figure~\ref{fig:directives}.
 
-\noindent
-{\sf .ascii}~~"{\it string}"...
- 
-\noindent
-A string of ASCII characters is loaded into consecutive byte addresses in the memory.
-Multiple strings, separated by commas, can be specified.
- 
-\noindent
-{\sf .asciz}~~"{\it string}"...
-
-\noindent
-The same as {\sf .ascii}, except that each string is followed (terminated) by a zero byte.
-
-\noindent
-{\sf .byte}~~{\it expressions}
-
-\noindent
+\begin{figure}[H]
+\begin{center}
+\begin{tabular}{p{.22\linewidth}|p{.7\linewidth}}
+{\bf Directive} & {\bf Purpose} \\ \hline
+\rule[-0.075in]{0in}{0.25in}{\sf .ascii}~~"{\it string}" & A string of ASCII characters is 
+loaded into consecutive byte addresses in the memory.  Multiple strings, separated by commas, 
+can be specified.\\
+\rule[-0.075in]{0in}{0.33in}{\sf .asciz}~~"{\it string}" & The same as {\sf .ascii}, except 
+that each string is followed (terminated) by a zero byte.\\
+\rule[-0.075in]{0in}{0.33in}{\sf .byte}~~{\it expressions} & 
 Expressions separated by commas are specified. Each expression is assembled into
-the next byte. Examples of expressions are: 8, 5 + LABEL, and K $-$ 6.
- 
-\noindent
-{\sf .data}
-
-\noindent
-Identifies the data that should be placed in the data section of the memory.
-The desired memory location for the data section is system dependent.
-
-\noindent
-{\sf .end}
-
-\noindent
+the next byte. Examples of expressions are: 8, 5 + LABEL, and K $-$ 6.\\
+\rule[-0.075in]{0in}{0.33in}{\sf .data} & Identifies the data that should be placed in the 
+data section of the memory. The desired memory location for the data section is system dependent.\\
+\rule[-0.075in]{0in}{0.33in}{\sf .end} & 
 Marks the end of the source code file; everything after this
-directive is ignored by the Assembler.
+directive is ignored by the Assembler.\\
+\rule[-0.075in]{0in}{0.33in}{\sf .equ}~~{\it symbol,~expression} &
+Sets the value of {\it symbol} to {\it expression}. This directive can also be specified
+as {\sf .eqv}.\\
+\end{tabular}
+\end{center}
+	\caption{Directives (Part $a$).}
+	\label{fig:directives}
+\end{figure}
 
-\noindent
-{\sf .equ}~~{\it symbol,~expression}
-
-\noindent
-Sets the value of {\it symbol} to {\it expression}.
- 
-\noindent
-{\sf .global}~~{\it symbol}
-
-\noindent
+\begin{center}
+\begin{tabular}{p{.22\linewidth}|p{.7\linewidth}}
+{\bf Directive} & {\bf Purpose} \\ \hline
+\rule[-0.075in]{0in}{0.33in}{\sf .global}~~{\it symbol} & 
 Makes {\it symbol} visible outside the assembled object file.
-
-\noindent
-{\sf .hword}~~{\it expressions}
-
-\noindent
+This directive can also be specified as {\sf .globl}.\\
+\rule[-0.075in]{0in}{0.33in}{\sf .hword}~~{\it expressions} & 
 Expressions separated by commas are specified. Each expression is assembled into
-a half-word (16-bit) number.
-
-\noindent
-{\sf .include}~~"{\it filename}"
-
-\noindent
-Provides a mechanism for including supporting files in a source program.
- 
-\noindent
-{\sf .org}~~{\it new-lc}
- 
-\noindent
+a half-word (16-bit) number.\\
+\rule[-0.075in]{0in}{0.33in}{\sf .include}~~"{\it filename}" &
+Provides a mechanism for including supporting files in a source program.\\
+\rule[-0.075in]{0in}{0.33in}{\sf .org}~~{\it new-lc} &
 Advances the location counter to the address {\it new-lc}.
 The {\sf .org} directive may only increase the location counter, or leave it unchanged; 
-it cannot move the location counter backwards.
-
-\noindent
-{\sf .skip}~~{\it size}
-
-\noindent
-Emits the number of bytes specified in {\it size}; the value of each byte is zero.
-
-\noindent
-{\sf .text}
-
-\noindent
+it cannot move the location counter backwards.\\
+\rule[-0.075in]{0in}{0.33in}{\sf .skip}~~{\it size} & 
+Emits the number of bytes specified in {\it size}; the value of each byte is zero.\\
+\rule[-0.075in]{0in}{0.33in}{\sf .text} & 
 Identifies the code that should be placed in the text section of the memory.
-The desired memory location for the text section is system specific.
-
-\noindent
-{\sf .word}~~{\it expressions}
-
-\noindent
+The desired memory location for the text section is system specific.\\
+\rule[-0.075in]{0in}{0.33in}{\sf .word}~~{\it expressions} &
 Expressions separated by commas are specified. Each expression is assembled into
 a 32-bit value.
+\end{tabular}
+
+\vspace{0.25in}
+Figure~\ref{fig:directives}. Directives (Part $b$).
+\end{center}
 
 \section{Example Program}
 
@@ -1157,17 +1137,17 @@ signed 32-bit number.
 _start:     la      s0, Avector     # pointer to vector A
             la      s1, Bvector     # pointer to vector B
             la      t0, N           # pointer to N
-            lw      s2, (t0)        # t2 = N (number of vector elements)
-            li      s3, 0           # t3 will hold the final result
+            lw      s2, (t0)        # s2 = N (number of vector elements)
+            li      s3, 0           # s3 will hold the final result
             
 loop:       lw      a0, (s0)        # load next element of vector A
             lw      a1, (s1)        # load next element of vector B
-            jal     mmult           # compute product
+            jal     mult            # compute product
             add     s3, s3, a0      # add to the sum
             addi    s0, s0, 4       # point to next element of vector A
             addi    s1, s1, 4       # point to next element of vector B
             addi    s2, s2, -1      # count down
-            bne     s2, zero, loop
+            bnez    s2, loop
 
             la      t0, dot_p       # pointer to the final result
             sw      s3, (t0)        # store the result
@@ -1175,33 +1155,31 @@ stop:       j       stop
 
 # Multiplies a0 x a1, using successive addition
 # Returns the product in a0
-mmult:      mv      t0, zero        # product
+mult:       mv      t0, zero        # product
             mv      t1, zero        # for checking sign of result
-            bge     a1, zero, mloop # is a1 a positive value?
+            bgez    a1, mloop       # is a1 a positive value?
             neg     a1, a1          # ...if not, then negate a1
             li      t1, 1           # remember to negate the product
 
-mloop:      beqz    a1, mdone
-            add     t0, t0, a0
-            addi    a1, a1, -1
+mloop:      beqz    a1, mdone       # done adding yet?
+            add     t0, t0, a0      # add the multiplier to the product
+            addi    a1, a1, -1      # decrement the multiplicand
             j       mloop
 
-mdone:      beq     t1, zero, mret
+mdone:      beqz    t1, mult_ret    # is sign of product correct?
             neg     t0, t0          # flip sign of result
-mret:       mv      a0, t0          # return result
+mult_ret:   mv      a0, t0          # return result
             ret
 
             .data
 N:          .word   6
 Avector:    .word   5, 3, -6, 19, 8, 12
 Bvector:    .word   2, 14, -3, 2, -5, 36
-dot_p:      .word   0
-\end{lstlisting}
+dot_p:      .word   0\end{lstlisting}
 	\caption{A program that computes the dot product of two vectors.}
 	\label{fig:example}
 \end{figure}
  
-
 \noindent
 The program ends by continuously looping to the {\it stop} label.
 
@@ -1224,40 +1202,41 @@ memory starting at the beginning address of the {\it data} segment.
 Since the program performs multiplication by using a subroutine, it can be executed on a
 Nios~V/m processor, which does not have the RISC-V multiplication and division extension.
 If the program were executed on a Nios~V/g instruction, which does have the multiplication
-and division extension, then the {\it mmult} subroutine could be removed and replaced with a
+and division extension, then the {\it mult} subroutine could be removed and replaced with a
 {\sf mul} instruction. 
 
 \section{Exceptions and Interrupts}
-\label{sec:exceptions}
+\label{sec:traps}
 
 An unexpected change in the flow of execution in Nios~V programs can be caused by an
 {\it exception} or an {\it interrupt}. Exceptions are typically caused by error conditions,
 described in Section~\ref{sec:exceptions}, and interrupts are caused by hardware devices
 or software, discussed in Section~\ref{sec:interrupts}. The instruction that is executing 
-when such an exception or interrupt occurs is not completed, and Nios~V immediately 
-transfers control to a {\it trap handler} routine.
+when such an exception or interrupt occurs is not completed; instead, the instruction is
+stopped and Nios~V transfers control to a {\it trap handler} routine.
 
 \subsection{Exceptions}
-
+\label{sec:exceptions}
 An exception can occur as the result of an error condition, or it can be caused by
 executing an {\sf ecall} instruction. When an exception happens Nios~V performs a number
 of actions that involve control registers discussed in Section~\ref{sec:control}:
 \vspace{-\baselineskip}
 \begin{itemize}
 \item The value of the {\it pc} is copied into the {\it mepc} register. 
-\item A unique {\it exception code} that identifies the specific type of exception that
-has occurred is copied into the {\it mcause} register. Some examples of exception codes are: 
+\item Bit $b_{31}$ of the {\it mcause} register is set to 0, to indicate the occurrence of an
+exception. Also, a unique {\it exception code} that identifies the specific type of exception that
+has occurred is copied into {\it mcause}. Some examples of exception codes are: 
 \begin{itemize}
 \item 0 (instruction not word aligned): this exception occurs if Nios~V attempts to fetch
 an instruction when the value of the {\it pc} is not a multiple of four.
 \item 2 (illegal instruction): this exception occurs if the machine code fetched from the
 {\it pc} address does not correspond to a supported Nios~V instruction.
 \item 4 (load address not aligned): this exception occurs if {\sf lw} is executed
-using an address that is not a multiple of four, or if {\sf lh} is executed using
-an address that is not a multiple of two.
+to read from an address that is not a multiple of four, or if {\sf lh} is executed to read
+from an address that is not a multiple of two.
 \item 6 (store address not aligned): this exception occurs if {\sf sw} is executed
-using an address that is not a multiple of four, or if {\sf sh} is executed using
-an address that is not a multiple of two.
+to write to an address that is not a multiple of four, or if {\sf sh} is executed to write
+to an address that is not a multiple of two.
 \item 11 (ecall): this exception occurs when the environment
 call instruction is executed.
 \end{itemize}
@@ -1272,486 +1251,323 @@ into the {\it pc}.
 \end{itemize}
 
 A typical trap handler routine would examine the contents of the {\it mcause} register to
-determine why the trap happened. For all exceptions, bit $b_{31}$ of this register will be
-0. If this bit has the value 1, then the trap has been caused by an interrupt.
+determine why the trap happened, and then take an appropriate action.
 
 \subsection{Interrupts}
-xxx  If an interrupt has occurred, resets the {\it MIE} bit in {\it mstatus} to 0.
-
-If the trap is
-
-If the trap is caused by an interrupt, possible codes are: 3 (machine software interrupt),
-7 (machine timer interrupt), or $\ge 16$ (external IRQ).
-An {\it exception} in the normal flow of program execution can be caused by:
-
-In both cases the processor takes a number of steps
-
-An {\it exception} in the normal flow of program execution can be caused by:
-\begin{itemize}
-\item An error condition, such as an address mis-alignment
-\item Hardware interrupt
-\item Software interrupt
-\item Attempted accessing of a nonexistent memory location
-\item Unimplemented instruction
-\end{itemize}
-\noindent
-The ARM Cortex-A9 processor uses a vectored exception scheme, in
-which there is a separate vector of information assigned to each
-type of exception. This vector normally consists of an instruction
-that loads into the program counter the address of the first
-instruction of the corresponding exception-service routine. 
-The vectors are stored 
-in the {\it exception vector table} at pre-assigned locations.
-Table 4 gives the assignment of exception vectors in the
-exception vector table. It also shows the priority levels
-for the various exceptions and the mode entered upon the
-occurrence of an exception.
-
-\subsection{Software Interrupt}
-\label{sec:swi}
-
-A software interrupt, which is called a {\it software exception}
-in ARM literature, occurs when an SVC instruction is
-encountered in a program. This instruction causes the processor
-to switch into Supervisor mode.
-The address of the next instruction is saved in the banked register LR\_svc and the contents of CPSR are saved in SPSR\_svc.
-Then, the address of entry 8 in the exception vector table
-is loaded into the Program Counter. A branch instruction at that
-location leads to to the required exception-service routine.
-
-\subsection{Hardware Interrupts}
-\label{sec:hardware_interrupts}
-
-Hardware interrupts can be raised by external sources, such as
-I/O devices, by asserting one of the processor's
-interrupt-request inputs, IRQ or FIQ.
-When the processor receives a hardware interrupt request, it
-enters the corresponding exception mode to service the interrupt.
-It also saves the contents of PC and CPSR. 
-
-The saved contents of the PC are supposed to be the return
-address. However, this is not the case with the ARM Cortex-A9
-processor. This processor prefetches instructions for execution.
-While the current instruction is being executed, the next
-instruction is prefetched and its processing is started.
-This means that the Program Counter points to the instruction
-after the prefetched one. Namely, the updated contents of PC
-are the address of the current instruction plus 8.
-Since the interrupt is serviced upon completion of the current
-instruction, the next prefetched instruction is discarded and
-it must be executed upon return from the interrupt. Therefore,
-the address saved in the link register must be decremented
-by 4 prior to returning to the interrupted program.
-This can be done by having
-\begin{center}
-SUBS~~~PC, LR, \#4
-\end{center}
-\noindent
-as the last instruction in the exception-service routine.
-Note that the suffix S causes a proper return to the interrupted
-program, as explained above.
-
-\subsubsection{IRQ Interrupts}
-\label{sec:IRQ}
-
-Upon accepting an IRQ interrupt request, the processor 
-saves the contents of CPSR in the SPSR\_irq register, and
-it saves the contents of PC in the link register LR\_irq.
-It also sets the mode bits in CPSR to denote the IRQ exception
-mode, and it sets the I bit to 1 to disable further IRQ
-interrupts. Then, it executes the instruction at location
-0x018 of the exception vector table, which has to cause
-a branch that leads to the IRQ exception-service routine.
-
-The return from the exception-service routine should be performed
-with the instruction
-\begin{center}
-SUBS~~~PC, LR, \#4
-\end{center}
-\noindent
-
-\subsubsection{FIQ Interrupts}
-
-An FIQ interrupt request is raised by a device that needs fast
-response. Upon accepting the request, the processor 
-saves the contents of CPSR in the SPSR\_fiq register, and
-it saves the contents of PC in the link register LR\_fiq.
-It also sets the mode bits in CPSR to denote the FIQ exception
-mode, and it sets the F and I bits to 1 to disable further
-interrupts. Then, it executes the instruction at location
-0x01C of the exception vector table. Since this is the last 
-location in the exception vector table, it can actually hold
-the first instruction of the FIQ exception-service routine
-(instead of an instruction that causes a branch to the FIQ
-exception-service routine), which speeds up the response to
-the FIQ request.
-
-In the FIQ mode there are five additional banked registers,
-R8\_fiq to R12\_fiq, which means that the exception-service 
-routine can use these registers without first having to save the 
-contents of R8 to R12 on the stack. This leads to a faster
-response.
-
-The return from the exception-service routine should be performed
-with the instruction
-\begin{center}
-SUBS~~~PC, LR, \#4
-\end{center}
-\noindent
-
-\subsection{Unimplemented Instruction}
-
-This exception occurs when the processor encounters a valid
-instruction that is not implemented in hardware. 
-The exception-service routine may emulate the required operation
-in software.
-
-The return from the exception-service routine should be performed
-with the instruction
-\begin{center}
-SUBS~~~PC, LR, \#4
-\end{center}
-\noindent
-
-\subsection{Instruction Access Violation}
-
-This exception occurs if the processor tries to access an
-instruction at a non-existing memory location.
-
-The return from the exception-service routine should be performed
-with the instruction
-\begin{center}
-SUBS~~~PC, LR, \#4
-\end{center}
-\noindent
-
-\subsection{Data Access Violation}
-
-This exception occurs if the processor tries to access data
-at a non-existing memory location.
-
-In this case, the return from the exception-service routine
-should be performed with the instruction
-\begin{center}
-SUBS~~~PC, LR, \#8
-\end{center}
-\noindent
-
-\subsection{Nested Interrupts}
-
-When two or more interrupts or exceptions occur at different
-priority levels, causing the processor to enter different
-modes of operation, their servicing can proceed immediately
-because the banked registers in various modes are used to save 
-the critical information about the interrupted program.
-However, if multiple interrupts can occur at the same priority
-level, typically multiple IRQ requests, then it is necessary
-to nest the exception-service routines. This includes saving
-the contents of the banked link register, LR\_mode,
-on the stack before enabling subsequent
-requests. Before returning from the corresponding
-exception-service routine, the contents of the register must
-be restored.
-
-\subsection{Exception Processing Example}
-
-The following example shows how the exception vector table can be
-set up, and how the exception-service routines can be organized.
-We will use a hardware IRQ interrupt as an example of an
-exception-service routine.
-
-As shown in Table 4, the exception vector table must occupy
-the fixed memory locations in the address range 0x000 to 0x01C.
-Each word in this table must be an instruction that causes the
-program execution to go to the corresponding exception-service
-routine. This requires the program counter to be loaded with
-the address of the first instruction in the exception-service
-routine. This can be accomplished with load instructions
-\begin{center}
-LDR~~~~PC, =EXCEPTION\_SERVICE\_ROUTINE\_NAME
-\end{center}
-Figure 5 illustrates the structure of the code that can be used.
-
-\begin{figure}[H]
-\begin{center} %%%\begin{singlespace}
-\begin{lstlisting}[style=defaultArmStyle]
-        .text
-        .global  _start
-        LDR      PC, =_start              /* Go to the beginning of the MAIN */
-                                          /* program. */
-        LDR      PC, =SERVICE_UND         /* Unimplemented instruction. */
-        LDR      PC, =SERVICE_SVC         /* Software interrupt. */
-        LDR      PC, =SERVICE_ABT_INST    /* Failed instruction access. */
-        LDR      PC, =SERVICE_ABT_DATA    /* Failed data access. */
-        .word    0                        /* Null entry for address 0x014. */
-        LDR      PC, =SERVICE_IRQ         /* Hardware IRQ interrupt. */
-        LDR      PC, =SERVICE_FIQ         /* Hardware FIQ interrupt. */
-				
-/* The main program. */
-_start: ...
-        .
-        .
-        .
-				
-/* Service routine for IRQ interrupts. */
-SERVICE_IRQ:
-        .
-        .
-        .
-        SUBS PC, LR, #4                    /* Return to interrupted program. */
-
-/* Service routine for software interrupts. */
-SERVICE_SVC:
-        .
-        .
-        .
-        MOVS PC, LR                        /* Return to interrupted program. */
-	
-
-\end{lstlisting} %%%\end{singlespace}
-\end{center}
-	\vspace{-0.33in}
-	\caption{Code used to set up the exception processing.}
-	\label{fig:5}
-\end{figure}
-
-Observe that 0x000 is inserted in address location 0x014,
-because this vector location is not allocated to servicing an
-exception. Observe also that the return from the
-exception-service routines used as an example is done as
-explained in sections \ref{sec:hardware_interrupts} and \ref{sec:IRQ}.
-
-xxx
-XXX mention this: {\it MSIP} (machine software interrupt pending): a programmer can set or reset this
-bit by writing to a memory-mapped control register, described in Section~\ref{sec:exceptions}, 
-which is used to effect a {\it software interrupt}.
-
-\begin{itemize}
-\item Software trap
-\item Hardware interrupt
-\item Unimplemented instruction
-\end{itemize}
-\noindent
-In response to an exception the Nios II processor automatically performs the following actions:
-\begin{enumerate}
-\item Saves the existing processor status information by copying the contents
-of the {\it status} register ({\it ctl0}) into the {\it estatus} register ({\it ctl1})
-
-\item Clears the $U$ bit in the {\it status} register, to ensure that the processor
-is in the Supervisor mode
-
-\item Clears the {\it PIE} bit in the {\it status} register, thus disabling the
-additional external processor interrupts
-
-\item Writes the address of the instruction after the exception into the {\it ea}
-register ({\it r29})
-
-\item Transfers execution to the address of the {\it exception handler} which
-determines the cause of the exception and dispatches an appropriate
-{\it exception routine} to respond to the exception
-\end{enumerate}
-\noindent
-The address of the exception handler is specified at system generation time
-using the SOPC Builder or Platform Designer tool,
-and it cannot be changed by software at run time. 
-This address can be provided by the designer; otherwise, the default address is
-$20_{16}$ from the starting address of the main memory. For example, if the 
-memory starts at address 0, then the default address of the exception handler
-is 0x00000020.
-
-\subsection{Software Trap}
-
-A software exception occurs when a {\sf trap} instruction is encountered in 
-a program. This instruction saves the address of the next instruction in the
-{\it ea} register ({\it r29}). Then, it disables interrupts and transfers
-execution to the exception handler.
-
-In the exception-service routine the last instruction is {\sf eret} (Exception Return), 
-which returns execution control to the instruction that follows the {\sf trap} 
-instruction that caused the exception. The return address is given by the contents
-of register {\it ea}. The {\sf eret} instruction restores the
-previous status of the processor by copying the contents of the {\it estatus}
-register into the {\it status} register. 
-
-A common use of the software trap is to transfer control to a different program,
-such as an operating system.
-
-\subsection{Hardware Interrupts}
 \label{sec:interrupts}
 
-Hardware interrupts can be raised by external sources, such as I/O devices,
-by asserting one of the processor's 32 interrupt-request inputs, {\it irq0}
-through {\it irq31}. An interrupt is generated only if the following three
-conditions are true:
+By default interrupts are not enabled in Nios~V. To make interrupts visible to the
+processor, software must:
 \begin{itemize}
-\item The {\it PIE} bit in the {\it status} register is set to 1
-\item An interrupt-request input, {\it irqk}, is asserted
-\item The corresponding interrupt-enable bit, {\it ctl3}$_k$, is set to 1
+\item Set the {\it MIE} bit in the {\it mstatus} register to 1. 
+\item For each source of interrupt that should be enabled, set the corresponding enable bit 
+to 1 in the {\it mie} register.
 \end{itemize}
-\noindent
-The contents of the {\it ipending} register ({\it ctl4}) indicate which interrupt 
-requests are pending. An exception routine determines which of the 
-pending interrupts has the highest priority, and transfers control to the
-corresponding {\it interrupt-service routine}.
+\vspace{-\baselineskip}
+When an interrupt occurs, its corresponding bit in the {\it mip} register will be set to
+1, to show that the interrupt is pending.
+If enabled, this interrupt will cause Nios~V to perform a number of actions:
+\begin{itemize}
+\item The currently-executing instruction is cancelled, and the value of the {\it pc} is 
+copied into the {\it mepc} register. 
+\item The value of the {\it MIE} bit in the {\it mstatus} register is set to 0, preventing
+nested interrupts. 
+\item Bit $b_{31}$ of the {\it mcause} register is set to 1, to indicate the occurrence of an
+interrupt. Also, the interrupt request ({\it IRQ}) number of the interrupting device 
+is written into the {\it exception code} field of the {\it mcause} register. Possible
+{\it IRQ} codes are:
+\begin{itemize}
+\item 3 (software interrupt): this interrupt is pending when software writes a 1 into the
+memory-mapped {\it msip} register, from in Figure~\ref{fig:mm_control}. 
+\item 7 (machine timer interrupt): this interrupt is pending when the value of {\it
+mtime}, from Figure~\ref{fig:mm_control}, is greater than or equal to the value of {\it mtimecmp}. 
+\item $\ge 16$ (external interrupt): each of these interrupts is pending when the corresponding
+external device sends an interrupt request signal to Nios~V.
+\end{itemize}
+\item The value of the {\it trap handler address} is copied into the {\it pc}. Two schemes 
+are supported for determining the trap address, depending on the {\it mode} bits in the 
+{\it mtvec} register, from Figure~\ref{fig:control}.  The possible mode bit values are:
+\begin{itemize}
+\item 00 ({\it Basic mode}): for all interrupts, the {\it trap handler address} in the 
+{\it mtvec} register is copied into the {\it pc}.
+\item 01 ({\it Vectored mode}): the trap address depends on the interrupt's IRQ number. 
+The address written into the {\it pc} is calculated as the {\it trap handler address} in
+{\it mtvec} plus $4 \times $IRQ.
+\end{itemize}
+\end{itemize}
 
-Upon completion of the interrupt-service routine, the execution control 
-is returned to the interrupted program by means of the {\sf eret} instruction,
-as explained above. However, since an external interrupt request is handled without
-first completing the instruction that is being executed when the interrupt occurs,
-the interrupted instruction must be re-executed upon return from the interrupt-service
-routine. To achieve this, the interrupt-service routine has to adjust the contents
-of the {\it ea} register which are at this time pointing to the next instruction
-of the interrupted program. Hence, the value in the {\it ea} register has to be
-decremented by 4 prior to executing the {\sf eret} instruction.
+A trap handler routine typically calls a specific subroutine for each interrupt, which clears 
+the source of the {\it IRQ} and performs whatever actions are needed to service it. The trap 
+handler then returns to the interrupted program by executing the {\sf mret} instruction. 
 
-\subsection{Unimplemented Instructions}
+\subsubsection{Software Interrupt}
+\label{sec:swi}
 
-This exception occurs when the processor encounters a valid instruction that is
-not implemented in hardware. This may be the case with instructions such as
-{\sf mul} and {\sf div}. The exception handler may call a routine that emulates the
-required operation in software.
+As indicated above, a software program can cause a software interrupt to become pending by
+writing a 1 into bit $b_0$ of the {\it msip} register, from Figure~\ref{fig:mm_control}.
+This bit-value will be reflected in the {\it MSIP} bit in the {\it mip} register shown 
+in Figure~\ref{fig:control}. If this interrupt is enabled, the normal interrupt processing 
+actions described above will take place. The software interrupt can be cleared by writing a 0 
+into bit $b_0$ of the {\it msip} register.
 
-\subsection{Determining the Type of Exception}
+\subsection{Interrupts Processing Examples}
 
-When an exception occurs, the exception-handling routine has to determine what
-type of exception has occurred. The order in which the exceptions should be
-checked is:
-\begin{enumerate}
-\item Read the {\it ipending} register to see if a hardware interrupt has occurred;
-if so, then go to the appropriate interrupt-service routine.
-\item Read the instruction that was being executed when the exception occurred.
-The address of this instruction is the value in the {\it ea} register minus 4.
-If this is the {\sf trap} instruction, then go to the software-trap-handling routine.
-\item Otherwise, the exception is due to an unimplemented instruction.
-\end{enumerate}
+Figure~\ref{fig:ints} gives an example of code that uses the basic Nios~V trap handling mode.
+The code
+enables interrupts from the Nios~V machine timer and uses them to display a one-second binary
+counter on an output port that has a set of red lights (LEDs). The addresses of the timer
+registers, {\it mtime} and {\it mtimecmp}, as well as the red light port, called {\it ledr},
+are taken from the {\it DE1-SoC Computer System with Nios~V}, which is depicted in 
+Figure~\ref{fig:system}. 
 
-\subsection{Exception Processing Example}
+Lines~\ref{line:equ1}~to~\ref{line:equ2} in Figure~\ref{fig:ints}$a$ define some symbolic 
+names that are used in the code for the I/O addresses. The symbol {\it onesecond}
+defined in Line~\ref{line:equ3} has the value 100~million, which is the number of timer 
+cycles needed to provide a timeout every one second on the DE1-SoC system.
 
-The following example illustrates the Nios II code needed to deal with a hardware
-interrupt. We will assume that an I/O device raises an interrupt request on the
-interrupt-request input {\it irq1}. Also, let the exception handler start at 
-address 0x020, and the interrupt-service routine for the {\it irq1} request
-start at address 0x0100. 
+Line~\ref{line:sp} initializes the stack pointer to an address within the 64~MB SDRAM 
+in the DE1-SoC system, and Line~\ref{line:timer} calls a subroutine that initializes the timer. 
+Interrupts are enabled in Lines~\ref{line:int1}~to~\ref{line:int2}. First, the address of
+the trap handler routine is written into the {\it mtvec} register, and then machine timer 
+interrupts are enabled by setting bit $b_7$ of the {\it mie} register. Finally, interrupts 
+are enabled in Nios~V by setting bit $b_3$ of the {\it mstatus} register.
 
-Figure~\ref{fig:7} shows a portion of the code that can be used for this purpose.
-The exception handler first determines the type of exception that has occurred.
-Having determined that there is a hardware interrupt request, it finds the
-specific interrupt by examining the bits of the {\it et} register which has
-a copy of control register {\it ctl4}. If bit $et_1$ is equal to 1, then the
-the interrupt-service routine EXT\_IRQ1 is executed. Otherwise, it is necessary
-to check for other possible interrupts.
+\begin{figure}[h]
+\begin{center}
+\begin{minipage}[h]{15 cm}
+\begin{lstlisting}[style=defaultNiosVStyle, name=ints, numbers=left, escapechar=|]
+            |\label{line:equ1}|.equ    ledr_base, 0xff200000
+            |\label{line:equ2}|.equ    mtime_base, 0xff202100
+            |\label{line:equ3}|.equ    onesecond, 100000000
+            .text
+            .global _start
+|\label{line:sp}|_start:     li      sp, 0x40000      # initialize the stack location
+            |\label{line:timer}|jal     set_timer        # initialize the timer
+     
+                    |\label{line:int1}|la      t0, handler
+                    csrw    mtvec, t0        # set trap address
+            li      t0, 0b10000000   # set the enable pattern
+            csrs    mie, t0          # enable timer interrupts
+            |\label{line:int2}|csrsi   mstatus, 0x8     # enable global interrupts
 
-
-\begin{figure}[H]
-\begin{lstlisting}[style=defaultNiosStyle] %%%\begin{singlespace}
-.org  0x20
-/* Exception handler */
-      rdctl  et, ipending              /* Check if external interrupt occurred */
-      beq    et, r0, OTHER_EXCEPTIONS  /* If zero, check exceptions */
-      subi   ea, ea, 4                 /* Hardware interrupt, decrement ea to */  
-                                       /* execute the interrupted instruction */
-                                       /* upon return to main program */ 
-      andi   r13, et, 2                /* Check if irq1 asserted */
-      beq    r13, r0, OTHER_INTERRUPTS /* If not, check other external interrupts */
-      call   EXT_IRQ1                  /* If yes, go to IRQ1 service routine */
-OTHER_INTERRUPTS:
-/* Instructions that check for other hardware interrupts should be placed here */
-      br     END_HANDLER               /* Done with hardware interrupts */
-OTHER_EXCEPTIONS:
-/* Instructions that check for other types of exceptions should be placed here */
-END_HANDLER:
-      eret                             /* Return from exception */
-.org  0x100
-/* Interrupt-service routine for the desired hardware interrupt */
-EXT_IRQ1:
-/* Instructions that handle the irq1 interrupt request should be placed here */
-      ret                              /* Return from interrupt-service routine */
+            |\label{line:wfi1}|la      s0, counter      # pointer to counter
+            la      s1, ledr_base    # pointer to red lights
+            sw      zero, (s1)       # turn off all lights
+loop:       wfi
+            lw      t0, (s0)         # load the counter value
+            sw      t0, (s1)         # write to the lights
+            |\label{line:wfi2}|j       loop
 \end{lstlisting}
-	\caption{Code used to handle a hardware interrupt.}
-	\label{fig:7}
+	\caption{An example program using basic interrupts (Part $a$).}
+	\label{fig:ints}
+\end{minipage}
+\end{center}
 \end{figure}
 
-Note that in Figure~\ref{fig:7} we are using register {\it r13} in the process of testing 
-whether the bit {\it irq1} is set to 1. In a practical application program this
-register may also be used for some other purpose, in which case its contents
-should first be saved on the stack and later restored prior to returning
-from the exception handler.
+\begin{center}
+\begin{minipage}[h]{15 cm}
+\begin{lstlisting}[style=defaultNiosVStyle, name=ints, numbers=left, escapechar=|]
+# Trap handler
+|\label{line:trap1}|handler:    addi    sp, sp, -8       # save regs that will be modified
+            sw      t1, 4(sp)
+            sw      t0, (sp)
+            # check for cause of trap
+            csrr    t0, mcause       # read mcause register
+            |\label{line:xor}|li      t1, 0x80000007   # pattern to check interrupt bit
+                                     # and IRQ = 7
+|\label{line:stay}|stay:       bne     t0, t1, stay     # unexpected cause of exception
+            
+            # Restart the timer. This is one way to clear the interrupt
+            |\label{line:clear1}|la      t0, mtime_base
+            |\label{line:clear2}|sw      zero, 8(t0)
 
-\noindent
+            |\label{line:inc1}|la      t0, counter      # pointer to counter
+            lw      t1, (t0)         # read counter value
+            addi    t1, t1, 1        # increment the counter
+            |\label{line:inc2}|sw      t1, (t0)         # store counter to memory
 
+            lw      t0, (sp)         # restore regs
+            lw      t1, 4(sp)
+            addi    sp, sp, 8
+            |\label{line:trap2}|mret
 
-\section{Cache Memory}
+# Set timeout to 1 second
+set_timer:  la      t0, mtime_base   # set address
+            sw      zero, 8(t0)      # reset lower word of mtime
+            sw      zero, 0xc(t0)    # reset upper word of mtime
+            
+            li      t1, onesecond
+            sw      t1, (t0)         # set mtimecmp low word
+            sw      zero, 4(t0)      # set mtimecmp upper word
+            ret
+     
+            .data
+counter:    .word   0                # the counter to be displayed\end{lstlisting}
 
-As shown in Figure~\ref{fig:4}, a Nios II system can include instruction and data caches,
-which are implemented in the memory blocks in the FPGA chip.
-The caches can be specified when a system is being designed by using the SOPC Builder or Platform Designer
-software. Inclusion of caches improves the performance of a Nios II system significantly,
-particularly when most of the main memory is provided by an external SDRAM chip, as is 
-the case with Altera's DE-series boards. Both instruction and data caches are direct-mapped.
- 
+\vspace{0.25in}
+Figure~\ref{fig:ints}.	An example program using basic interrupts (Part $b$).
+\end{minipage}
+\end{center}
 
-The instruction cache can be implemented in the fast and standard versions of
-the Nios II processor systems. It is organized in 8 words per cache line, and its size
-is a user-selectable design parameter.
-  
+Lines~\ref{line:wfi1}~to~\ref{line:wfi2} in Figure~\ref{fig:ints}$a$ 
+display the counter value in an endless loop,
+waiting for an interrupt to occur on each iteration. 
 
-The data cache can be implemented only with the Nios II/f processor. It has a
-configurable line size of 4, 16 or 32 bytes per cache line. Its overall size is also a
-user-selectable design parameter.
+The trap handler routine is given in Lines~\ref{line:trap1}~to~\ref{line:trap2} of
+Figure~\ref{fig:ints}$b$.  It first saves the temporary registers that will be modified
+({\it t0} and {\it t1}), and then reads the {\it mcause} register. To ensure that a timer
+interrupt has occurred, Line~\ref{line:xor} checks that the interrupt bit, $b_{31}$, in
+{\it mcause} has the value 1, and the exception code field is equal to 7. If this check is not
+satisfied, then some kind of error has occurred and the code stops on
+Line~\ref{line:stay}. Otherwise, the handler resets the timer, in
+Line~\ref{line:clear2}. This action {\it clears} the timer 
+interrupt, since it makes the value of {\it mtime} less than the value of 
+{\it mtimecmp}. Also, this action resets the timer for its next timeout. An equivalent way
+of handling the timer would be to add the {\it onesecond} value to {\it mtimecmp}.
+However, this would be more complex and wouldn't have any advantage in this
+usage case over the simpler approach of clearing {\it mtime}. 
 
-\subsection{Cache Management}
+Lines~\ref{line:inc1}~to~\ref{line:inc2} of Figure~\ref{fig:ints}$b$ increment the counter
+value that is being displayed on the red lights by the main program. Finally, the last
+part of the trap handler restores the temporary registers that it has modified and then 
+executes the {\sf mret} instruction to return to the interrupted program.
 
-Cache management is handled by software. For this purpose
-the Nios II instruction set includes the following instructions:
-\begin{itemize}
-\item {\sf initd~~IMMED16(rA)}~~~(Initialize data-cache line) \\
-Invalidates the line in the data cache that is associated with the address determined
-by adding the sign-extended value IMMED16 and the contents of register {\it rA}.
-\item {\sf initi~~rA}~~~(Initialize instruction-cache line) \\
-Invalidates the line in the instruction cache that is associated with the address
-contained in register {\it rA}.
-\item {\sf flushd~~IMMED16(rA)}~~~(Flush data-cache line) \\
-Computes the effective address by adding the sign-extended value IMMED16 and the
-contents of register rA. Then, it identifies the cache line associated with this
-effective address, writes any dirty data in the cache line back to memory, and
-invalidates the cache line.
-\item {\sf flushi~~rA}~~~(Flush instruction-cache line) \\
-Invalidates the line in the instruction cache that is associated with the address
-contained in register {\it rA}.
-\end{itemize}
+The code that initializes the machine timer is shown at the end of
+Figure~\ref{fig:ints}$b$. It simply sets {\it mtime} to 0 and {\it mtimecmp} to 100~million,
+providing one-second timeouts based on its 100~MHz clock signal. 
 
-\subsection{Cache Bypass Methods}
+Figure~\ref{fig:vectored} gives an example of code that uses the vectored Nios~V trap 
+handling mode. To illustrate the vectored interrupt approach, this code uses two 
+types of interrupts: a software interrupt and timer interrupts. A key difference from the
+code in Figure~\ref{fig:ints} is illustrated in Lines~\ref{line:v1}~to~\ref{line:v2}, 
+which write the handler address into {\it mtvec}, but with its {\it mode} bits set to the
+value 01. Also, Lines~\ref{line:en1}~and~\ref{line:en2} set two interrupt enable bits in
+{\it mie}: bit $b_7$ (machine timer) and bit $b_3$ (software interrupt). 
 
-A Nios II processor uses its data cache in the standard manner. But, it also allows the
-cache to be bypassed in two ways. As mentioned in section 8.1, the Load and Store
-instructions have a version intended for accessing I/O devices, where the
-effective address specifies a location in an I/O device interface. These instructions are:
-{\sf ldwio}, {\sf ldbio}, {\sf lduio}, {\sf ldhio}, {\sf ldhuio}, {\sf stwio}, {\sf stbio},
-and {\sf sthio}. They bypass the data cache.
+A software interrupt is generated by the code in Lines~\ref{line:sw1}~to~\ref{line:sw2}
+by writing a 1 into bit $b_0$ of the {\it msip} register.
 
-Another way of bypassing the data cache is by using bit 31 of an address as a tag that
-indicates whether the processor should transfer the data to/from the cache, or bypass it.
-This feature is available only in the Nios II/f processor. 
+\begin{figure}[H]
+\begin{center}
+\begin{minipage}[h]{15 cm}
+\begin{lstlisting}[style=defaultNiosVStyle, name=vecs, numbers=left, escapechar=|]
+            |$\ldots$| directives (see |Figure~\ref{fig:ints}) not| shown
 
-Mixing cached and uncached accesses has to be done with care. Otherwise, the coherence of
-the cached data may be compromised.
+            .text
+            .global _start
+_start:     li      sp, 0x40000      # initialize the stack location
+            jal     set_timer        # initialize the timer 
+     
+            |\label{line:v1}|la      t0, handler      # get handler address
+            ori     t0, t0, 0b1      # set vector mode
+            |\label{line:v2}|csrw    mtvec, t0        # set trap address and mode
+            |\label{line:en1}|li      t0, 0b10001000   # set the enable pattern
+            |\label{line:en2}|csrs    mie, t0          # timer & software interrupts
+            csrsi   mstatus, 0x8     # enable global interrupts
 
-\section{Tightly Coupled Memory}
+            # Make a software interrupt happen
+            |\label{line:sw1}|la      t0, mtime_base   # base address
+            li      t1, 1            # pattern to write to msip
+            |\label{line:sw2}|sw      t1, 0x10(t0)     # write to msip (sw interrupt)
 
-As explained in section 6, a Nios II processor can access the memory blocks in the FPGA
-chip as a {\it tightly coupled memory}. This arrangement does not use the Avalon network. 
-Instead, the tightly coupled memory is connected directly to the processor.
+            |\label{line:mret}|la      s0, counter      # pointer to counter
+            la      s1, ledr_base    # pointer to red lights
+loop:       wfi
+            lw      t0, (s0)         # load the counter value
+            sw      t0, (s1)         # write to the lights
+            |\label{line:loop}|j       loop
+\end{lstlisting}
+	\caption{An example program using vectored interrupts (Part $a$).}
+	\label{fig:vectored}
+\end{minipage}
+\end{center}
+\end{figure}
 
-Data in the tightly coupled memory is accessed using the normal Load and Store instructions,
-such as {\sf ldw} or {\sf stw}. The Nios II control circuits determine if the address of a
-memory location is in the tightly coupled memory. Accesses to the tightly coupled memory
-bypass the caches. For the address span of the tightly coupled memory, the processor
-operates as if caches were not present.
+\begin{center}
+\begin{minipage}[h]{15 cm}
+\begin{lstlisting}[style=defaultNiosVStyle, name=vecs, numbers=left, escapechar=|]
+# Trap handler
+|\label{line:h1}|handler:    j       exception
+            .org    handler + 3 * 4  # IRQ 3: software interrupt
+            |\label{line:irq3}|j       IRQ_3
+            .org    handler + 7 * 4  # IRQ 7: timer interrupt
+            |\label{line:h2}|j       IRQ_7
 
+exception:  j       exception        # not handled in this code
+            
+# software interrupt handler
+IRQ_3:      addi    sp, sp, -8       # save regs that will be modified
+            sw      t1, 4(sp)
+            sw      t0, (sp)
+
+            la      t0, mtime_base   # base address
+            |\label{line:clr}|sw      zero, 0x10(t0)   # clear software interrupt in msip
+            la      t0, ledr_base    # pointer to red lights
+            li      t1, 0b1111111111
+            sw      t1, (t0)         # turn on all lights
+
+            lw      t0, (sp)         # restore regs
+            lw      t1, 4(sp)
+            addi    sp, sp, 8
+            mret
+
+# timer interrupt handler
+IRQ_7:      addi    sp, sp, -8       # save regs that will be modified
+            sw      t1, 4(sp)
+            sw      t0, (sp)
+            
+            # Restart the timer
+            la      t0, mtime_base
+            sw      zero, 8(t0)      # write to mtime
+
+            |$\ldots$| some code |not shown (see Figure~\ref{fig:ints})|
+            |\label{line:mret2}|mret
+
+set_timer:  |$\ldots$| code |not shown (see Figure~\ref{fig:ints})|
+            ret
+
+            .data
+counter:    .word   0                # the counter to be displayed
+\end{lstlisting}
+
+\vspace{0.25in}
+Figure~\ref{fig:vectored}.	An example program using vectored interrupts (Part $b$).
+\end{minipage}
+\end{center}
+
+Lines~\ref{line:h1}~to~\ref{line:h2} of Figure~\ref{fig:vectored}$b$ provide three
+trap vectors, at the addresses: {\it handler}, {\it handler} + 12, and {\it handler} + 28.
+The vector at the address {\it handler} would be used in this code for any exception that
+occurs. Since no exceptions are expected in this example program, the code simply stops at
+this address if an extraneous exception should happen to occur. 
+
+As mentioned above, a software interrupt is created in this example when a 1 is written
+into the {\it msip} register by the {\sf sw} instruction in Line~\ref{line:sw2} of 
+Figure~\ref{fig:vectored}$a$. In response to the corresponding pending interrupt,
+Nios~V will jump to the vector address {\it handler} + 12. The instruction at this address
+(see Line~\ref{line:irq3} of Figure~\ref{fig:vectored}$b$)
+then jumps to the label {\it IRQ\_3}, which provides the software interrupt handler. 
+After saving temporary registers that it will modify, the handler clears the pending
+interrupt by writing 0 into the {\it msip} register, in Line~\ref{line:clr}. Then, the
+handler writes a pattern to illuminate all ten red lights in the LEDR output port, so that
+a user can visually confirm that the software interrupt handler has been executed.
+Finally, the handler restores temporary register values and then executes {\sf mret} to 
+return to (Line~\ref{line:mret} of) the main program.
+
+The main program in Figure~\ref{fig:vectored}$a$ will execute the loop between 
+Lines~\ref{line:mret} and~\ref{line:loop} indefinitely. Each time the machine timer
+reaches its one-second timeout, Nios~V will jump to the vector address {\it handler} + 28.
+The instruction at this address (see Line~\ref{line:h2} of Figure~\ref{fig:vectored}$b$)
+then jumps to the label {\it IRQ\_7}, which provides the 
+machine timer interrupt handler. Most of the code in this handler is not shown, because it
+is the same code that we described previously for Figure~\ref{fig:ints}, except that this
+handler has use the stack to save the temporary registers that it will modify. Once this 
+handler is completed, it restores saved temporary registers and then 
+executes the {\sf mret} instruction in Line~\ref{line:mret2}
+to return to the interrupted loop in the main program.
 
 % Copyright and Trademark
 
 \input{\commonPath/Docs/copyright.tex}
-
 
 \end{document}
