@@ -61,9 +61,10 @@
  	morekeywords={la, li, lb, lh, lw, lbu, lhu, sb, sh, sw, sll, slli, srl, srli, sra, srai,
     add, addi, sub, lui, auipc, xor, xori, or, ori, and, andi, not, slt, slti, sltu, sltiu,
     seqz, snez, sgtz, sgt, sgtu, slt, mul, mulh, mulhsu, mulhu, div, divu, rem, remu,
-    ret, beqz, bnez, bgtz, bltz, blez, bgt, bgtu, ble, bleu,
-    beq, bne, blt, bge, bltu, bgeu, j, jr, jal, jalr, mv, neg, ret, scall, break, nop
-    csrrw, csrrwi, csrrs, csrrsi, csrrc, csrrci, csrr, csrw, csrwi, ecall},% 	
+    ret, mret, beqz, bnez, bgtz, bltz, blez, bgt, bgtu, ble, bleu,
+    beq, bne, blt, bge, bgez, bltu, bgeu, j, jr, jal, jalr, mv, neg, ret, scall, break, nop
+    csrrw, csrrwi, csrrs, csrrsi, csrrc, csrrci, csrr, csrw, csrwi, csrs, csrsi, csrc,
+    csrci, ecall, wfi},% 	
  	morekeywords=[2]{.align, .ascii, .asciiz, .byte, .data, .double, .equ, .extern, .include,
     .float, .global, .hword, .kdata, .ktext, .set, .skip, .end, .space, .text, .word},% 	
  	morekeywords=[3]{zero, ra, sp, gp, tp, s0, fp, t0, t1, t2, t3, t4, t5, t6,
@@ -83,6 +84,8 @@
    \definecolor{niosVDirectiveColour}{rgb}{0.000,0.000,0.902}
    \definecolor{niosVSpecialRegColour}{rgb}{0.000,0.000,0.000}
    \definecolor{niosVStringColour}{rgb}{0.808,0.482,0.000}
+   \definecolor{NiosVCommentColour}{rgb}{0.000,0.502,0.000}
+   \definecolor{brown}{rgb}{.59,.29,.0}
    
    %% NOTE: To make bold use: =\bfseries\color{<colour>}
    \lstdefinestyle{defaultNiosVStyle} {
@@ -90,7 +93,8 @@
    stringstyle=\color{niosVStringColour},
    keywordstyle=\color{niosVInstructionColour},
    keywordstyle=[2]\color{niosVDirectiveColour},
-   keywordstyle=[3]\itshape\color{niosVSpecialRegColour}
+   keywordstyle=[3]\itshape\color{niosVSpecialRegColour},
+   commentstyle=\small\color{brown}\ttfamily
    }
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
