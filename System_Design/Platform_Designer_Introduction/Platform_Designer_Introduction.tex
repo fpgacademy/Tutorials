@@ -46,26 +46,27 @@
  
 \section{Introduction}
 
-This tutorial presents an introduction to the Intel\textsuperscript{\textregistered} Platform Designer tool, which is
-used to design digital hardware systems that contain components such as processors, memories, input/output
-interfaces, timers, and the like. The Platform Designer tool allows a designer to choose the components
-that are desired in the system by selecting these components in a graphical user interface.
-It then automatically generates the hardware system that connects all of the components together.
+This tutorial presents an introduction to the Altera\textsuperscript{\textregistered} 
+Platform Designer tool, which is used to design digital hardware systems that contain 
+components such as processors, memories, input/output interfaces, timers, and the like. 
+The Platform Designer tool allows a designer to choose the components that are desired 
+in the system by selecting these components in a graphical user interface.  It then 
+automatically generates the hardware system that connects all of the components together.
 
-The hardware system development flow is illustrated by giving step-by-step instructions for using the 
-Platform Designer tool in conjunction with the Quartus\textsuperscript{\textregistered} Prime software 
-to implement a simple example system. 
-The last step in the development process involves configuring the designed hardware system
-in an actual FPGA device, and running an application program. To show how this is done, 
-it is assumed that the user has access to an Intel DE-series Development and Education board 
-connected to a computer that has Quartus Prime and Nios\textsuperscript{\textregistered}
-II software installed. The screen captures in the tutorial were obtained using the 
-Quartus Prime version \versnum; other versions of the software may be slightly different.
+The hardware system development flow is illustrated by giving step-by-step instructions 
+for using the Platform Designer tool in conjunction with the 
+Quartus\textsuperscript{\textregistered} Prime software 
+to implement a simple example system. The last step in the development process involves 
+configuring the designed hardware system in an actual FPGA device, and running an 
+application program.  We assume the reader is using one of the DE-series boards featured on the 
+{\small \href{https://www.fpgacademy.org/boards.html} {FPGAcademy.org}} website.
+Screen captures and menu items that are shown in the tutorial may have a somewhat different
+appearance in various Quartus Prime versions.
 
 {\bf Contents}:
 \begin{itemize}
 \item Nios II System
-\item Intel's Platform Designer Tool
+\item Altera's Platform Designer Tool
 \item Integration of a Nios II System into a Quartus Prime Project
 \item Compiling a Quartus Prime Project when using the Platform Designer Tool
 \item Using the \productNameMed{} to Download a Designed Hardware System and Run an Application Program
@@ -73,32 +74,33 @@ Quartus Prime version \versnum; other versions of the software may be slightly d
 \clearpage
 \newpage
 
-\section{Intel DE-series FPGA Boards}
-For this tutorial we assume that the reader has access to an Intel DE-series board,
-such as the one shown in Figure~\ref{fig:1}. The figure depicts the DE1-SoC board, which features an Intel 
-Cyclone\textsuperscript{\textregistered} V FPGA chip. The board provides a lot of other resources, such as memory chips, slider switches,
-pushbutton keys, LEDs, audio input/output, video input (NTSC/PAL decoder) and video output (VGA).
+\section{DE-series FPGA Boards}
+For this tutorial we assume that the reader has access to a DE-series board,
+such as the one shown in Figure~\ref{fig:1}. The figure depicts the DE1-SoC board, which 
+features an Altera Cyclone\textsuperscript{\textregistered} V FPGA chip. The board provides 
+a lot of other resources, such as memory chips, slider switches, pushbutton keys, LEDs, 
+audio input/output, video input (NTSC/PAL decoder) and video output (VGA).
 It also provides several types of serial input/output connections, including a USB port for
 connecting the board to a personal computer. In this tutorial we will make use of only a few of 
 the resources: the FPGA chip, slider switches, LEDs, and the USB port that connects to a computer.
 
 Although we have chosen the DE1-SoC board as an example, the tutorial is pertinent for other
-DE-series boards that are described in the University Program section of Intel's website. 
+DE-series boards that are described in the FPGAcademy.org website. 
 
 \begin{figure}[H]
    \begin{center}
       \includegraphics[scale=.5]{figures/figure1.png}
    \end{center}
-   \caption{An Intel DE1-SoC board.} 
+   \caption{A DE1-SoC board.} 
 	\label{fig:1}
 \end{figure}
 
 \section{A Digital Hardware System Example}
 We will use a simple hardware system that is shown in Figure~\ref{fig:2}.
-It includes the Intel Nios II embedded processor,
+It includes the Altera Nios II embedded processor,
 which is a {\it soft processor} module defined as code in a hardware-description language.
 A Nios II module can be included as part of a larger system, and then that system can
-be implemented in an Intel FPGA chip by using the Quartus Prime software.
+be implemented in an Altera FPGA chip by using the Quartus Prime software.
 
 \begin{figure}[H]
    \begin{center}
@@ -158,7 +160,7 @@ Doing this tutorial, the reader will learn about:
 \item Running an application program on the Nios II processor
 \end{itemize}
 
-\section{Intel's Platform Designer Tool}
+\section{Altera's Platform Designer Tool}
 
 The Platform Designer tool is used in conjunction with the Quartus Prime CAD software.
 It allows the user to easily create a system based on the Nios II processor, by simply
@@ -282,7 +284,7 @@ the Nios II processor specified as indicated in Figure~\ref{fig:7}.
 \item To specify the on-chip memory perform the following:
 \begin{itemize}
 \item Expand the category {\sf Basic Functions}, and then expand to select
-{\sf On Chip Memory $>$ On-Chip Memory (RAM or ROM) Intel FPGA IP},
+{\sf On Chip Memory $>$ On-Chip Memory (RAM or ROM) Altera FPGA IP},
 and click {\sf Add}
 \item In the On-Chip Memory Configuration Wizard window, shown in Figure~\ref{fig:8}, ensure that
 the {\sf Slave S1 Data width} is set to 32 bits and the {\sf Total memory size} to 4K bytes (4096 bytes)
@@ -346,7 +348,8 @@ The resulting connections are shown in Figure~\ref{fig:11}.
 
 \item Specify the input parallel I/O interface as follows:
 \begin{itemize}
-\item From the IP Catalog, select {\sf Processors and Peripherals $>$ Peripherals $>$ PIO (Parallel I/O) Intel FPGA IP}
+\item From the IP Catalog, select {\sf Processors and Peripherals $>$ Peripherals $>$ PIO
+(Parallel I/O) Altera FPGA IP}
 and click {\sf Add} to reach the PIO Configuration Wizard in Figure~\ref{fig:12}
 \item Specify the width of the port to be 8 bits and choose the direction of the 
 port to be {\sf Input}, as shown in the figure. 
@@ -363,7 +366,8 @@ port to be {\sf Input}, as shown in the figure.
 
 \item In the same way, specify the output parallel I/O interface: 
 \begin{itemize}
-\item From the IP Catalog, select {\sf Processors and Peripherals $>$ Peripherals $>$ PIO (Parallel I/O) Intel FPGA IP}
+\item From the IP Catalog, select {\sf Processors and Peripherals $>$ Peripherals $>$ PIO
+(Parallel I/O) Altera FPGA IP}
 and click {\sf Add} to reach the PIO Configuration Wizard again
 \item Specify the width of the port to be 8 bits and choose the direction of the 
 port to be {\sf Output}. 
@@ -391,7 +395,7 @@ The resulting design is depicted in Figure~\ref{fig:13}.
 between the Nios II system and the host computer. This can be accomplished by 
 instantiating the JTAG UART interface as follows:
 \begin{itemize}
-\item Select {\sf Interface Protocols $>$ Serial $>$ JTAG UART Intel FPGA IP} and
+\item Select {\sf Interface Protocols $>$ Serial $>$ JTAG UART Altera FPGA IP} and
 click {\sf Add} to reach the JTAG UART Configuration Wizard in Figure~\ref{fig:14}
 \item Do not change the default settings 
 \item Click {\sf Finish} to return to the System Contents tab
@@ -671,7 +675,7 @@ The procedure for making pin assignments is described in the tutorial
 making the pin assignments when we use the same pin names as in the DE1-SoC 
 User Manual is to import the assignments from a Quartus Prime Setting File with Pin Assignments. 
 For example, the pin assignments for the DE1-SoC board are provided in the {\it DE1\_SoC.qsf} file, 
-which can be found on Intel's FPGA University Program website. 
+which can be found on Altera's FPGA University Program website. 
 
 Since the system we are designing needs to operate at a 50-MHz clock
 frequency, we can add the needed timing assignment in the Quartus Prime project.
@@ -750,8 +754,9 @@ assembled object file. This label is the default label we use to indicate to
 the Linker program the beginning of the application program.
 
 For a detailed explanation of the Nios II assembly language instructions see
-the tutorial {\it Introduction to the Intel Nios II Soft Processor},
-which is available on Intel's FPGA University Program website.
+the tutorial {\it Introduction to the Nios II Soft Processor},
+which is available on in the Computer Organization System Design section of the
+{\small \href{https://www.fpgacademy.org/tutorials.html} {FPGAcademy.org}} website.
 
 Enter this code into a file {\it lights.s}, or use the file provided with this tutorial,
 and place the file into a working directory. We placed the file into the directory 
@@ -784,10 +789,10 @@ for use with the DE-series boards. This software provides a simple means for com
 and downloading of programs onto a DE-series board.
 It also makes it possible for the user to perform debugging tasks.
 A description of this software is available in the {\it \productNameMed{}} tutorial.
-We should also note that other Nios II development systems are provided by Intel,
+We should also note that other Nios II development systems are provided by Altera,
 for use in commercial development.
 Although we will use the \productNameMed{} in this tutorial, the other Nios II tools
-available from Intel could alternatively be used with our designed hardware system.
+available from Altera could alternatively be used with our designed hardware system.
 
 Open the \productNameMed{}, which leads to the window in Figure~\ref{fig:26}.
 ~\\

@@ -37,8 +37,7 @@ stay:       bne     t0, t1, stay     # unexpected cause of exception
             
             # update the timer for the next interrupt cycle
             la      t0, MTIME_BASE
-            # read the current time
-rloop:      lw      t1, (t0)         # read mtimecmp low
+            lw      t1, (t0)         # read mtimecmp low
             li      t2, onesecond
             add     t2, t2, t1       # add one second to mtimecmp
             sw      t2, (t0)         # write to mtimecmp low

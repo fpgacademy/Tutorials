@@ -13,3 +13,9 @@ System_Design/Nios_V/Nios_V_Intro.out
 System_Design/Nios_V/Nios_V_Intro.log
 System_Design/Nios_V/Nios_V_Intro.pdf
 System_Design/Nios_V/Nios_V_Intro.synctex.gz
+*.aux
+*.log
+*.out
+*.gz
+*.gz
+*.pdf

@@ -1,15 +1,15 @@
 \documentclass[11pt, twoside, pdftex]{article}
 
 % This include all the settings that we should use for the document
-\newcommand{\PDFTitle}{Introduction to the Intel\textsuperscript{\textregistered} Nios\textsuperscript{\textregistered} II Soft Processor}
+\newcommand{\PDFTitle}{Introduction to the Altera\textsuperscript{\textregistered} Nios\textsuperscript{\textregistered} II Soft Processor}
 \newcommand{\commonPath}{../../Common}
 \input{\commonPath/Docs/defaulttext.tex}
 \input{\commonPath/Docs/preamble.tex}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 % Add title
-\newcommand{\doctitle}{Introduction to the Intel\textsuperscript{\textregistered} \\ Nios\textsuperscript{\textregistered} II Soft Processor}
-\newcommand{\dochead}{Introduction to the Intel\textsuperscript{\textregistered} Nios\textsuperscript{\textregistered} II Soft Processor}
+\newcommand{\doctitle}{Introduction to the Altera\textsuperscript{\textregistered} \\ Nios\textsuperscript{\textregistered} II Soft Processor}
+\newcommand{\dochead}{Introduction to the Altera\textsuperscript{\textregistered} Nios\textsuperscript{\textregistered} II Soft Processor}
 % Usually no need to change these two lines
 \title{\fontfamily{phv}\selectfont{\doctitle} }
 \chead{ \small{\textsc{\bfseries \dochead} } }
@@ -46,17 +46,15 @@
  
 \section{Introduction}
 
-This tutorial presents an introduction the Intel\textsuperscript{\textregistered} Nios\textsuperscript{\textregistered} II processor, 
-which is a soft processor that can be instantiated on an Intel FPGA device.
-It describes the basic architecture of Nios II and its instruction set.
-The Nios II processor and its associated memory and peripheral components are
-easily instantiated by using Intel's SOPC Builder or Platform Designer tool in conjunction with the 
-Quartus\textsuperscript{\textregistered} Prime software. 
+This tutorial presents an introduction the Altera\textsuperscript{\textregistered} 
+Nios\textsuperscript{\textregistered} II processor, which is a soft processor that can 
+be instantiated on an Altera FPGA device.  It describes the basic architecture of Nios II 
+and its instruction set.  The Nios II processor and its associated memory and peripheral 
+components are easily instantiated by using Altera's Platform Designer tool in conjunction 
+with the Quartus\textsuperscript{\textregistered} Prime software. 
 
 A full description of the Nios II processor is provided in the 
-{\it Nios II Processor Reference Handbook}, which is available in the literature
-section of the Intel web site. Introductions to the SOPC Builder and Platform Designer tools are given in the tutorials {\it Introduction to the Intel SOPC Builder} and 
-{\it Introduction to the Intel Platform Designer Tool}, respectively.  Both can be found in the University Program section of the web site.
+{\it Nios II Processor Reference Handbook}, which is available on the Internet.
 
 {\bf Contents}:
 \begin{itemize}
@@ -77,17 +75,18 @@ section of the Intel web site. Introductions to the SOPC Builder and Platform De
 
 \section{Background}
 
-Intel's Nios II is a soft processor, defined in a hardware description language,
-which can be implemented in Intel's FPGA devices by using the 
+Nios II is a soft processor, defined in a hardware description language,
+which can be implemented in Altera FPGA devices by using the 
 Quartus Prime CAD system. 
-This tutorial provides a basic introduction to the Nios II processor, intended for
-a user who wishes to implement a Nios II based system on an Intel Development and 
-Education board.
+In this tutorial we assume that the reader is using Nios~II as part of a computer system
+that is implemented on a DE1-SoC board. If another DE-series board is used, then most of
+the discussion will still be applicable, but some features of the computer system might 
+be different.
 
 \section{Nios II System}
 The Nios II processor can be used with a variety of other components to form 
 a complete system. These components include a number of standard peripherals, 
-but it is also possible to define custom peripherals. Intel's DE-series boards
+but it is also possible to define custom peripherals. The DE1-SoC board
 contain several components that can be integrated
 into a Nios II system. An example of such a system is shown in Figure~\ref{fig:1}.
  
@@ -120,7 +119,7 @@ execution trace data.
 Since all parts of the Nios II system implemented on the FPGA chip are defined by
 using a hardware description language, a knowledgeable user could write such code
 to implement any part of the system. This would be an onerous and time consuming
-task. Instead, one can use the SOPC Builder or Platform Designer tools in the Quartus Prime software
+task. Instead, one can use the Platform Designer tool in the Quartus Prime software
 to implement a desired system simply by
 choosing the required components and specifying the parameters needed to make
 each component fit the overall requirements of the system.
@@ -269,7 +268,7 @@ Figure~\ref{fig:4} shows how a Nios II processor can access memory and I/O devic
 For best performance, the Nios II/f processor can include both instruction and 
 data caches. The caches are implemented in the FPGA memory blocks. Their usage is
 optional and they are specified (including their size) at the
-system generation time by using the SOPC Builder or Platform Designer. The Nios II/s version can have
+system generation time by using the Platform Designer. The Nios II/s version can have
 the instruction cache but not the data cache. The Nios II/e version has neither the
 instruction nor data cache.
 
@@ -1194,19 +1193,20 @@ Since we have not explicitly specified the starting address of the
 program itself, the assembled code will be loaded in memory starting 
 at address 0.
 
-To execute the program in Figure~\ref{fig:6} on an Intel's DE-series board, it is necessary to 
+To execute the program in Figure~\ref{fig:6} on a DE-series board, it is necessary to 
 implement a Nios II processor and its memory (which can be just the on-chip memory of 
 the FPGA). Since the program includes the Multiply instruction, it cannot
 be executed on the economy version of the processor, because Nios II/e does not
 support the {\sf mul} instruction. Either Nios II/s or Nios II/f processors can
 be used.
  
+The tutorial {\it Introduction to the Platform Designer} explains
+how a Nios II system can be implemented. This tutorial is available in the 
+\texttt{Computer Organization System Design} section of the 
+{\small \href{https://www.fpgacademy.org/tutorials.html} {FPGAcademy.org}} website.
 
-The tutorials {\it Introduction to the Intel SOPC Builder} and 
-{\it Introduction to the Intel Platform Designer Tool} explain
-how a Nios II system can be implemented.
-The tutorial {\it \productNameMed{}} explains how an application program can be
-assembled, downloaded and executed on a DE-series board.
+The {\it Monitor Program Tutorial for the Nios~II Processor} explains how an application 
+program can be assembled, downloaded and executed on a DE-series board.
 
 \section{Exception Processing}
 
@@ -1237,7 +1237,7 @@ determines the cause of the exception and dispatches an appropriate
 \end{enumerate}
 \noindent
 The address of the exception handler is specified at system generation time
-using the SOPC Builder or Platform Designer tool,
+using the Platform Designer tool,
 and it cannot be changed by software at run time. 
 This address can be provided by the designer; otherwise, the default address is
 $20_{16}$ from the starting address of the main memory. For example, if the 
@@ -1368,10 +1368,10 @@ from the exception handler.
 
 As shown in Figure~\ref{fig:4}, a Nios II system can include instruction and data caches,
 which are implemented in the memory blocks in the FPGA chip.
-The caches can be specified when a system is being designed by using the SOPC Builder or Platform Designer
+The caches can be specified when a system is being designed by using the Platform Designer
 software. Inclusion of caches improves the performance of a Nios II system significantly,
 particularly when most of the main memory is provided by an external SDRAM chip, as is 
-the case with Intel's DE-series boards. Both instruction and data caches are direct-mapped.
+the case with DE-series boards. Both instruction and data caches are direct-mapped.
  
 
 The instruction cache can be implemented in the fast and standard versions of

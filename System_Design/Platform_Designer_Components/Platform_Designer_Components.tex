@@ -36,14 +36,14 @@
 
 \section{Introduction}
 
-The Intel\textsuperscript{\textregistered} Platform Designer tool allows a digital system to be designed by interconnecting selected Platform Designer 
+The Altera\textsuperscript{\textregistered} Platform Designer tool allows a digital system to be designed by interconnecting selected Platform Designer 
 components, such as processors, memory controllers, parallel and serial ports, and the like. 
 The Platform Designer tool includes many pre-designed components that may be selected for inclusion in
 a designed system, and it is also possible for users to create their own custom Platform Designer components. 
 This tutorial provides an introduction to the process of creating custom Platform Designer components.  
 The discussion is based on the assumption that the reader is familiar with the Verilog 
 or VHDL hardware description language and is also familiar with the material in the tutorial 
-{\it Introduction to the Intel Platform Designer Tool}. 
+{\it Introduction to the Altera Platform Designer Tool}. 
 
 The screen captures in this tutorial were obtained using the Quartus\textsuperscript{\textregistered} Prime version \versnum~ software; 
 if other versions are used, some of the images may be slightly different.
@@ -64,8 +64,11 @@ if other versions are used, some of the images may be slightly different.
 
 The Platform Designer tool allows users to put together a system using pre-made and/or custom components. 
 Such systems usually comprise one or more processors, memory interfaces, I/O ports and 
-other custom hardware.  The Platform Designer-created system can be included as part of a larger circuit and 
-implemented on an FPGA board, such as the Intel DE-series boards.
+other custom hardware.  The Platform Designer-created system can be included as part of a 
+larger circuit and implemented on an FPGA board, such as one of the DE-series boards
+described on the
+{\small \href{https://www.fpgacademy.org/boards.html} {FPGAcademy.org}} website.
+
 An example of such a system is depicted in Figure~\ref{fig:1}, where the part of the
 system created by the Platform Designer tool is highlighted in a blue color.
 
@@ -115,7 +118,7 @@ a component might provide an Avalon-ST port for high-throughput data, in additio
 Avalon MM slave port for control.  All components must include the Avalon Clock and 
 Reset Interfaces. Readers interested in more complete information about the Avalon Interfaces 
 may consult the {\it Avalon Interface Specifications} document that can be found on 
-the Intel website.
+the Altera website.
 
 In this tutorial we will show how to develop a Platform Designer component that has an Avalon Memory-Mapped 
 Interface and an Avalon Conduit Interface. The component is a 32-bit register that can be 
@@ -394,7 +397,8 @@ Before creating the new Platform Designer component for our 32-bit register, we 
 first instantiate some other components that will be needed in our system. In the {\sf IP Catalog} area of the Platform Designer window expand the
 {\sf Processors and Peripherals $>$ Embedded Processors} item and add a {\sf Nios II Processor} to the system. In the Nios II
 Processor dialog window that opens, select {\sf Nios II/e} as the type of processor. 
-Next, in the {\sf IP Catalog}, expand the {\sf Basic Functions $>$ On-Chip Memory} item and add an {\sf On-Chip Memory (RAM or ROM) Intel FPGA IP} component.
+Next, in the {\sf IP Catalog}, expand the {\sf Basic Functions $>$ On-Chip Memory} item
+and add an {\sf On-Chip Memory (RAM or ROM) Altera FPGA IP} component.
 Click {\sf Finish} to return to the main Platform Designer window. In the {\sf Connections} area of the Platform Designer
 window, make the connections illustrated in Figure~\ref{fig:10} between 
 the clock component, Nios II processor, and on-chip memory module. 

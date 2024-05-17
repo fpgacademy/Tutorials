@@ -48,7 +48,7 @@
 \section{Introduction}
 
 This document introduces the ARM* Generic Interrupt Controller (GIC), which is included as
-part of the ARM Cortex-A9* MPCORE* processor in the Intel\textsuperscript{\textregistered} Cyclone\textsuperscript{\textregistered} V SoC family. We do not discuss
+part of the ARM Cortex-A9* MPCORE* processor in the Altera\textsuperscript{\textregistered} Cyclone\textsuperscript{\textregistered} V SoC family. We do not discuss
 some of the advanced features of the GIC in this document; complete information is available 
 in the publication entitled {\it ARM Generic Interrupt Controller
 Architectural Specification}, which is available from ARM Holdings. 
@@ -72,7 +72,7 @@ ARM A9 MPCORE processor.  The GIC is connected to the IRQ interrupt signals of
 all I/O peripheral devices that are capable of generating interrupts.  Most of these
 devices are normally external to the A9 MPCORE, and some are internal peripherals (such as
 timers). The GIC included
-with the A9 MPCORE processor in the Intel Cyclone V SoC family handles up to 255 
+with the A9 MPCORE processor in the Altera Cyclone V SoC family handles up to 255 
 sources of interrupts. When a peripheral device sends its IRQ signal to the GIC, then the
 GIC can forward a corresponding IRQ signal to one or both of the A9 cores.
 Software code that is running on the A9 core can then query the GIC to determine which 
@@ -90,8 +90,10 @@ working with interrupts for the ARM Cortex-A9 and the GIC are described in the f
 
 \section{Interrupts in the ARM Cortex-A9*}
 An introduction to ARM processors can be found in the tutorial {\it Introduction to the
-ARM Processor Using Intel/ARM Toolchain},  which is available on Intel's FPGA University 
-Program website.  As described in that tutorial, the ARM Cortex-A9 has several main modes of 
+ARM A9 Processor},  which is available 
+in the \texttt{Computer Organization System Design} section of the 
+{\small \href{https://www.fpgacademy.org/tutorials.html} {FPGAcademy.org}} website.
+As described in that tutorial, the ARM Cortex-A9 has several main modes of 
 operation, listed below:
 \begin{itemize}
 \item {\it User} mode -- is the basic mode in which application
@@ -221,9 +223,11 @@ cores. There is one CPU Interface for each A9 core in the MPCORE.  API registers
 in each CPU Interface are depicted in Figure~\ref{fig:CPU_IF}. To make the example more
 concrete, we have assigned addresses to these registers, as shown. These addresses
 correspond to those used in the document {\it DE1-SoC Computer System with ARM Cortex-A9},
-which is available from Intel's FPGA University Program. The DE1-SoC Computer System is an ARM
-Cortex-A9 embedded system that can be implemented on Intel's DE1-SoC development and
-education board. 
+which is available in the \texttt{Computer Organization} section of the 
+{\small \href{https://www.fpgacademy.org/courses.html} {FPGAcademy.org}} website.
+The DE1-SoC Computer System is an ARM
+Cortex-A9 embedded system that can be implemented on a DE1-SoC Development and
+Education board. 
 
 The {\it CPU Interface Control Register} (ICCICR) is used to enable forwarding of
 interrupts from the CPU Interface to the corresponding A9 core. 
@@ -394,7 +398,18 @@ Figure \ref{fig:C_code}. An example of C code that configures the GIC (Part $b$)
 
 \newpage
 \section{Example Platform Designer System}
-\label{sec:PF_Sys} This section describes how to configure components capable of producing interrupts in a Platform Designer system. Only the parts of Platform Designer that are essential for interrupts are explained. Please refer to {\it Introduction to the Platform Designer} and {\it Making Platform Designer Components} available on the Intel FPGA University Program website for more details on using Platform Designer. The system used in this example is the {\it DE1-SoC Computer System}. Installing the  Monitor Program allows you to easily view and modify this system in \path{C:\intelFPGA_lite\version\University_Program\Computer_Systems}. Please refer to {\it Monitor Program Tutorial for the ARM Processor} on the University Program website for more details on installing and using the Monitor Program with the ARM processor.
+\label{sec:PF_Sys} This section describes how to configure components capable of producing 
+interrupts in a Platform Designer system. Only the parts of Platform Designer that are essential 
+for interrupts are explained. For more details the reader may refer to 
+{\it Introduction to the Platform Designer} and {\it Making Platform Designer Components},
+available in the 
+\texttt{Computer Organization System Design} section of the 
+{\small \href{https://www.fpgacademy.org/tutorials.html} {FPGAcademy.org}} website.
+The system used in this example is 
+the {\it DE1-SoC Computer System}. Installing the  Monitor Program allows you to easily view 
+and modify this system in \path{C:\intelFPGA_lite\version\University_Program\Computer_Systems}. 
+Refer to {\it Monitor Program Tutorial for the ARM Processor} on the FPGAcademy
+for more details on installing and using the Monitor Program with the ARM processor.
 
 Peripherals that are a part of the HPS on DE-series boards are already connected to the ARM processor and do not require any additional configuration within Platform Designer to produce interrupts. Components on the FPGA side of the board must be configured within Platform Designer to produce interrupts. Figure \ref{fig:fig_PF} shows the DE1-SoC Computer system. The components of interest are
 the Cyclone V Hard Processor system and the input PIO peripherals such as the pushbuttons. Although this example is configuring the pushbuttons, it is possible to configure any IP in Platform Designer with an interrupt sender to produce interrupts with the same procedure.
