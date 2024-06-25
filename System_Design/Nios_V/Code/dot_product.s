@@ -1,7 +1,6 @@
 # Program that calculates a dot product of two vectors
 
-            .text
-            .global _start
+.global _start
 _start:     la      s0, Avector     # pointer to vector A
             la      s1, Bvector     # pointer to vector B
             la      t0, N           # pointer to N
@@ -37,7 +36,6 @@ mdone:      beqz    t1, mult_ret    # is sign of product correct?
 mult_ret:   mv      a0, t0          # return result
             ret
 
-            .data
 N:          .word   6
 Avector:    .word   5, 3, -6, 19, 8, 12
 Bvector:    .word   2, 14, -3, 2, -5, 36

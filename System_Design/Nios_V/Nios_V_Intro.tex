@@ -393,11 +393,11 @@ It is sometimes necessary to compare the values in registers and to record the r
 Such comparisons can be done using the instructions: 
 \vspace{-\baselineskip}
 \begin{ctabbing}
-~~~~\={\sf sltiu}~~\={\sf rd, rs1, rs2}~~~~\=\kill
+~~~~\={\sf sltiu}~~\={\sf rd, rs1, uimm}~~~~\=\kill
 \>{\sf slt} \>{\sf rd, rs1, rs2} \>(set if less than)\\
 \>{\sf sltu} \>{\sf rd, rs1, rs2} \>(set if less than unsigned)\\
-\>{\sf slti} \>{\sf rd, rs1, rs2} \>(set if less than immediate)\\
-\>{\sf sltiu} \>{\sf rd, rs1, rs2} \>(set if less than immediate unsigned)
+\>{\sf slti} \>{\sf rd, rs1, imm} \>(set if less than immediate)\\
+\>{\sf sltiu} \>{\sf rd, rs1, uimm} \>(set if less than immediate unsigned)
 \end{ctabbing}
 
 \noindent
@@ -434,7 +434,6 @@ Several pseudoinstructions provide variants of the comparison instructions. Exam
 \>{\sf sgtz} \>{\sf rd, rs1} \>(set if greater than zero)\\
 \>{\sf sgt} \>{\sf rd, rs1, rs2} \>(set if greater than)\\
 \>{\sf sgtu} \>{\sf rd, rs1, rs2} \>(set if greater than unsigned)\\
-\>{\sf slt} \>{\sf rd, rs1, rs2} \>(set if less than)
 \end{ctabbing}
 
 \subsubsection{Integer Multiplication and Division}
@@ -1143,52 +1142,7 @@ signed 32-bit number.
 The program ends by continuously looping to the {\it stop} label.
 
 \begin{figure}[H]
-\begin{lstlisting}[style=defaultNiosVStyle]
-            .text
-            .global _start
-_start:     la      s0, Avector     # pointer to vector A
-            la      s1, Bvector     # pointer to vector B
-            la      t0, N           # pointer to N
-            lw      s2, (t0)        # s2 = N (number of vector elements)
-            li      s3, 0           # s3 will hold the final result
-            
-loop:       lw      a0, (s0)        # load next element of vector A
-            lw      a1, (s1)        # load next element of vector B
-            jal     mult            # compute product
-            add     s3, s3, a0      # add to the sum
-            addi    s0, s0, 4       # point to next element of vector A
-            addi    s1, s1, 4       # point to next element of vector B
-            addi    s2, s2, -1      # count down
-            bnez    s2, loop
-
-            la      t0, dot_p       # pointer to the final result
-            sw      s3, (t0)        # store the result
-stop:       j       stop
-
-# Multiplies a0 x a1, using successive addition
-# Returns the product in a0
-mult:       mv      t0, zero        # product
-            mv      t1, zero        # for checking sign of result
-            bgez    a1, mloop       # is a1 a positive value?
-            neg     a1, a1          # ...if not, then negate a1
-            li      t1, 1           # remember to negate the product
-
-mloop:      beqz    a1, mdone       # done adding yet?
-            add     t0, t0, a0      # add the multiplier to the product
-            addi    a1, a1, -1      # decrement the multiplicand
-            j       mloop
-
-mdone:      beqz    t1, mult_ret    # is sign of product correct?
-            neg     t0, t0          # flip sign of result
-mult_ret:   mv      a0, t0          # return result
-            ret
-
-            .data
-N:          .word   6
-Avector:    .word   5, 3, -6, 19, 8, 12
-Bvector:    .word   2, 14, -3, 2, -5, 36
-dot_p:      .word   0
-\end{lstlisting}
+\lstinputlisting[style=defaultNiosVStyle]{Code/dot_product.s}
 	\caption{A program that computes the dot product of two vectors.}
 	\label{fig:example}
 \end{figure}
@@ -1206,11 +1160,8 @@ indicates to the Assembler that the label {\it \_start} is accessible outside of
 assembled object file. This is the default label that should be used to indicate to
 the Linker program the beginning of the application program.
 
-The assembled machine code will be placed into the memory starting 
-at the beginning address of the {\it .text} segment.
 The program includes some sample data, which illustrate how the {\sf .word} directive 
-can be used to place data items into memory. The assembled data will be loaded into 
-memory starting at the beginning address of the {\it .data} segment.
+can be used to place data items into memory. 
 
 Since the program performs multiplication by using a subroutine, it can be executed on a
 Nios~V/m processor, which does not have the RISC-V multiplication and division extension.
@@ -1354,11 +1305,10 @@ are enabled in Nios~V by setting bit $b_3$ of the {\it mstatus} register.
 \begin{figure}[h]
 \begin{center} \begin{minipage}[h]{15 cm}
 \begin{lstlisting}[style=defaultNiosVStyle, name=ints, numbers=left, escapechar=|]
-            |\label{line:equ1}|.equ    LEDR_BASE, 0xff200000
-            |\label{line:equ2}|.equ    MTIME_BASE, 0xff202100
-            |\label{line:equ3}|.equ    onesecond, 100000000
-            .text
-            .global _start
+|\label{line:equ1}|.equ    LEDR_BASE, 0xff200000
+|\label{line:equ2}|.equ    MTIME_BASE, 0xff202100
+|\label{line:equ3}|.equ    onesecond, 100000000
+.global _start
 |\label{line:sp}|_start:     li      sp, 0x40000      # initialize the stack location
             |\label{line:timer}|jal     set_timer        # initialize the timer
      
@@ -1419,7 +1369,6 @@ set_timer:  la      t0, MTIME_BASE   # set address
             sw      zero, 4(t0)      # set mtimecmp high word
             ret
      
-            .data
 counter:    .word   0                # the counter to be displayed\end{lstlisting}
 
 \vspace{0.25in}
@@ -1533,8 +1482,7 @@ tloop:      lw      t2, 0xc(t0)      # read mtime high
 \begin{lstlisting}[style=defaultNiosVStyle, name=vecs, numbers=left, escapechar=|]
             |$\ldots$| directives (see |Figure~\ref{fig:ints}) not| shown
 
-            .text
-            .global _start
+.global _start
 _start:     li      sp, 0x40000      # initialize the stack location
             jal     set_timer        # initialize the timer 
      
@@ -1606,7 +1554,6 @@ IRQ_7:      addi    sp, sp, -8       # save regs that will be modified
 set_timer:  |$\ldots$| code |not shown (see Figure~\ref{fig:ints})|
             ret
 
-            .data
 counter:    .word   0                # the counter to be displayed
 \end{lstlisting}
 

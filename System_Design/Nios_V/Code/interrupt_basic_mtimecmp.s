@@ -1,10 +1,9 @@
 # Program that displays a binary counter on LEDR
-            .equ    LEDR_BASE, 0xff200000
-            .equ    MTIME_BASE, 0xff202100
-            .equ    onesecond, 100000000
+.equ LEDR_BASE, 0xff200000
+.equ MTIME_BASE, 0xff202100
+.equ onesecond, 100000000
 
-            .text
-            .global _start
+.global _start
 _start:     li      sp, 0x40000      # initialize the stack location
             jal     set_timer        # initialize the timer
      
@@ -76,5 +75,4 @@ tloop:      lw      t2, 0xc(t0)      # read mtime high
 
             ret
      
-            .data
 counter:    .word   0                # the counter to be displayed
