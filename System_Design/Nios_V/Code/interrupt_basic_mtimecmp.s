@@ -1,7 +1,7 @@
 # Program that displays a binary counter on LEDR
 .equ LEDR_BASE, 0xff200000
 .equ MTIME_BASE, 0xff202100
-.equ onesecond, 100000000
+.equ clock_rate, 100000000
 
 .global _start
 _start:     li      sp, 0x40000      # initialize the stack location
@@ -36,15 +36,15 @@ stay:       bne     t0, t1, stay     # unexpected cause of exception
             
             # update the timer for the next interrupt cycle
             la      t0, MTIME_BASE
-            lw      t1, (t0)         # read mtimecmp low
-            li      t2, onesecond
+            lw      t1, 8(t0)        # read mtimecmp low
+            li      t2, clock_rate
             add     t2, t2, t1       # add one second to mtimecmp
-            sw      t2, (t0)         # write to mtimecmp low
+            sw      t2, 8(t0)        # write to mtimecmp low
             sltu    t2, t2, t1       # check for addition overflow
 
-            lw      t1, 4(t0)        # read mtimecmp high
+            lw      t1, 12(t0)       # read mtimecmp high
             add     t1, t1, t2       # increment (t2 = 1 if overflow)
-            sw      t1, 4(t0)        # write to mtimecmp high
+            sw      t1, 12(t0)       # write to mtimecmp high
 
             la      t0, counter      # pointer to counter
             lw      t1, (t0)         # read counter value
@@ -60,18 +60,18 @@ stay:       bne     t0, t1, stay     # unexpected cause of exception
 # Set timeout to 1 second
 set_timer:  la      t0, MTIME_BASE   # set address
             # read the current time
-tloop:      lw      t2, 0xc(t0)      # read mtime high
-            lw      t1, 8(t0)        # read mtime low
-            lw      t3, 0xc(t0)      # read high again
+tloop:      lw      t2, 4(t0)        # read mtime high
+            lw      t1, 0(t0)        # read mtime low
+            lw      t3, 4(t0)        # read high again
             bne     t3, t2, tloop    # check for overflow from low to high
             
             # current time is t2:t1
-            li      t3, onesecond
+            li      t3, clock_rate
             add     t3, t3, t1       # add one second to current time
-            sw      t3, (t0)         # write to mtimecmp low
+            sw      t3, 8(t0)        # write to mtimecmp low
             sltu    t3, t3, t1       # check for addition overflow
             add     t2, t2, t3       # increment (t3 = 1 if overflow)
-            sw      t2, 4(t0)        # write to mtimecmp high
+            sw      t2, 12(t0)       # write to mtimecmp high
 
             ret
      

@@ -947,8 +947,8 @@ need to specify the {\it zero} register when it would just serve as a placeholde
 Nios~V includes a 64-bit internal timer that is available to application programmers. 
 The timer is reset to 0 when the processor is powered on, and then monotonically
 increases for every processor clock cycle. 
-Since the timer is 64-bits wide, it will not overflow in any realistic amount
-of time. The timer is accessible via two memory-mapped registers, called {\it mtime}
+Since it is 64-bits wide, the timer will not overflow in any realistic amount
+of time. Two memory-mapped registers are associated with the timer, called {\it mtime}
 (machine time) and {\it mtimecmp} (machine time compare). The {\it mtime} register provides 
 the current timer value, and the {\it mtimecmp} register can be used to cause a timer 
 interrupt. A Nios~V timer interrupt will be pending whenever the value of {\it mtime} reaches or
@@ -968,7 +968,7 @@ in this register are not used. Interrupts are discussed further in Section~\ref{
 
 The {\it mtime}, {\it mtimecmp} and {\it msip} registers are part of a module in Nios~V called
 the {\it Advanced Core Local Interrupt Specification} (ACLINT). As illustrated in 
-Figure~\ref{fig:mm_control}, a {\it base} address is associated with the {\it ACLINT}, and 
+Figure~\ref{fig:mm_control}, a {\it base} address is assigned to the {\it ACLINT}, and 
 each of the registers inside it has an address that is {\it offset} from this base. The value of
 the {\it ACLINT} base address is system dependent. 
 
@@ -1283,20 +1283,22 @@ into bit $b_0$ of the {\it msip} register.
 \label{sec:modes}
 
 Figure~\ref{fig:ints} gives an example of code that uses the basic Nios~V trap handling mode.
-The code
-enables interrupts from the Nios~V machine timer and uses them to display a one-second binary
-counter on an output port that has a set of red lights (LEDs). The addresses of the timer
+The code enables interrupts from the Nios~V machine timer and uses them to display a 
+binary counter on an output port that has a set of red lights (LEDs). The addresses of the timer
 registers, {\it mtime} and {\it mtimecmp}, as well as the red light port, called {\it LEDR},
 are taken from the {\it DE1-SoC Computer System with Nios~V}, shown in
 Figure~\ref{fig:system}. 
 
 Lines~\ref{line:equ1}~and~\ref{line:equ2} in Figure~\ref{fig:ints}$a$ define some symbolic 
-names that are used in the code for the I/O addresses. The symbol {\it onesecond}
-defined in Line~\ref{line:equ3} has the value 100~million, which is the number of timer 
-cycles needed to provide a timeout every one second in the DE1-SoC system.
+names that are used in the code for the I/O addresses. The symbol {\it clock\_rate}
+corresponds to the frequency of the clock signal that is connected to the Nios~V
+processor. This clock frequency is system dependent, and so the value specified in 
+Line~\ref{line:equ3}, which is 100~million, is just an example. The intent of the 
+{\it clock\_rate} value in this example to cause a timer interrupt every one second.
 
 Line~\ref{line:sp} initializes the stack pointer to an address within the 64~MB SDRAM 
-in the DE1-SoC system, and Line~\ref{line:timer} calls a subroutine that initializes the timer. 
+in the DE1-SoC system, and Line~\ref{line:timer} calls a subroutine that initializes the
+machine timer. 
 Interrupts are enabled in Lines~\ref{line:int1}~to~\ref{line:int2}. First, the address of
 the trap handler routine is written into the {\it mtvec} register, and then machine timer 
 interrupts are enabled by setting bit $b_7$ of the {\it mie} register. Finally, interrupts 
@@ -1307,7 +1309,7 @@ are enabled in Nios~V by setting bit $b_3$ of the {\it mstatus} register.
 \begin{lstlisting}[style=defaultNiosVStyle, name=ints, numbers=left, escapechar=|]
 |\label{line:equ1}|.equ    LEDR_BASE, 0xff200000
 |\label{line:equ2}|.equ    MTIME_BASE, 0xff202100
-|\label{line:equ3}|.equ    onesecond, 100000000
+|\label{line:equ3}|.equ    clock_rate, 100000000
 .global _start
 |\label{line:sp}|_start:     li      sp, 0x40000      # initialize the stack location
             |\label{line:timer}|jal     set_timer        # initialize the timer
@@ -1347,7 +1349,7 @@ loop:       wfi
             
             # Restart the timer. This is one way to clear the interrupt
             |\label{line:clear1}|la      t0, MTIME_BASE
-            |\label{line:clear2}|sw      zero, 8(t0)
+            |\label{line:clear2}|sw      zero, (t0)
 
             |\label{line:inc1}|la      t0, counter      # pointer to counter
             lw      t1, (t0)         # read counter value
@@ -1361,12 +1363,12 @@ loop:       wfi
 
 # Set timeout to 1 second
 set_timer:  la      t0, MTIME_BASE   # set address
-            sw      zero, 8(t0)      # reset low word of mtime
-            sw      zero, 0xc(t0)    # reset high word of mtime
+            sw      zero, (t0)       # reset mtime low word
+            sw      zero, 4(t0)      # reset mtime high word
             
-            li      t1, onesecond
-            sw      t1, (t0)         # set mtimecmp low word
-            sw      zero, 4(t0)      # set mtimecmp high word
+            li      t1, clock_rate
+            sw      t1, 8(t0)        # set mtimecmp low word
+            sw      zero, 12(t0)     # set mtimecmp high word
             ret
      
 counter:    .word   0                # the counter to be displayed\end{lstlisting}
@@ -1397,8 +1399,8 @@ part of the trap handler restores the temporary registers that it has modified a
 executes the {\sf mret} instruction to return to the interrupted program.
 
 The code that initializes the machine timer is shown at the end of
-Figure~\ref{fig:ints}$b$. It simply sets {\it mtime} to 0 and {\it mtimecmp} to 100~million,
-providing one-second timeouts based on its 100~MHz clock signal. 
+Figure~\ref{fig:ints}$b$. It sets {\it mtime} to 0 and {\it mtimecmp} to the value
+of the system clock frequency, which will result in one-second timeouts.
 
 Instead of resetting {\it mtime} to zero in the trap handler, as described above, another way
 of handling the timer would be to increment {\it mtimecmp} when each interrupt occurs. 
@@ -1407,10 +1409,11 @@ to reset the {\it mtime} value. For this alternative approach, Figure~\ref{fig:s
 shows a version of {\it set\_timer} that initializes {\it mtimecmp} to the current value of 
 the 64-bit {\it mtime} register. This operation requires a loop to check for overflow from 
 the low-to-high 32-bit parts of {\it mtime} that could happen during the read operation. 
-The code then adds 100~million to the current time value and stores the resulting sum into
+The code then adds the {\it clock\_rate} value to the value that was read from {\it
+mtime}, and stores the resulting sum into
 {\it mtimecmp}, accounting for the carry that could be involved in this 64-bit operation.
 Figure~\ref{fig:trap_mtimecmp} shows the part of the corresponding 
-trap handler that would need to be changed for this alternative approach, which increments
+trap handler that would need to be changed for this alternative approach of incrementing
 {\it mtimecmp}. 
 
 Figure~\ref{fig:vectored} gives an example of code that uses the vectored interrupt
@@ -1431,18 +1434,18 @@ by writing a 1 into bit $b_0$ of the {\it msip} register.
 # Set timeout to 1 second
 set_timer:  la      t0, MTIME_BASE   # set address
             # read the current time
-tloop:      lw      t2, 0xc(t0)      # read mtime high
-            lw      t1, 8(t0)        # read mtime low
-            lw      t3, 0xc(t0)      # read high again
+tloop:      lw      t2, 4(t0)        # read mtime high
+            lw      t1, (t0)         # read mtime low
+            lw      t3, 4(t0)        # read high again
             bne     t3, t2, tloop    # check for overflow from low to high
             
             # current time is t2:t1
-            li      t3, onesecond
+            li      t3, clock_rate
             add     t3, t3, t1       # add one second to current time
-            sw      t3, (t0)         # write to mtimecmp low
+            sw      t3, 8(t0)        # write to mtimecmp low
             sltu    t3, t3, t1       # check for carry-out
             add     t2, t2, t3       # increment (t3 = carry-out)
-            sw      t2, 4(t0)        # write to mtimecmp high
+            sw      t2, 12(t0)       # write to mtimecmp high
 
             ret
 \end{lstlisting}
@@ -1459,15 +1462,15 @@ tloop:      lw      t2, 0xc(t0)      # read mtime high
             |\ldots| code |not| shown
             # update the timer for the next interrupt cycle
             la      t0, MTIME_BASE
-            lw      t1, (t0)         # read mtimecmp low
-            li      t2, onesecond
+            lw      t1, 8(t0)        # read mtimecmp low
+            li      t2, clock_rate
             add     t2, t2, t1       # add one second to mtimecmp
-            sw      t2, (t0)         # write to mtimecmp low
+            sw      t2, 8(t0)        # write to mtimecmp low
             sltu    t2, t2, t1       # check for carry-out from addition
 
-            lw      t1, 4(t0)        # read mtimecmp high
+            lw      t1, 12(t0)       # read mtimecmp high
             add     t1, t1, t2       # increment (t2 = carry-out)
-            sw      t1, 4(t0)        # write to mtimecmp high
+            sw      t1, 12(t0)       # write to mtimecmp high
             |\ldots| code |not| shown
 \end{lstlisting}
 	\caption{Part of the trap handler for the alternative approach.}
@@ -1480,7 +1483,7 @@ tloop:      lw      t2, 0xc(t0)      # read mtime high
 \begin{center}
 \begin{minipage}[h]{15 cm}
 \begin{lstlisting}[style=defaultNiosVStyle, name=vecs, numbers=left, escapechar=|]
-            |$\ldots$| directives (see |Figure~\ref{fig:ints}) not| shown
+|$\ldots$| directives (see |Figure~\ref{fig:ints}) not| shown
 
 .global _start
 _start:     li      sp, 0x40000      # initialize the stack location
@@ -1496,7 +1499,7 @@ _start:     li      sp, 0x40000      # initialize the stack location
             # Make a software interrupt happen
             |\label{line:sw1}|la      t0, MTIME_BASE   # base address
             li      t1, 1            # pattern to write to msip
-            |\label{line:sw2}|sw      t1, 0x10(t0)     # write to msip (sw interrupt)
+            |\label{line:sw2}|sw      t1, 16(t0)       # write to msip (sw interrupt)
 
             |\label{line:mret}|la      s0, counter      # pointer to counter
             la      s1, LEDR_BASE    # pointer to red lights
@@ -1529,7 +1532,7 @@ IRQ_3:      addi    sp, sp, -8       # save regs that will be modified
             sw      t0, (sp)
 
             la      t0, MTIME_BASE   # base address
-            |\label{line:clr}|sw      zero, 0x10(t0)   # clear software interrupt in msip
+            |\label{line:clr}|sw      zero, 16(t0)     # clear software interrupt in msip
             la      t0, counter      # pointer to the counter
             li      t1, 0b1111111110
             sw      t1, (t0)         # write to the counter
@@ -1546,7 +1549,7 @@ IRQ_7:      addi    sp, sp, -8       # save regs that will be modified
             
             # Restart the timer
             la      t0, MTIME_BASE
-            sw      zero, 8(t0)      # write to mtime
+            sw      zero, (t0)       # write to mtime
 
             |$\ldots$| some code |not shown (see Figure~\ref{fig:ints})|
             |\label{line:mret2}|mret
@@ -1583,11 +1586,11 @@ return to (Line~\ref{line:mret} of) the main program.
 
 The main program in Figure~\ref{fig:vectored}$a$ will execute the loop between 
 Lines~\ref{line:wfi} and~\ref{line:loop} indefinitely. Each time the machine timer
-reaches its one-second timeout, the processor will jump to the vector address {\it handler} + 28.
+generates an interrupt, the processor will jump to the vector address {\it handler} + 28.
 The instruction at this address (see Line~\ref{line:h2} of Figure~\ref{fig:vectored}$b$)
 then jumps to the label IRQ\_7, which provides the 
 machine timer interrupt handler. Most of the code in this handler is not shown, because it
-is the same as the code that we described previously for Figure~\ref{fig:ints}, except that this
+is the same as the code described previously for Figure~\ref{fig:ints}, except that this
 handler has to save onto the stack the temporary registers that it will modify. Once this 
 handler is completed, it restores saved temporary registers and then 
 executes the {\sf mret} instruction in Line~\ref{line:mret2}

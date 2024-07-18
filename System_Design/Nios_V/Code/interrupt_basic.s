@@ -1,7 +1,7 @@
 # Program that displays a binary counter on LEDR
 .equ LEDR_BASE, 0xff200000
 .equ MTIME_BASE, 0xff202100
-.equ onesecond, 100000000
+.equ clock_rate, 100000000
 
 .global _start
 _start:     li      sp, 0x20000      # initialize the stack location
@@ -35,8 +35,8 @@ stay:       bne     t0, t1, stay     # unexpected cause of exception
             
             # Restart the timer
             la      t0, MTIME_BASE
-            sw      zero, 8(t0)      # reset mtime low
-            sw      zero, 0xc(t0)    # reset mtime high
+            sw      zero, 0(t0)      # reset mtime low
+            sw      zero, 4(t0)      # reset mtime high
 
             la      t0, counter      # pointer to counter
             lw      t1, (t0)         # read counter value
@@ -50,12 +50,12 @@ stay:       bne     t0, t1, stay     # unexpected cause of exception
 
 # Set timeout to 1 second
 set_timer:  la      t0, MTIME_BASE   # set address
-            sw      zero, 8(t0)      # reset lower word of mtime
-            sw      zero, 0xc(t0)    # reset upper word of mtime
+            sw      zero, 0(t0)      # reset mtime lower word
+            sw      zero, 4(t0)      # reset mtime upper word
             
-            li      t1, onesecond
-            sw      t1, (t0)         # set mtimecmp low word
-            sw      zero, 4(t0)      # set mtimecmp upper word
+            li      t1, clock_rate
+            sw      t1, 8(t0)        # set mtimecmp low word
+            sw      zero, 12(t0)     # set mtimecmp upper word
             ret
      
 counter:    .word   0                # the counter to be displayed
