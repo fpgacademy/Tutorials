@@ -1,15 +1,15 @@
 \documentclass[11pt, twoside, pdftex]{article}
 
 % This include all the settings that we should use for the document
-\newcommand{\PDFTitle}{Using the ModelSim-Intel FPGA Simulator by Drawing Waveforms}
+\newcommand{\PDFTitle}{Using the ModelSim FPGA Simulator by Drawing Waveforms}
 \newcommand{\commonPath}{../../../Common}
 \input{\commonPath/Docs/defaulttext.tex}
 \input{\commonPath/Docs/preamble.tex}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 % Add title
-\newcommand{\doctitle}{Using the ModelSim-Intel FPGA \\ Simulator by Drawing Waveforms}
-\newcommand{\dochead}{Using the ModelSim-Intel FPGA Simulator}
+\newcommand{\doctitle}{Using the ModelSim FPGA \\ Simulator by Drawing Waveforms}
+\newcommand{\dochead}{Using the ModelSim FPGA Simulator}
 % Usually no need to change these two lines
 \title{\fontfamily{phv}\selectfont{\doctitle} }
 \chead{ \small{\textsc{\bfseries \dochead} } }
@@ -47,12 +47,12 @@
 \section{Introduction}
 
 This tutorial introduces the simulation of VHDL code using the Graphical Waveform Editor
-in the {\it ModelSim-Intel FPGA} simulator. We assume that you are using 
-{\it ModelSim-Intel FPGA Starter Edition version 18.0}. This software can 
-be downloaded and installed from the {\it Download Center for Intel FPGAs}. In this
-download center, you can select release {\it 18.0} of the {\it Quartus Prime Lite Edition}, 
+in the {\it ModelSim FPGA} simulator. We assume that you are using the
+{\it ModelSim FPGA Starter Edition} that accompanies Quartus Prime version 21.1. This software can 
+be downloaded and installed from the {\it Download Center for Intel (Altera) FPGAs}. In this
+download center, you can select release \texttt{21.1} of the {\it Quartus Prime Lite Edition}, 
 and then on the \texttt{Individual Files} tab choose to download and install the 
-{\it ModelSim-Intel FPGA Starter Edition} software. We assume that you are using a computer
+{\it ModelSim-Intel FPGA (Starter) Edition} software. We assume that you are using a computer
 that is running the Windows operating system. If you are using the Linux operating system 
 then minor differences to the instructions would apply, such as using a / filesystem delimiter 
 rather than the $\backslash$ delimiter that is used with Windows. 
@@ -60,7 +60,7 @@ rather than the $\backslash$ delimiter that is used with Windows.
 This tutorial is intended for introductory use of ModelSim by students who are just
 beginning to learn about the relevant topics. For students who have gained some
 familiarity with logic design and VHDL code we recommend the approach presented in the tutorial
-{\it Using the ModelSim-Intel FPGA Simulator with VHDL Testbenches}.
+{\it Using the ModelSim FPGA Simulator with VHDL Testbenches}.
 
 {\bf Contents}:
 \begin{itemize}
@@ -73,18 +73,11 @@ familiarity with logic design and VHDL code we recommend the approach presented 
 {\bf Requirements:}
 \begin{itemize}
 \item ModelSim-Intel FPGA Starter Edition software
-\item A computer running either Microsoft* Windows* (version 10 is recommended) or Linux 
+\item A computer running a recent version of Microsoft* Windows* or Linux 
 (Ubuntu, or a similar Linux distribution). The computer would typically be either a
 desktop computer or laptop, and is used to run the ModelSim software.
 \end{itemize}
 
-{\bf Optional:}
-\begin{itemize}
-\item Intel Quartus\textsuperscript{\textregistered} Prime software
-\item A DE-series development and education board, such as the DE1-SoC board. These boards are 
-described on Intel's FPGA University Program website, and are available from the manufacturer 
-Terasic Technologies.
-\end{itemize}
 \clearpage
 \newpage
 \section{Getting Started}

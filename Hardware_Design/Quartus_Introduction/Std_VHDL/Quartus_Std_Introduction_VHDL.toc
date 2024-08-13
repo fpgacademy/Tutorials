@@ -1,0 +1,16 @@
+\contentsline {section}{\numberline {1}Introduction}{2}{section.1}%
+\contentsline {section}{\numberline {2}Background}{3}{section.2}%
+\contentsline {section}{\numberline {3}Getting Started}{4}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Quartus\textsuperscript {\textregistered } Prime Online Help}{6}{subsection.3.1}%
+\contentsline {section}{\numberline {4}Starting a New Project}{6}{section.4}%
+\contentsline {section}{\numberline {5}Design Entry Using VHDL Code}{13}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Using the Quartus Prime Text Editor}{14}{subsection.5.1}%
+\contentsline {subsubsection}{\numberline {5.1.1}Using VHDL Templates}{16}{subsubsection.5.1.1}%
+\contentsline {subsection}{\numberline {5.2}Adding Design Files to a Project}{16}{subsection.5.2}%
+\contentsline {section}{\numberline {6}Compiling the Designed Circuit}{18}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Errors}{19}{subsection.6.1}%
+\contentsline {section}{\numberline {7}Pin Assignment}{21}{section.7}%
+\contentsline {section}{\numberline {8}Programming and Configuring the FPGA Device}{25}{section.8}%
+\contentsline {subsection}{\numberline {8.1}JTAG* Programming for the DE1-SoC Board, DE0-Nano-SoC, DE10-Nano, and DE10-Standard}{26}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}JTAG* Programming for the DE0-CV, DE0-Nano, DE10-Lite, and DE2-115 Boards}{28}{subsection.8.2}%
+\contentsline {section}{\numberline {9}Testing the Designed Circuit}{29}{section.9}%

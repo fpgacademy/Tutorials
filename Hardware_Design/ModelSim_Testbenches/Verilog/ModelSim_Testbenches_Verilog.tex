@@ -1,7 +1,7 @@
 \documentclass[11pt, twoside, pdftex]{article}
 
 % This includes all the settings that we should use for the document
-\newcommand{\PDFTitle}{Using the ModelSim-Intel FPGA Simulator with Verilog Testbenches}
+\newcommand{\PDFTitle}{Using the ModelSim FPGA Simulator with Verilog Testbenches}
 \newcommand{\commonPath}{../../../Common}
 \input{\commonPath/Docs/defaulttext.tex}
 \input{\commonPath/Docs/preamble.tex}
@@ -10,8 +10,8 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 % Add title
-\newcommand{\doctitle}{Using the ModelSim-Intel FPGA \\ Simulator with Verilog Testbenches}
-\newcommand{\dochead}{Using the ModelSim-Intel FPGA Simulator with Verilog Testbenches}
+\newcommand{\doctitle}{Using the ModelSim FPGA \\ Simulator with Verilog Testbenches}
+\newcommand{\dochead}{Using the ModelSim FPGA Simulator with Verilog Testbenches}
 % Usually no need to change these two lines
 \title{\fontfamily{phv}\selectfont{\doctitle} }
 \chead{ \small{\textsc{\bfseries \dochead} } }
@@ -51,12 +51,12 @@
 \section{Introduction}
 
 This tutorial introduces the simulation of Verilog code using the
-{\it ModelSim-Intel FPGA} simulator. We assume 
-that you are using {\it ModelSim-Intel FPGA Starter Edition version 18.0}. This software can 
+{\it ModelSim FPGA} simulator. We assume 
+that you are using {\it ModelSim-Intel FPGA (Starter) Edition version 21.1}. This software can 
 be downloaded and installed from the {\it Download Center for Intel FPGAs}. In this
-download center, you can select release {\it 18.0} of the {\it Quartus Prime Lite Edition}, 
+download center, you can select release \texttt{21.1} of the {\it Quartus Prime Lite Edition}, 
 and then on the \texttt{Individual Files} tab choose to download and install the 
-{\it ModelSim-Intel FPGA Starter Edition} software. We assume that you are using a computer
+{\it ModelSim-Intel FPGA (Starter) Edition} software. We assume that you are using a computer
 that is running the Windows operating system. If you are using the Linux operating system 
 then minor differences to the instructions would apply, such as using a / filesystem delimiter 
 rather than the $\backslash$ delimiter that is used with Windows. 
@@ -73,17 +73,9 @@ rather than the $\backslash$ delimiter that is used with Windows.
 {\bf Requirements:}
 \begin{itemize}
 \item ModelSim-Intel FPGA Starter Edition software
-\item A computer running either Microsoft* Windows* (version 10 is recommended) or Linux 
+\item A computer running a recent version of Microsoft* Windows* or Linux 
 (Ubuntu, or a similar Linux distribution). The computer would typically be either a
 desktop computer or laptop, and is used to run the ModelSim software.
-\end{itemize}
-
-{\bf Optional:}
-\begin{itemize}
-\item Intel Quartus\textsuperscript{\textregistered} Prime software
-\item A DE-series development and education board, such as the DE1-SoC board. These boards are 
-described on Intel's FPGA University Program website, and are available from the manufacturer 
-Terasic Technologies.
 \end{itemize}
 
 \clearpage

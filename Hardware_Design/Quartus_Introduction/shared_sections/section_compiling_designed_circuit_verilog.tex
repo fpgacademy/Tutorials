@@ -17,7 +17,7 @@ In case of errors, there will be appropriate messages given.
 
 When the compilation is finished, a compilation report is produced.
 A tab showing this report is opened automatically, as seen in Figure~\ref{fig:20}.
-The tab can be closed in the normal way, and it can be opened at any time
+This tab can be closed in the normal way, and it can be opened at any time
 either by selecting {\sf Processing $>$ Compilation Report} or by clicking on 
 the icon \includegraphics[scale=0.45]{figures/icon6.png}.
 The report includes a number of sections listed on the left side.
@@ -35,37 +35,35 @@ tiny circuit on the selected FPGA chip.
 
 \subsection{Errors}
 
-Quartus Prime software displays messages produced during compilation in the Messages window.
-If the Verilog design file is correct, one of the messages will
-state that the compilation was successful and that there are no
-errors.
+The Quartus Prime software displays messages produced during compilation in the Messages window.
+If the Verilog design file has been correctly specified, then one of the messages will
+state that the compilation was successful and that there are no errors.
 
 If the Compiler does not report zero errors, then there is at least one mistake 
-in the Verilog code. In this case a
-message corresponding to each error found will
-be displayed in the Messages window.
-Double-clicking on an error message will highlight the offending
-statement in the Verilog code in the Text Editor window. 
+in the Verilog code. In this case a message corresponding to each error found will
+be displayed in the Messages window.  Double-clicking on an error message will highlight 
+the offending statement in the Verilog code in the Text Editor window. 
 Similarly, the Compiler may display some warning messages. Their details can be
 explored in the same way as in the case of error messages.
 The user can obtain more information about a specific error or warning message
 by selecting the message and pressing the {\sf F1} function key.
 
-To see the effect of an error, open the file {\it light.v}.
-Remove the semicolon in the {\bf assign} statement, illustrating a
-typographical error that is easily made.
-Compile the erroneous design file by clicking on the \includegraphics[scale=.45]{figures/icon5.png} icon.
+To see the effect of an error, open the file {\it light.v}.  Remove the semicolon in the 
+{\bf assign} statement, illustrating a common typographical error.
+Compile the erroneous design file by clicking on the 
+\includegraphics[scale=.45]{figures/icon5.png} icon.
 A pop-up box will ask if the changes made to the {\it light.v} file should be saved;
 click {\sf Yes}. After trying to compile the circuit,
 Quartus Prime software will display error messages in the Messages window, and 
 show that the compilation failed in the {\sf Analysis \& Synthesis} stage of the compilation process.
 The compilation report summary, given in Figure~\ref{fig:19}, 
-confirms the failed result. In the Table of Contents panel, expand the {\sf Analysis \& Synthesis} part of the report
+confirms the failed result. In the Table of Contents panel, expand the 
+{\sf Analysis \& Synthesis} part of the report
 and then select {\sf Messages} to have the messages displayed as shown in Figure~\ref{fig:20}.
 The Compilation Report can be displayed as a separate window as in Figure~\ref{fig:20} 
 by right-clicking its tab and selecting {\sf Detach Window}, and can be reattached by clicking
 {\sf Window > Attach Window}. Double-click on the first error message. 
-Quartus Prime software responds by opening the {\it light.v}
+The Quartus Prime software responds by opening the {\it light.v}
 file and highlighting the statement which is affected by the error,
 as shown in Figure~\ref{fig:21}.
 Correct the error and recompile the design.

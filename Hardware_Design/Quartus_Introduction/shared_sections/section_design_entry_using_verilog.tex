@@ -2,9 +2,9 @@
 
 
 \noindent
-As a design example, we will use the two-way light controller circuit shown in 
-Figure~\ref{fig:11}. The circuit can be used to control a single light from either of the
-two switches, $x_1$ and $x_2$, where a closed switch corresponds to the logic value 1.
+As a design example, we will use the two-way light controller circuit illustrated in 
+Figure~\ref{fig:11}. This circuit can be used to control a single light from either of the
+two switches $x_1$ and $x_2$, where a closed switch corresponds to the logic value 1.
 The truth table for the circuit is also given in the figure. Note that
 this is just the Exclusive-OR function of the inputs $x_1$ and $x_2$,
 but we will specify it using the gates shown.
@@ -30,6 +30,7 @@ file. So, we will use the name {\it light.v}.
 \lstset{language=Verilog}
 \begin{figure}[H]
 \begin{center}
+\begin{minipage}[h]{12.5 cm}
 \begin{lstlisting}
 module light (x1, x2, f);
 	input x1, x2;
@@ -37,9 +38,9 @@ module light (x1, x2, f);
 	assign f = (x1 & ~x2)|(~x1 & x2);
 endmodule 
 \end{lstlisting}
+\end{minipage}
 \end{center}
-\vspace{-0.33in}
-	\caption{Verilog code for the circuit in Figure 11.}
+	\caption{Verilog code for the circuit in Figure \ref{fig:11}.}
 	\label{fig:12}
 \end{figure}
 
@@ -52,13 +53,12 @@ to create the Verilog source code file, which we will name {\it light.v}.
 
 Select {\sf File $>$ New} to get the window in Figure~\ref{fig:13}, 
 choose {\sf Verilog HDL File}, and click {\sf OK}. 
-This opens the Text Editor window. 
-The first step is to specify a name
+This command opens the Text Editor window.  The first step is to specify a name
 for the file that will be created. Select {\sf File $>$ Save As}
 to open the pop-up box depicted in Figure~\ref{fig:14}. 
-In the box labeled {\sf Save as type} choose {\sf Verilog HDL File}.
-In the box labeled {\sf File name} type {\it light}.
-Put a checkmark in the box {\sf Add file to current project}.
+The box labeled {\sf Save as type} should be set to {\sf Verilog HDL File}.
+The name of the file in the box labeled {\sf File name} should be {\it light}.
+Put a check-mark in the box {\sf Add file to current project}.
 Click {\sf Save}, which puts the file into the directory
 {\it introtutorial} and leads to the Text Editor window shown
 in Figure~\ref{fig:15}. 
@@ -115,7 +115,7 @@ familiar with this resource.
 
 \subsection{Adding Design Files to a Project}
 
-As we indicated when discussing Figure~\ref{fig:6}, you can tell Quartus Prime software
+As we indicated when discussing Figure~\ref{fig:6}, you can tell the Quartus Prime software
 which design files it should use as part of the current project.
 To see the list of files already included in the {\it light} project,
 select {\sf Assignments $>$ Settings}, which leads to the window in Figure~\ref{fig:16}.

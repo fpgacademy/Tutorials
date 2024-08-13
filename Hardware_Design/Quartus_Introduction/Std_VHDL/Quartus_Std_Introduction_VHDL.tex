@@ -10,18 +10,12 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
-% Document Begings
+% Document Begins
 \begin{document}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 % Header Logo and Title
 \input{../shared_sections/header_logo_and_text.tex}
-%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%%%%%%%%%%%%%%%%%%%%%%%%%
-% Table of Contents
-{\tiny \tableofcontents}
-\newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
@@ -64,21 +58,25 @@
 \input{../shared_sections/section_pin_assignments_std.tex}
 
 % Additional to pin assignments sections.
-For convenience when using large designs, all relevant pin assignments for the 
-DE-series board are given in individual files. For example, the DE1-SoC pin assignments 
-can be found in the {\it DE1\_SoC.qsf} file, which is available from Intel's FPGA University
-Program website.
-This file uses the names found in the {\it DE1-SoC User Manual}.
-If we wanted to make the pin assignments for our example circuit by importing
-this file, then we would have to use the same names in our 
-Block Diagram/Schematic design file;
-namely, {\it SW[0]}, {\it SW[1]} and {\it LEDG[0]} for 
-{\it x1}, {\it x2} and {\it f}, respectively.
-Since these signals are specified in the {\it DE1\_SoC.qsf} file
-as elements of vectors {\it SW} and {\it LEDG}, we must refer to them in the same
-way in our design file. For example, in the {\it DE1\_SoC.qsf} 
-file the 10 toggle switches are called {\it SW[9]} to {\it SW[0]}.
-In a design file they can also be referred to as a vector {\it SW[9..0]}.
+For convenience, all important settings for a specific DE-series board, such as device and
+pin assignments, are available in a file that can be downloaded from the 
+\texttt{Teaching and Projects Boards} section of the website
+{\small \href{https://www.fpgacademy.org/boards.html} {FPGAcademy.org}}. 
+Any of these assignment files can be downloaded to your computer by clicking on the 
+corresponding {\sf QSF} item that is provided along with the description of the board. 
+
+As an example, the {\sf QSF} file that you can download for the DE1-SoC board is 
+named {\it DE1\_SoC.qsf}. This file provides various types of assignments, including
+pin assignments for {\it all} signals on the board. You can import these assignments into
+your Quartus Prime project, as described above. The pin assignments in the file 
+{\it DE1\_SoC.qsf} use the signal names that are defined in the user manual for the board,
+in this case the {\it DE1-SoC User Manual}.  
+If we wanted to make the pin assignments for our example circuit 
+by importing this file, then we would have to use the same names in our \typeName~code that
+are used in this {\it DE1\_SoC.qsf} file. In our example, this means that instead of the
+top-level ports named {\it x1}, {\it x2} and {\it f}, we would name these ports 
+{\it SW[0]}, {\it SW[1]} and {\it LEDG[0]}, respectively, because those are the names
+used in the {\it DE1\_SoC.qsf} file. 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
