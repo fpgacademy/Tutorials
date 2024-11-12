@@ -5,6 +5,7 @@
 \newcommand{\commonPath}{../../Common}
 \input{\commonPath/Docs/defaulttext.tex}
 \input{\commonPath/Docs/preamble.tex}
+\newcommand{\red}[1]{{\color{red}\sf{#1}}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 % Add title
@@ -324,7 +325,9 @@ Line~1 defines a variable called \texttt{INSTALL} that specifies the folder in w
 software needed for this tutorial has been installed. The setting given in the figure matches 
 the installation folder that we used in Section~\ref{sec:getthem}, as shown in 
 Figure~\ref{fig:exe2}. If a different installation folder is used on your computer, then 
-change the value of the \texttt{INSTALL} variable accordingly. 
+change the value of the \texttt{INSTALL} variable accordingly (type forward slashes (/)
+as separators to specify the path to your folder, as done in the Figure~\ref{fig:firstfew},
+as opposed to backward slashes ($\backslash$)). 
 
 \begin{figure}[h]
     \begin{center}
@@ -336,7 +339,7 @@ change the value of the \texttt{INSTALL} variable accordingly.
 
 \subsection{Configuring the DE1-SoC Board}
 
-Connect a DE1-SoC board to your computer. The board should be connnected by plugging
+Connect a DE1-SoC board to your computer. The board should be connected by plugging
 a cable that has a {\it Type-A USB} connector into the {\it USB Blaster} port on the board 
 and connecting the other end of this cable to any {\it USB} port on your computer. Ensure 
 that the DE1-SoC board is properly powered on.
@@ -387,11 +390,11 @@ To develop Nios~V programs, you need to use {\bf two} PowerShell terminals: the 
 is used to open the {\it GDB Server}, and the second one is used run the {\it GDB Client}. 
 To start the GDB Server, in the terminal window of Figure~\ref{fig:largest1} execute the command:
 
-make \texttt{GDB\_SERVER}
+\texttt{make GDB\_SERVER}
 
 The server will then remain running in this window, as indicated in Figure~\ref{fig:server}. 
 Now, open another PowerShell window (you can simply click on the \texttt{+} button near the 
-top of Figure~\ref{fig:server} to open a new PoweShell {\it tab}). In this new terminal 
+top of Figure~\ref{fig:server} to open a new PowerShell {\it tab}). In this new terminal 
 tab navigate again to the same folder as in Figure~\ref{fig:largest1}. 
 
 \begin{figure}[h]
@@ -402,8 +405,8 @@ tab navigate again to the same folder as in Figure~\ref{fig:largest1}.
     \end{center}
 \end{figure}
 
-The assembly-language program for this part of the tutorial, {\it largest.s}, is shown in 
-Figure~\ref{fig:largest_code}. This program searches through a list of integers that is 
+This part of the tutorial uses an assembly-language program, {\it largest.s}, which is shown 
+in Figure~\ref{fig:largest_code}. This program searches through a list of integers that is 
 stored in memory and finds the largest number in the list. Assemble this program by 
 executing the command \texttt{make COMPILE}.
 You could also just type \texttt{make}, because \texttt{COMPILE} is the first target in the 
@@ -426,7 +429,7 @@ assembler and linker tools to generate the Nios~V executable file {\it largest.e
 
 Now you can run the {\it GDB Client} by executing the command:
 
-make \texttt{GDB\_CLIENT}
+\texttt{make GDB\_CLIENT}
 
 The GDB Client will connect to your DE1-SoC board, load the executable file {\it largest.elf},
 initialize some Nios~V control registers, and set the Nios~V program counter register, {\it pc},
@@ -440,6 +443,10 @@ Figure~\ref{fig:gdb_client}.
         \label{fig:gdb_client}
     \end{center}
 \end{figure}
+
+We will use the {\it largest.s} program as an example to illustrate some basic GDB commands. 
+A GDB command reference is provided in Appendix A. Of course, a lot of documentation about
+GDB commands can also be found on the Internet. 
 
 In the GDB Client type the \texttt{list} (\texttt{l}) command, as shown in the 
 Figure~\ref{fig:gdb1}, to see the loaded program.
@@ -460,6 +467,31 @@ register \texttt{t1} has the number of elements in the list, which is \texttt{7}
 specified at the label \texttt{N} in the code Figure~\ref{fig:largest_code}).
 The results of these commands are displayed in Figure~\ref{fig:gdb2}.
 
+As illustrated in Figure~\ref{fig:gdb3} set a breakpoint at line 7 in the source code,
+which corresponds to the label \texttt{loop}, by using the command \texttt{break} ({\it b}) 7.  
+Then, run to this breakpoint twice by using the \texttt{continue} (\texttt{c})
+command. Check the value of register \texttt{t3} to see that the largest number found in
+the list so far is \texttt{5}. 
+
+Now, clear the breakpoint by using the command \texttt{clear 7}. Then, use the
+\texttt{continue} command to run to the end of the program, as illustrated in
+Figure~\ref{fig:gdb4}.  At this point the program will
+be endlessly looping at the label \texttt{stop} in Figure~\ref{fig:largest_code}). To
+return control to the GDB Client type $^{\wedge}\texttt{C}$ (hold down the \texttt{CTRL} key 
+on your keyboard and press \texttt{c}). 
+
+We are now finished with the {\it largest\_s} example. As demonstrated in Figure~\ref{fig:gdb4},
+disconnect from your DE1-SoC board by executing the \texttt{detach} command. Finally, execute
+the \texttt{quit} command. If you see the prompt \texttt{Terminate batch job (Y/N)?}
+respond with \texttt{n}.
+
+In the GDB Server terminal of Figure~\ref{fig:server}, type \texttt{q} to quit. While
+it is not absolutely necessary to exit the server before starting to work on another
+Nios~V program, it is a good idea to do so. The server occasionally experiences
+communications failures with the DE1-SoC board and then has to be restarted---hence, leaving 
+the server running for long periods of time may not be a good approach.
+        
+~\\
 \begin{figure}[h]
     \begin{center}
         \includegraphics[scale=.6]{figures/gdb2.png}
@@ -467,6 +499,403 @@ The results of these commands are displayed in Figure~\ref{fig:gdb2}.
         \label{fig:gdb2}
     \end{center}
 \end{figure}
+
+
+\begin{figure}[h]
+    \begin{center}
+        \includegraphics[scale=.6]{figures/gdb3.png}
+        \caption{Using a breakpoint.}
+        \label{fig:gdb3}
+    \end{center}
+\end{figure}
+
+\begin{figure}[h]
+    \begin{center}
+        \includegraphics[scale=.6]{figures/gdb4.png}
+        \caption{Completing the program and quitting from GDB.}
+        \label{fig:gdb4}
+    \end{center}
+\end{figure}
+
+\section{Design Files Examples}
+
+Having learned the basics about using GDB with Nios~V in Section~\ref{sec:doit}, we will 
+now utilize the various design files examples provided with this tutorial to illustrate
+additional GDB capabilities. 
+
+\subsection{Using Simple I/O Devices with Assembly Code}
+\label{sec:simpleIO}
+
+When starting to work on a new design example it is a good approach to power your DE1-SoC
+board \texttt{off}, and then \texttt{on} again, so that the system is reset.   
+Open a PowerShell terminal and navigate to the folder for the \texttt{display\_s} design
+example. In this folder, execute the command \texttt{make DE1-SoC} to configure your board. 
+If this programming step fails, refer to the discussion in Section~\ref{sec:doit} for
+suggestions as to how to fix any issues. Once your board is successfully configured,
+execute the command \texttt{make GDB\_SERVER}. Now, open a second
+PowerShell tab (as described in Section~\ref{sec:doit}) and, as illustrated in 
+Figure~\ref{fig:display_s1}, navigate again to the \texttt{display\_s} folder and 
+execute the command \texttt{make COMPILE}, followed by \texttt{make GDB\_CLIENT}.
+
+\begin{figure}[h]
+    \begin{center}
+        \includegraphics[scale=.6]{figures/display_s1.png}
+        \caption{Starting GDB for the \texttt{display\_s} example.}
+        \label{fig:display_s1}
+    \end{center}
+\end{figure}
+
+Within the GDB Client, use \texttt{list 1,14} to see the source-code of the program. As
+shown in  Figure~\ref{fig:display_s2}, the program first sets up three pointers to I/O
+devices in the {\it DE1-SoC Computer}: register {\it t0} is initialized to the address of 
+the \red{{\it LEDR}} red light port, register {\it t1} to the address of the {\it SW} slide-switch
+port, and register {\it t2} to the address of the port connected to 7-segment display 
+\red{{\it HEX3}} to \red{{\it HEX0}}. The program then executes an endless loop in 
+which it loads the current value of the {\it SW} switch port and stores this value to 
+both the \red{{\it LEDR}} and \red{\it HEX0}} display ports. 
+
+Run the program by executing the \texttt{continue} command. While the program is running,
+experiment with different settings on the {\it SW}$_{6-0}$ switches on the DE1-SoC board and observe 
+the \red{{\it LEDR}} lights and \red{{\it HEX0}} display. 
+
+Type $^{\wedge}\texttt{C}$ to stop the running program and return control to the GDB
+Client. Now, set a breakpoint at the top of the \texttt{loop} in the program with the
+command \texttt{break 10}. Use the \texttt{continue} command to run the program to the
+breakpoint at \texttt{Line 10} (at the label \texttt{loop}). Set a desired pattern on 
+the {\it SW} switches and then execute the \texttt{step} command,
+followed by \texttt{info reg t3} to see the value loaded from the {\it SW} port. Execute 
+\texttt{step} again and observe the \red{{\it LEDR}} lights, then use \texttt{step} again and 
+observe the \red{{\it HEX0}} display. 
+
+\begin{figure}[h]
+    \begin{center}
+        \includegraphics[scale=.6]{figures/display_s2.png}
+        \caption{The \texttt{list} command.}
+        \label{fig:display_s2}
+    \end{center}
+\end{figure}
+
+Use \texttt{continue} again to get to the top of the loop, and then \texttt{step} to
+execute the {\it load} instruction at \texttt{Line 10}. Now, use the GDB command 
+\texttt{set \$t3 = 0x3ff} to overwrite the value loaded into register {\it t3}. Use
+\texttt{step} again and then observe on the DE1-SoC board that the value you placed 
+into register {\it t3} turns on all ten \red{{\it LEDR}} lights. 
+
+We are now done with this design example, so use the \texttt{detach} command to disconnect
+from the DE1-SoC board. Finally, \texttt{quit} from the GDB Client, and then go to the
+GDB Server PowerShell tab and type \texttt{q} to close the server.
+
+\subsection{Using Interrupts with Assembly Code}
+
+The assembly code example for this part of the tutorial displays a one-second binary counter on 
+the red lights \red{{\it LEDR}}. The speed of the counter is controlled by using interrupts from 
+the Nios~V Machine Timer.  
+
+Open a PowerShell terminal and navigate to the \texttt{interrupt\_s} folder.
+If not already done, configure your DE1-SoC board by running \texttt{make DE1-SoC}. Execute 
+\texttt{make GDB\_SERVER}. In a second PowerShell tab navigate again to the 
+\texttt{interrupt\_s} folder and run \texttt{make COMPILE} and \texttt{make GDB\_CLIENT}.
+
+In the GDB Client, as illustrated in Figure~\ref{fig:interrupt_s1}, run \texttt{list 1,15}. 
+Use \texttt{step} to execute the instruction on \texttt{Line 5} that initializes the stack pointer
+register. Next, enter \texttt{x/4x 0xff202100}. This command displays the contents 
+of the memory-mapped 64-bit Nios~V \texttt{Machine Timer} registers, which are referred to as 
+{\it mtime}, which has the address \texttt{0xff202100}, and {\it mtimecmp}, which has the
+address \texttt{0xff202108}.
+
+Next, set a breakpoint using \texttt{break 9}. Then, execute \texttt{continue}, which runs the
+Nios~V program to call the subroutine {\it set\_timer} and then stops, after returning, at 
+the breakpoint on \texttt{Line 9}. Again, as illustrated in Figure~\ref{fig:interrupt_s2}, use 
+\texttt{x/4x~0xff202100} to display the Machine Timer registers. As indicated in the figure, 
+the {\it mtime} register was cleared to 0 (and then continued counting up at its 100 MHz clock 
+rate), and the {\it mtimecmp} register was set to 100,000,000 (\texttt{0x5f5e100}) to
+provide machine timer timeouts for every one second.  
+
+\begin{figure}[h]
+    \begin{center}
+        \includegraphics[scale=.6]{figures/interrupt_s1.png}
+        \caption{The \texttt{interrupt\_s} example.}
+        \label{fig:interrupt_s1}
+    \end{center}
+\end{figure}
+
+\begin{figure}[h]
+    \begin{center}
+        \includegraphics[scale=.6]{figures/interrupt_s2.png}
+        \caption{Examining the Nios~V Machine Timer registers.}
+        \label{fig:interrupt_s2}
+    \end{center}
+\end{figure}
+
+The next five instructions in the program set up Nios~V interrupts as needed for this
+example. As shown in Figure~\ref{fig:interrupt_s3}, display
+the contents of the (uninitialized) {\it mtvec} control register by using
+\texttt{info reg mtvec}. Enter \texttt{step 2} to execute two instructions, and
+then use \texttt{info reg mtvec} to see that this register has been initialized to
+\texttt{0x68}. Enter \texttt{info symbol 0x68} to see that this is the address in memory of the 
+interrupt {\it handler} routine. 
+Display the current contents of the {\it mie} and {\it mstatus} control registers
+with \texttt{info reg mie status}. Execute three more instructions (\texttt{step 3}) and
+then enter \texttt{info reg mie mstatus} again to see that the {\it mie} register now
+contains the value \texttt{0x80}, which has the interrupt-enable bit corresponding to the
+Machine Timer set to 1, and {\it mstatus} shows that the {\it Machine-mode Interrupt Enable} bit
+({\it MIE}) in this register is now set to 1, meaning that Nios~V interrupts are now
+enabled ({\it Machine} mode is the only processor mode supported in Nios~V).
+
+\begin{figure}[h]
+    \begin{center}
+        \includegraphics[scale=.6]{figures/interrupt_s3.png}
+        \caption{Examining Nios~V control registers.}
+        \label{fig:interrupt_s3}
+    \end{center}
+\end{figure}
+
+Clear the breakpoint that was previously set by entering \texttt{clear 9}. 
+Enter \texttt{continue} to run the program and observe that the \red{{\it LEDR}} lights
+show a binary counter incrementing once per second. Type $^{\wedge}\texttt{C}$ to
+interrupt the program and return control to the GDB Client.
+
+Next, enter \texttt{break handler} to set a breakpoint at the interrupt handler routine.
+Note that this code is in a different source-code file, {\it handler.s}, from the main program.
+Enter \texttt{continue} to run the program until it reaches the breakpoint. Enter
+\texttt{list} to see the first few lines of code in the {\it handler} routine, as displayed in
+Figure~\ref{fig:interrupt_s4}. Execute the five instructions displayed in the figure, using
+\texttt{step 5}. Then, enter \texttt{info reg t0} to see the cause of the interrupt
+(contents of the {\it mcause} control register). The displayed value \texttt{0x80000007}, as 
+seen in Figure~\ref{fig:interrupt_s5}, shows that a hardware interrupt has occurred (\texttt{0x8})
+from the device with interrupt number \texttt{7}. This is the expected result, as
+interrupt 7 corresponds to the Machine Timer. 
+
+Clear the handler interrupt by entering \texttt{clear handler}, and then \texttt{continue}
+execution of the program. Observe the \red{{\it LEDR}} lights to get an indication of the
+value of the binary {\it counter} being displayed. Type $^{\wedge}\texttt{C}$ to stop the
+program and return control to the GDB Client. To see the current value of the {\it counter}
+use the command \texttt{x counter}. It is possible to change the value of this ``variable'' 
+by using the \texttt{set} command. For example, set the counter to the value \texttt{0x3f0} by
+using \texttt{set \{int\} counter = 0x3f0}. The cast to type \texttt{\{int\}} is required so that 
+GDB knows the {\it type} of the variable. Enter continue and observe the new value of
+the counter displayed on the \red{{\it LEDR}} lights. Another way to modify the value of
+the counter is to first find its address with the command \texttt{info address counter}.
+This command returns the address value \texttt{0x64}. Thus, an alternative way to set the 
+counter to the value \texttt{0x3f0} is to used the command
+\texttt{set *0x64 = 0x3f0}. Here \texttt{*0x64}
+uses the syntax of the C language to set the {\it contents} of an address ({\it pointer}). 
+
+\begin{figure}[h]
+    \begin{center}
+        \includegraphics[scale=.6]{figures/interrupt_s4.png}
+        \caption{The interrupt {\it handler} routine.}
+        \label{fig:interrupt_s4}
+    \end{center}
+\end{figure}
+
+\begin{figure}[h]
+    \begin{center}
+        \includegraphics[scale=.6]{figures/interrupt_s5.png}
+        \caption{Checking the cause of the interrupt.}
+        \label{fig:interrupt_s5}
+    \end{center}
+\end{figure}
+
+We are now finished with this example, so enter \texttt{detach} to close the connection between 
+the GDB Client and the DE1-SoC board, and then enter \texttt{quit}.
+
+\subsection{Using a Terminal to Print Text Messages from Assembly Code}
+
+As a final example using assembly language, we will show how you can ``print'' text messages 
+to a terminal window.  This example can be found in the design files folder 
+\texttt{JTAG\_UART\_s}. As done previously, open two PowerShell terminals and navigate to
+the proper folder. In one terminal
+start the GDB Server. In the other terminal, execute \texttt{make} to build the program's
+executable file, and then start the GDB Client. Now, open a {\it third} PowerShell
+terminal and navigate again to the \texttt{JTAG\_UART\_s} folder. Execute the command 
+\texttt{make TERMINAL}. This command creates a communications link between the PowerShell
+terminal and the JTAG UART on the DE1-SoC board, which can be used to display text
+messages. 
+
+In the GDB Client run the assembly program by entering \texttt{continue}. Observe that the
+message 
+
+\texttt{JTAG UART example code}
+
+appears in the terminal that is connected to the
+JTAG UART. Also, on a separate line the \texttt{>} prompt is shown. Click on this line,
+and then type some text with your keyboard. The text is simply echoed back to the terminal
+window by the assembly program that is running. 
+
+In the GDB Client type $^{\wedge}\texttt{C}$ to stop the program. Then, to see how GDB can
+be used to restart a program enter the command \texttt{set \$pc = \_start}, or
+(equivalently) \texttt{set \$pc = 0}. Use \texttt{continue} to restart the program and 
+observe the JTAG terminal window. 
+
+Finally, \texttt{detach} from the GDB Client and \texttt{quit}. Then, close the PowerShell
+terminal connected to the JTAG UART, and also stop the GDB Server.
+
+\subsection{Using I/O Devices with C Code}
+
+In this part of the tutorial we will use GDB to run a C program that accesses some simple 
+I/O devices. As in previous examples, open two PowerShell terminals. In each terminal 
+navigate to the folder for this design example, which is \texttt{display\_C}. Use one 
+terminal to start the GDB server. In the other terminal first execute \texttt{make}, which 
+builds the executable program by running the C compiler and linker, and then start the GDB 
+Client, as shown in Figure~\ref{fig:display_C0}.
+
+Within the GDB Client enter \texttt{break main}, and then run the program using \texttt{continue}.
+Type \texttt{list} to see the beginning part of the main program for this example, as displayed in 
+Figure~\ref{fig:display_C1}.
+
+Enter \texttt{break 15} to set a breakpoint, and then use \texttt{continue} to run to 
+Line 15 in the source code. On the DE1-SoC board, set the {\it SW} switches to any value of
+your choosing, for example \texttt{0x7f}. Use \texttt{step} to execute the C statement on
+Line 15, and then execute \texttt{print /x value} to examine the data that was loaded, as 
+depicted in Figure~\ref{fig:display_C2}. To see which Nios~V register is used to hold
+this data, execute the \texttt{disassemble} command. As illustrated in 
+Figure~\ref{fig:display_C3}, register {\it a5} is used to hold this {\it value}. Display
+the contents of this register by entering \texttt{info reg a5}, as seen in 
+Figure~\ref{fig:display_C4}. Use \texttt{step} to execute the next instruction, and
+observe that the \red{{\it LEDR}} lights are updated. Then, enter \texttt{continue} to run
+the program until it reaches the breakpoint again at Line 15. Observe that the 
+\red{{\it HEX0}} display is now updated.
+
+Enter the command \texttt{info break} to see the two breakpoints that are currently set,
+at Line 12 ({\it main}) and Line 15. Use the \texttt{delete} command to clear these
+breakpoints. 
+
+As we are finished with this example, use \texttt{detach} to disconnect from the DE1-SoC 
+board and then \texttt{quit} from the GDB client. In the GDB Server terminal type 
+\texttt{q} to quit.
+
+\begin{figure}[h]
+    \begin{center}
+        \includegraphics[scale=.6]{figures/display_C0.png}
+        \caption{Starting GDB for the \texttt{display\_C} example.}
+        \label{fig:display_C0}
+    \end{center}
+\end{figure}
+
+\begin{figure}[h]
+    \begin{center}
+        \includegraphics[scale=.6]{figures/display_C1.png}
+        \caption{Listing the {\it main} function.}
+        \label{fig:display_C1}
+    \end{center}
+\end{figure}
+
+\begin{figure}[H]
+    \begin{center}
+        \includegraphics[scale=.6]{figures/display_C2.png}
+        \caption{Loading a variable from an I/O device.}
+        \label{fig:display_C2}
+    \end{center}
+\end{figure}
+
+\begin{figure}[H]
+    \begin{center}
+        \includegraphics[scale=.6]{figures/display_C3.png}
+        \caption{Disassembling C code into assembly code.}
+        \label{fig:display_C3}
+    \end{center}
+\end{figure}
+
+\begin{figure}[H]
+    \begin{center}
+        \includegraphics[scale=.6]{figures/display_C4.png}
+        \caption{Stepping through C code.}
+        \label{fig:display_C4}
+    \end{center}
+\end{figure}
+
+\subsection{Using Interrupts with C Code}
+
+This part of the tutorial uses Nios~V interrupts with C code. 
+As in previous examples, open two PowerShell terminals. In each terminal 
+navigate to the folder for this design example, which is \texttt{interrupt\_C}. Use one 
+terminal to start the GDB server. In the other terminal first execute \texttt{make}, which 
+builds the executable program by running the C compiler and linker, and then start the GDB 
+Client.
+
+Within the GDB Client enter \texttt{break main}, and then run the program using \texttt{continue}.
+Enter \texttt{list 37,46} to see the beginning part of the main program for this example, as 
+displayed in Figure~\ref{fig:interrupt_C1}.
+
+\begin{figure}[h]
+    \begin{center}
+        \includegraphics[scale=.6]{figures/interrupt_C1.png}
+        \caption{The {\it main} function.}
+        \label{fig:interrupt_C1}
+    \end{center}
+\end{figure}
+
+Execute the \texttt{break 44} command and then use \texttt{continue} to run to Line 44 of the 
+source code. Before executing the subroutine \texttt{set\_mtimer()} in the program, use the
+command \texttt{x/4x mtime\_ptr}, as depicted in Figure~\ref{fig:interrupt_C2}, to observe the
+current contents of the Nios~V Machine Timer registers. These registers are referred to as
+{\it mtime} and {\it mtimecmp}, as described in Section~\ref{sec:simpleIO}. Now, execute the
+GDB command \texttt{next}, which causes Nios~V to execute the \texttt{set\_mtimer()} subroutine
+in the C program and then return. The \texttt{set\_mtimer()} subroutine sets up the
+Machine Timer for one-second timeouts by reading the value of the {\it mtime} register, 
+adding 100,000,000 to it, and then storing this result into {\it mtimecmp}. The
+{\it mtime} register then continues to increment at its 100 MHz clock rate. Rerun the 
+command \texttt{x/4x mtime\_ptr} to see the updated values of the Machine Timer registers. 
+
+\begin{figure}[h]
+    \begin{center}
+        \includegraphics[scale=.6]{figures/interrupt_C2.png}
+        \caption{Setting the Machine Timer registers.}
+        \label{fig:interrupt_C2}
+    \end{center}
+\end{figure}
+
+\begin{figure}[h]
+    \begin{center}
+        \includegraphics[scale=.6]{figures/interrupt_C3.png}
+        \caption{Setting up interrupts.}
+        \label{fig:interrupt_C3}
+    \end{center}
+\end{figure}
+
+Enter \texttt{break 48} and then \texttt{continue} to Line 48. Then, use \texttt{list 50,63}
+to show the lines of code displayed in Figure~\ref{fig:interrupt_C3}. The {\it inline
+assembly} code shown in the figure sets up Nios~V interrupts as needed for the program.
+Use the command \texttt{info reg mstatus mtvec mie} to display the current values of the
+pertinent registers. Run the program up to Line 63 and then rerun the command
+\texttt{info reg mstatus mtvec mie} to see the updated register values. The {\it mstatus}
+register shows that Nios~V interrupts are now enabled for machine mode, and the {\it mtvec}
+register contains the address of the interrupt \texttt{handler} routine. The {\it mie}
+register has bits set that enable several sources of interrupts: Nios~V software interrupts, 
+machine timer, FPGA interval timer, and {\it KEY} push-buttons.
+
+\begin{figure}[h]
+    \begin{center}
+        \includegraphics[scale=.6]{figures/interrupt_C4.png}
+        \caption{Nios~V control registers.}
+        \label{fig:interrupt_C4}
+    \end{center}
+\end{figure}
+
+\begin{figure}[h]
+    \begin{center}
+        \includegraphics[scale=.6]{figures/interrupt_C5.png}
+        \caption{The main program loop.}
+        \label{fig:interrupt_C5}
+    \end{center}
+\end{figure}
+
+Use the command \texttt{list 63, 71} to see the remainder of the {\it main} program. As shown in
+Figure~\ref{fig:interrupt_C5}, it contains a 
+loop that reads two variables from memory, called {\it counter} and {\it digit}.  The
+{\it counter} variable is displayed in binary on the \red{{\it LEDR}} lights, and a decimal 
+number is displayed on \red{{\it HEX0}} based on the value of the {\it digit} variable.
+Both of these variables are updated by interrupt service routines that respond to hardware 
+timers.
+
+\begin{figure}[H]
+\lstinputlisting[language=C, lastline=71]{Code/handlers.c}
+	\caption{The interrupt handler.}
+	\label{fig:interrupt_code}
+\end{figure}
+
+\section*{Appendix A}
 
 % Copyright and Trademark
 
