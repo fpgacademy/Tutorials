@@ -12,7 +12,7 @@ extern volatile int digit;      // decimal digit to be displayed
 extern volatile int KEY_dir;    // digit counter direction
                                 //
 /*******************************************************************
- * Trap handler: determine what caused the interrupt and call the 
+ * Trap handler: determine what caused the interrupt and calls the 
  *  appropriate subroutine.
  ******************************************************************/
 void handler (void){

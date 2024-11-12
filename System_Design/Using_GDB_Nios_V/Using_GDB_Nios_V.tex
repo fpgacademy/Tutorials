@@ -445,8 +445,8 @@ Figure~\ref{fig:gdb_client}.
 \end{figure}
 
 We will use the {\it largest.s} program as an example to illustrate some basic GDB commands. 
-A GDB command reference is provided in Appendix A. Of course, a lot of documentation about
-GDB commands can also be found on the Internet. 
+A summary of the GDB commands used in this tutorial is provided in Appendix A. Of course, a 
+lot of documentation about GDB commands can also be found on the Internet. 
 
 In the GDB Client type the \texttt{list} (\texttt{l}) command, as shown in the 
 Figure~\ref{fig:gdb1}, to see the loaded program.
@@ -730,6 +730,7 @@ observe the JTAG terminal window.
 
 Finally, \texttt{detach} from the GDB Client and \texttt{quit}. Then, close the PowerShell
 terminal connected to the JTAG UART, and also stop the GDB Server.
+Close the connection to the JTAG terminal by typing $^{\wedge}\texttt{C}$ in its window.
 
 \subsection{Using I/O Devices with C Code}
 
@@ -889,13 +890,115 @@ number is displayed on \red{{\it HEX0}} based on the value of the {\it digit} va
 Both of these variables are updated by interrupt service routines that respond to hardware 
 timers.
 
+The interrupt {\it handler} for this program is given in Figure~\ref{fig:interrupt_code}.
+It uses assembly code to read the contents of the Nios~V {\it mcause} control register, and then
+uses this value to call the appropriate interrupt service routine. Assume that we wish to
+trace the execution of the program when an {\it interval timer} interrupt occurs. In the
+GDB Client enter the command \texttt{break itimer\_ISR}. Type \texttt{continue}. When the
+breakpoint has been reached, enter \texttt{list}, as displayed in
+Figure~\ref{fig:interrupt_C6}. Type {\it step} to execute the next line of code, as
+depicted in Figure~\ref{fig:interrupt_C7}. To see the value of the {\it KEY\_dir} variable
+loaded by the program enter \texttt{print KEY\_dir}. Type \texttt{step} to update the
+\texttt{digit} variable. Typing \texttt{step} again returns from this interrupt service
+routine to the interrupted program.
+
 \begin{figure}[H]
-\lstinputlisting[language=C, lastline=71]{Code/handlers.c}
+\lstinputlisting[language=C, firstline=14, lastline=30]{Code/handlers.c}
 	\caption{The interrupt handler.}
 	\label{fig:interrupt_code}
 \end{figure}
 
-\section*{Appendix A}
+\begin{figure}[h]
+    \begin{center}
+        \includegraphics[scale=.6]{figures/interrupt_C6.png}
+        \caption{A breakpoint at an interrupt service routine.}
+        \label{fig:interrupt_C6}
+    \end{center}
+\end{figure}
+
+\begin{figure}[h]
+    \begin{center}
+        \includegraphics[scale=.6]{figures/interrupt_C7.png}
+        \caption{Servicing an interval timer interrupt.}
+        \label{fig:interrupt_C7}
+    \end{center}
+\end{figure}
+
+We are now finished with this example, so use \texttt{detach} to disconnect from the DE1-SoC 
+board and then \texttt{quit} from the GDB client. Also, quit from the GDB Server in its 
+terminal window. 
+
+\subsection{Using a Terminal to Print from C Code}
+
+As a final example we will show how you can use {\it printf} in C code from within the GDB 
+Client.  This example can be found in the \texttt{print\_C} design files folder.
+As in previous examples, open two PowerShell terminals. In each terminal 
+navigate to the folder for this design example. Use one 
+terminal to start the GDB server. In the other terminal first execute \texttt{make} to
+build the executable program, and then start the GDB Client.
+Now, open a {\it third} PowerShell terminal and navigate again to the \texttt{print\_C} folder.
+Execute the command \texttt{make TERMINAL}. This command opens a program called the
+{\it nios2-terminal}, which allows for text-based communication between the GDB Client and 
+the DE1-SoC board via its {\it JTAG UART}.
+
+Within the GDB Client enter \texttt{break main}, and then run the program using \texttt{continue}.
+Enter \texttt{list 4,20}, as displayed in Figure~\ref{fig:print_C1}. The program uses an
+endless loop to read from the {\it SW} switches and {\it KEY} push-buttons. Whenever any
+KEY is pressed, the value read from the SW switches at that time is displayed as a
+hexadecimal value by calling the {\it printf} library routine. The output from {\it printf}
+appears on the {\it nios2-terminal} window. 
+
+Use \texttt{continue} to run the program. Try different settings of the {\it SW} switches
+and press any {\it KEY} push-button to see the corresponding value displayed on the 
+{\it nios2-terminal}.
+
+\begin{figure}[h]
+    \begin{center}
+        \includegraphics[scale=.6]{figures/print_C1.png}
+        \caption{The {\it printf} example.}
+        \label{fig:print_C1}
+    \end{center}
+\end{figure}
+
+In the GDB Client, use \texttt{detach} to disconnect from the DE1-SoC board and then
+\texttt{quit} from the GDB client. Also, quit from the GDB Server in its terminal window.
+Finally, close the {\it nios2-terminal} by typing $^{\wedge}\texttt{C}$ in its window.
+
+\newpage
+\section*{Appendix A: GDB Command Reference}
+
+Examples of GDB commands are summarized below. You can often execute a command by typing
+only part of its name: for example {\bf s} executes the {\it step} command, {\bf b} executes
+{\it break}, and {\bf cont} executes {\it continue}.
+
+\begin{tabbing}
+{\bf info address} symbol ~~~~\= ~~~~\=set a breakpoint at Line k in source code\kill
+{\bf step} \>execute a single source-code line\\
+{\bf step} {\it n} \>execute $n$ source-code lines\\
+{\bf stepi} \>execute a single Nios~V machine instruction (not used in the tutorial)\\
+{\bf continue} \>run the program from its current location\\
+{\bf next} \>execute the next source-code line, stepping over a subroutine call\\
+{\bf break} {\it k} \>set a breakpoint at Line k in source code\\
+{\bf clear} {\it k} \>clear the breakpoint at Line k \\
+{\bf info reg} [{\it name}, $\ldots$] \>show the current value of Nios~V register(s) {\it
+name}, $\ldots$\\
+{\bf info symbol} address \>give the address of a symbol\\
+{\bf info address} symbol \>give the symbol at an address\\
+{\bf info break} \>list all active breakpoints\\
+{\bf set} \$name = {\it value} \>Set the contents of Nios~V register {\it name} to {\it value}\\
+{\bf set} name = {\it value} \>Set the contents of {\it name} (for example, a variable) to {\it value}\\
+{\bf delete} \>clear all active breakpoints\\
+{\bf x} {\it A} \>display the word in memory at address {\it A}\\
+{\bf x}/x {\it A} \>display the word in memory in hexadecimal at address {\it A}\\
+{\bf x}/4x {\it A} \>display the four words in memory in hexadecimal starting at address {\it A}\\
+{\bf x}/xb {\it A} \>display the byte in memory in hexadecimal at address {\it A}\\
+{\bf print} {\it expr} \>print the value of an expression (for example, a variable)\\
+{\bf print} /x {\it expr} \>print the value of an expression in hexadecimal\\
+{\bf detach} \>disconnect the GDB Client from the target\\
+{\bf quit} \>close the GDB client, or GDB Server\\
+{\bf load} \>load the executable program into memory (used in Makefiles)\\
+{\bf target remote} {\it port} \>connect to remote debugging {\it port} (used in Makefiles)
+\end{tabbing}
 
 % Copyright and Trademark
 
