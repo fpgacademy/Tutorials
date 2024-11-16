@@ -448,7 +448,7 @@ We will use the {\it largest.s} program as an example to illustrate some basic G
 A summary of the GDB commands used in this tutorial is provided in Appendix A. Of course, a 
 lot of documentation about GDB commands can also be found on the Internet. 
 
-In the GDB Client type the \texttt{list} (\texttt{l}) command, as shown in the 
+In the GDB Client type the \texttt{list} command, as shown in the 
 Figure~\ref{fig:gdb1}, to see the loaded program.
 
 \begin{figure}[h]
@@ -460,23 +460,25 @@ Figure~\ref{fig:gdb1}, to see the loaded program.
 \end{figure}
 
 Next, execute the first two instructions in the program by using the 
-GDB \texttt{step} (\texttt{s}) command twice. Then, execute the commands 
+GDB \texttt{step} command twice. Then, execute the commands 
 \texttt{info reg t0} and \texttt{info reg t1} to see that register \texttt{t0} 
 holds the address in memory of the \texttt{result} label, which is \texttt{0x38}, and that
 register \texttt{t1} has the number of elements in the list, which is \texttt{7} (this value is
-specified at the label \texttt{N} in the code Figure~\ref{fig:largest_code}).
-The results of these commands are displayed in Figure~\ref{fig:gdb2}.
+specified at the label \texttt{N} in the code in Figure~\ref{fig:largest_code}).
+The results of these commands are displayed in Figure~\ref{fig:gdb2}. You can see the
+contents of memory by using the \texttt{x} command. Enter \texttt{x/4x result} to see the
+four words of memory starting at the address of the \texttt{result} label (\texttt{/4x}
+designates four \texttt{words} displayed in \texttt{hexadecimal}).
 
 As illustrated in Figure~\ref{fig:gdb3} set a breakpoint at line 7 in the source code,
-which corresponds to the label \texttt{loop}, by using the command \texttt{break} ({\it b}) 7.  
-Then, run to this breakpoint twice by using the \texttt{continue} (\texttt{c})
+which corresponds to the label \texttt{loop}, by using the command \texttt{break 7}.
+Then, run to this breakpoint twice by using the \texttt{continue}
 command. Check the value of register \texttt{t3} to see that the largest number found in
 the list so far is \texttt{5}. 
-
 Now, clear the breakpoint by using the command \texttt{clear 7}. Then, use the
 \texttt{continue} command to run to the end of the program, as illustrated in
 Figure~\ref{fig:gdb4}.  At this point the program will
-be endlessly looping at the label \texttt{stop} in Figure~\ref{fig:largest_code}). To
+be endlessly looping at the label \texttt{stop} in Figure~\ref{fig:largest_code}. To
 return control to the GDB Client type $^{\wedge}\texttt{C}$ (hold down the \texttt{CTRL} key 
 on your keyboard and press \texttt{c}). 
 
