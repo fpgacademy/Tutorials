@@ -309,11 +309,12 @@ Nios~V assembly-language program, {\it largest.s}, and a {\it Makefile}.
 
 In this tutorial the tools that we use for developing and debugging Nios~V programs are 
 executed via the {\it GNU make} program. A copy of {\it GNU make} is included as part of
-the installed software discussed in Section~\ref{sec:getthem}, in the folder:
+the installed software discussed in Section~\ref{sec:getthem}, in the location:
 
-\texttt{C:$\backslash$intelFPGA\_pro$\backslash$24.1$\backslash$fpgacademy$\backslash$AMP$\backslash$bin}
+\texttt{C:/intelFPGA\_pro/24.1/fpgacademy/AMP/bin/make.exe}
 
-You should add this folder to your \texttt{Path} {\it Windows Environment Variable}, so
+You should add the folder containing this {\it make.exe} program to your 
+\texttt{Path} {\it Windows Environment Variable}, so
 that it is easy to run the {\it make} program.  
 
 \section{Developing and Debugging Nios~V Assembly-Language Programs}
@@ -351,7 +352,8 @@ window of Figure~\ref{fig:largest1} execute the command:
 
 This command runs the Quartus {\it Programmer} and configures the board with the 
 {\it DE1-SoC Computer with Nios~V} system. If the command completes without errors, then you 
-can skip ahead to Section~\ref{sec:doit} and begin using GDB with Nios~V. 
+can skip ahead to Section~\ref{sec:doit} and begin using GDB with Nios~V. Note that in
+some cases it can take up to a minute to configure the board. 
 
 If the Quartus {\it Programmer} fails to start, then make sure that you have installed the
 required software, and that you have properly set up the \texttt{INSTALL} variable shown
@@ -475,12 +477,13 @@ which corresponds to the label \texttt{loop}, by using the command \texttt{break
 Then, run to this breakpoint twice by using the \texttt{continue}
 command. Check the value of register \texttt{t3} to see that the largest number found in
 the list so far is \texttt{5}. 
-Now, clear the breakpoint by using the command \texttt{clear 7}. Then, use the
-\texttt{continue} command to run to the end of the program, as illustrated in
-Figure~\ref{fig:gdb4}.  At this point the program will
-be endlessly looping at the label \texttt{stop} in Figure~\ref{fig:largest_code}. To
-return control to the GDB Client type $^{\wedge}\texttt{C}$ (hold down the \texttt{CTRL} key 
-on your keyboard and press \texttt{c}). 
+Now, clear the breakpoint by using the command \texttt{clear 7}. The program ends with an 
+infinite loop at the label \texttt{stop}, as seen in Figure~\ref{fig:largest_code}. Set a
+breakpoint at this label by using the command \texttt{break stop}. Enter \texttt{continue} to 
+resume the program until it stops at the breakpoint. 
+Finally, use the command \texttt{info reg t3} to see that the program 
+found the largest number in the list, which is \texttt{8}, and enter \texttt{x/4x result} 
+to see that this result has been stored into memory.
 
 We are now finished with the {\it largest\_s} example. As demonstrated in Figure~\ref{fig:gdb4},
 disconnect from your DE1-SoC board by executing the \texttt{detach} command. Finally, execute
@@ -556,18 +559,19 @@ port, and register {\it t2} to the address of the port connected to 7-segment di
 which it loads the current value of the {\it SW} switch port and stores this value to 
 both the \red{{\it LEDR}} and \red{\it HEX0}} display ports. 
 
-Run the program by executing the \texttt{continue} command. While the program is running,
-experiment with different settings on the {\it SW}$_{6-0}$ switches on the DE1-SoC board and observe 
-the \red{{\it LEDR}} lights and \red{{\it HEX0}} display. 
+Enter the command \texttt{break loop}, and 
+then use \texttt{continue} to stop the program at this breakpoint.
+Now, run through iterations of the loop in the program for a while by executing the 
+command \texttt{continue 150}. This command runs the
+program until the breakpoint at \texttt{loop} has been encountered 150 times. While the 
+program is running, try different settings on the {\it SW}$_{6-0}$ switches on the DE1-SoC 
+board and observe the \red{{\it LEDR}} lights and \red{{\it HEX0}} display. 
 
-Type $^{\wedge}\texttt{C}$ to stop the running program and return control to the GDB
-Client. Now, set a breakpoint at the top of the \texttt{loop} in the program with the
-command \texttt{break 10}. Use the \texttt{continue} command to run the program to the
-breakpoint at \texttt{Line 10} (at the label \texttt{loop}). Set a desired pattern on 
-the {\it SW} switches and then execute the \texttt{step} command,
-followed by \texttt{info reg t3} to see the value loaded from the {\it SW} port. Execute 
-\texttt{step} again and observe the \red{{\it LEDR}} lights, then use \texttt{step} again and 
-observe the \red{{\it HEX0}} display. 
+Wait until the program has stopped executing and control has been returned to the GDB
+Client. Now, set a new pattern of your choice on the {\it SW} switches and then enter
+the \texttt{step} command, followed by \texttt{info reg t3} to see the value loaded from 
+the {\it SW} port. Execute \texttt{step} again and observe the \red{{\it LEDR}} lights, 
+then use \texttt{step} a third time and observe the \red{{\it HEX0}} display. 
 
 \begin{figure}[h]
     \begin{center}
@@ -653,9 +657,12 @@ enabled ({\it Machine} mode is the only processor mode supported in Nios~V).
 \end{figure}
 
 Clear the breakpoint that was previously set by entering \texttt{clear 9}. 
-Enter \texttt{continue} to run the program and observe that the \red{{\it LEDR}} lights
-show a binary counter incrementing once per second. Type $^{\wedge}\texttt{C}$ to
-interrupt the program and return control to the GDB Client.
+Enter the command \texttt{continue \&}. The \texttt{\&} at the end of this command means
+``run the program in the {\it background}," and immediately provide the GDB command prompt so
+that commands can still be executed. While the Nios~V program is running, observe that the 
+\red{{\it LEDR}} lights show a binary counter incrementing once per second.  Now, stop the 
+running program by executing the GDB command \texttt{interrupt}. GDB will stop the
+program, in the same manner as when a breakpoint is reached.
 
 Next, enter \texttt{break handler} to set a breakpoint at the interrupt handler routine.
 Note that this code is in a different source-code file, {\it handler.s}, from the main program.
@@ -668,9 +675,10 @@ seen in Figure~\ref{fig:interrupt_s5}, shows that a hardware interrupt has occur
 from the device with interrupt number \texttt{7}. This is the expected result, as
 interrupt 7 corresponds to the Machine Timer. 
 
-Clear the handler interrupt by entering \texttt{clear handler}, and then \texttt{continue}
-execution of the program. Observe the \red{{\it LEDR}} lights to get an indication of the
-value of the binary {\it counter} being displayed. Type $^{\wedge}\texttt{C}$ to stop the
+Clear the handler interrupt by entering \texttt{clear handler}, and then execute
+\texttt{continue \&} to run the program in the {\it background}. 
+Observe the \red{{\it LEDR}} lights to get an indication of the
+value of the binary {\it counter} being displayed. Enter \texttt{interrupt} to stop the
 program and return control to the GDB Client. To see the current value of the {\it counter}
 use the command \texttt{x counter}. It is possible to change the value of this ``variable'' 
 by using the \texttt{set} command. For example, set the counter to the value \texttt{0x3f0} by
@@ -715,8 +723,8 @@ terminal and navigate again to the \texttt{JTAG\_UART\_s} folder. Execute the co
 terminal and the JTAG UART on the DE1-SoC board, which can be used to display text
 messages. 
 
-In the GDB Client run the assembly program by entering \texttt{continue}. Observe that the
-message 
+In the GDB Client run the assembly program by entering \texttt{continue \&} to run the
+program in the {\it background}. Observe that the message 
 
 \texttt{JTAG UART example code}
 
@@ -725,14 +733,16 @@ JTAG UART. Also, on a separate line the \texttt{>} prompt is shown. Click on thi
 and then type some text with your keyboard. The text is simply echoed back to the terminal
 window by the assembly program that is running. 
 
-In the GDB Client type $^{\wedge}\texttt{C}$ to stop the program. Then, to see how GDB can
+In the GDB Client enter \texttt{interrupt} to stop the running program. Then, to see how GDB can
 be used to restart a program enter the command \texttt{set \$pc = \_start}, or
-(equivalently) \texttt{set \$pc = 0}. Use \texttt{continue} to restart the program and 
-observe the JTAG terminal window. 
+(equivalently) \texttt{set \$pc = 0}. Use \texttt{continue \&} to restart the program in 
+the {\it background}, and observe the JTAG terminal window. 
 
+Again, enter the \texttt{interrupt} command to stop the program.
 Finally, \texttt{detach} from the GDB Client and \texttt{quit}. Then, close the PowerShell
 terminal connected to the JTAG UART, and also stop the GDB Server.
-Close the connection to the JTAG terminal by typing $^{\wedge}\texttt{C}$ in its window.
+Close the connection to the JTAG terminal by typing $^{\wedge}\texttt{C}$ in its window
+(while holding down the \texttt{ctrl} keyboard key, press \texttt{C}).
 
 \subsection{Using I/O Devices with C Code}
 
@@ -791,7 +801,7 @@ board and then \texttt{quit} from the GDB client. In the GDB Server terminal typ
         \label{fig:display_C2}
     \end{center}
 \end{figure}
-
+\vspace{-.5cm}
 \begin{figure}[H]
     \begin{center}
         \includegraphics[scale=.6]{figures/display_C3.png}
@@ -799,7 +809,7 @@ board and then \texttt{quit} from the GDB client. In the GDB Server terminal typ
         \label{fig:display_C3}
     \end{center}
 \end{figure}
-
+\vspace{-.5cm}
 \begin{figure}[H]
     \begin{center}
         \includegraphics[scale=.6]{figures/display_C4.png}
@@ -901,8 +911,8 @@ breakpoint has been reached, enter \texttt{list}, as displayed in
 Figure~\ref{fig:interrupt_C6}. Type {\it step} to execute the next line of code, as
 depicted in Figure~\ref{fig:interrupt_C7}. To see the value of the {\it KEY\_dir} variable
 loaded by the program enter \texttt{print KEY\_dir}. Type \texttt{step} to update the
-\texttt{digit} variable. Typing \texttt{step} again returns from this interrupt service
-routine to the interrupted program.
+\texttt{digit} variable. Enter the \texttt{step} command until the program returns from this 
+interrupt service routine to the interrupted program.
 
 \begin{figure}[H]
 \lstinputlisting[language=C, firstline=14, lastline=30]{Code/handlers.c}
@@ -926,6 +936,13 @@ routine to the interrupted program.
     \end{center}
 \end{figure}
 
+Enter the \texttt{delete} command to clear all breakpoints. Then, use \texttt{continue \&}
+to run the program in the {\it background}. Observe on the DE1-SoC board that a binary
+counter is displayed on the \red{{\it LEDR}} lights, and a digit counter appears on 
+\red{{\it HEX0}}. If you press any {\it KEY} pushbutton, then the direction of counting
+for the digit is reversed.
+
+Stop the running program by executing the \texttt{interrupt} command. 
 We are now finished with this example, so use \texttt{detach} to disconnect from the DE1-SoC 
 board and then \texttt{quit} from the GDB client. Also, quit from the GDB Server in its 
 terminal window. 
@@ -950,10 +967,6 @@ KEY is pressed, the value read from the SW switches at that time is displayed as
 hexadecimal value by calling the {\it printf} library routine. The output from {\it printf}
 appears on the {\it nios2-terminal} window. 
 
-Use \texttt{continue} to run the program. Try different settings of the {\it SW} switches
-and press any {\it KEY} push-button to see the corresponding value displayed on the 
-{\it nios2-terminal}.
-
 \begin{figure}[h]
     \begin{center}
         \includegraphics[scale=.6]{figures/print_C1.png}
@@ -962,7 +975,12 @@ and press any {\it KEY} push-button to see the corresponding value displayed on 
     \end{center}
 \end{figure}
 
-In the GDB Client, use \texttt{detach} to disconnect from the DE1-SoC board and then
+Use \texttt{continue \&} to run the program in the background. Try different settings of 
+the {\it SW} switches and press any {\it KEY} push-button to see the corresponding value 
+displayed on the {\it nios2-terminal}.
+
+In the GDB Client enter the \texttt{interrupt} command to stop the running program.
+Then, use \texttt{detach} to disconnect from the DE1-SoC board and then
 \texttt{quit} from the GDB client. Also, quit from the GDB Server in its terminal window.
 Finally, close the {\it nios2-terminal} by typing $^{\wedge}\texttt{C}$ in its window.
 
@@ -979,6 +997,8 @@ only part of its name: for example {\bf s} executes the {\it step} command, {\bf
 {\bf step} {\it n} \>execute $n$ source-code lines\\
 {\bf stepi} \>execute a single Nios~V machine instruction (not used in the tutorial)\\
 {\bf continue} \>run the program from its current location\\
+{\bf continue \&} \>run the program in the {\it background} from its current location\\
+{\bf interrupt} \>stop the execution of a program that is running in the {\it background}\\
 {\bf next} \>execute the next source-code line, stepping over a subroutine call\\
 {\bf break} {\it k} \>set a breakpoint at Line k in source code\\
 {\bf clear} {\it k} \>clear the breakpoint at Line k \\
