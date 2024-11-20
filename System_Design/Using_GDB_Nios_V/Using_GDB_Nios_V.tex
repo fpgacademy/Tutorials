@@ -270,10 +270,11 @@ hardware system and software development tools (in the \texttt{fpgacademy} folde
 On the {\href{https://www.fpgacademy.org/courses.html} {FPGAcademy.org}} website, this
 tutorial is accompanied by {\it Design Files} that are used to illustrate various features
 of the {\it GDB} software for developing and debugging Nios~V programs. Download to your 
-computer the provided {\it design\_files.zip} file. Then, uncompress this archive into any 
+computer the provided {\it Using\_GDB\_Nios\_V\_design\_files.zip} file. Then, uncompress 
+this archive into any 
 folder of your choice. We will refer to the examples of code and other files in this folder 
 throughout the tutorial. Figure~\ref{fig:designfiles} shows the folders included in the
-{\it Design Files}, assuming that they have been installed into a folder named
+{\it design files}, assuming that they have been installed into a folder named
 \texttt{GDB\_tutorial}.
 
 \begin{figure}[h]
@@ -284,16 +285,19 @@ throughout the tutorial. Figure~\ref{fig:designfiles} shows the folders included
     \end{center}
 \end{figure}
 
-\section{Setting up the Nios~V Development Environment}
-\label{sec:setup}
+\section{Developing and Debugging Nios~V Assembly-Language Programs}
+\label{sec:assembly}
 
-Once the necessary software and hardware components have been installed onto your computer, 
-as discussed in Section~\ref{sec:getthem}, then you can begin working with the {\it GDB}
-debugger to develop Nios~V programs. In this tutorial, we use the command-line environment 
-provided by the {\it Windows PowerShell}.
+After the necessary software and hardware components have been installed onto your computer, 
+as discussed in Section~\ref{sec:getthem}, you can begin working with the {\it GDB}
+debugger to develop Nios~V programs. We will first present a few examples that show how to 
+use GDB to develop and debug Nios~V assembly code. Later in the tutorial, in 
+Section~\ref{sec:c-code}, we will give some examples that use C code.
 
 \subsection{Using the GNU Make Program}
 
+In this tutorial all tools are executed by using the command-line environment 
+provided by the {\it Windows PowerShell}.
 Open a {\it PowerShell} terminal using a method of your choosing.  Then, navigate to the 
 {\it design files} folder called \texttt{C:$\backslash$GDB\_tutorial$\backslash$largest\_s}. 
 As illustrated in Figure~\ref{fig:largest1}, this folder contains an example of a 
@@ -316,9 +320,6 @@ the installed software discussed in Section~\ref{sec:getthem}, in the location:
 You should add the folder containing this {\it make.exe} program to your 
 \texttt{Path} {\it Windows Environment Variable}, so
 that it is easy to run the {\it make} program.  
-
-\section{Developing and Debugging Nios~V Assembly-Language Programs}
-\label{sec:assembly}
 
 In the folder of Figure~\ref{fig:largest1} open the {\it Makefile} in any text editor of your
 choice. The first few lines of this file are displayed in Figure~\ref{fig:firstfew}.
@@ -496,7 +497,6 @@ Nios~V program, it is a good idea to do so. The server occasionally experiences
 communications failures with the DE1-SoC board and then has to be restarted---hence, leaving 
 the server running for long periods of time may not be a good approach.
         
-~\\
 \begin{figure}[h]
     \begin{center}
         \includegraphics[scale=.6]{figures/gdb2.png}
@@ -504,7 +504,6 @@ the server running for long periods of time may not be a good approach.
         \label{fig:gdb2}
     \end{center}
 \end{figure}
-
 
 \begin{figure}[h]
     \begin{center}
@@ -522,7 +521,15 @@ the server running for long periods of time may not be a good approach.
     \end{center}
 \end{figure}
 
-\section{Design Files Examples}
+\subsection{Setting up Your Own Assembly-Code Makefile}
+\label{sec:yourownass}
+
+It is easy to customize the {\it Makefile} shown in Figure~\ref{fig:firstfew} so that you
+can use it with any assembly-language code of your choosing.  \texttt{Line 3} of the
+{\it Makefile} has to specify the name of the assembly-code file that has the \texttt{\_start}
+label, which designates the beginning of the program. Any \texttt{.s} header files that are
+used with the program can be listed in \texttt{Line 4}. Finally, any additional 
+assembly-language source-code files can be listed in \texttt{Line 5}. 
 
 Having learned the basics about using GDB with Nios~V in Section~\ref{sec:doit}, we will 
 now utilize the various design files examples provided with this tutorial to illustrate
@@ -738,11 +745,17 @@ be used to restart a program enter the command \texttt{set \$pc = \_start}, or
 (equivalently) \texttt{set \$pc = 0}. Use \texttt{continue \&} to restart the program in 
 the {\it background}, and observe the JTAG terminal window. 
 
-Again, enter the \texttt{interrupt} command to stop the program.
-Finally, \texttt{detach} from the GDB Client and \texttt{quit}. Then, close the PowerShell
-terminal connected to the JTAG UART, and also stop the GDB Server.
-Close the connection to the JTAG terminal by typing $^{\wedge}\texttt{C}$ in its window
+Again, enter the \texttt{interrupt} command to stop the program. Then, \texttt{detach} 
+from the GDB Client and \texttt{quit}, and also quit from the GDB Server. Finally, close 
+the connection to the JTAG terminal by typing $^{\wedge}\texttt{C}$ in its window
 (while holding down the \texttt{ctrl} keyboard key, press \texttt{C}).
+
+\section{Developing and Debugging Nios~V C-Language Programs}
+\label{sec:c-code}
+
+This section provides examples of using GDB for Nios~V with C code. The process is mostly
+the same as for using assembly-language code, but the {\it Makefile} and some GDB commands are
+somewhat different. 
 
 \subsection{Using I/O Devices with C Code}
 
@@ -756,27 +769,6 @@ Client, as shown in Figure~\ref{fig:display_C0}.
 Within the GDB Client enter \texttt{break main}, and then run the program using \texttt{continue}.
 Type \texttt{list} to see the beginning part of the main program for this example, as displayed in 
 Figure~\ref{fig:display_C1}.
-
-Enter \texttt{break 15} to set a breakpoint, and then use \texttt{continue} to run to 
-Line 15 in the source code. On the DE1-SoC board, set the {\it SW} switches to any value of
-your choosing, for example \texttt{0x7f}. Use \texttt{step} to execute the C statement on
-Line 15, and then execute \texttt{print /x value} to examine the data that was loaded, as 
-depicted in Figure~\ref{fig:display_C2}. To see which Nios~V register is used to hold
-this data, execute the \texttt{disassemble} command. As illustrated in 
-Figure~\ref{fig:display_C3}, register {\it a5} is used to hold this {\it value}. Display
-the contents of this register by entering \texttt{info reg a5}, as seen in 
-Figure~\ref{fig:display_C4}. Use \texttt{step} to execute the next instruction, and
-observe that the \red{{\it LEDR}} lights are updated. Then, enter \texttt{continue} to run
-the program until it reaches the breakpoint again at Line 15. Observe that the 
-\red{{\it HEX0}} display is now updated.
-
-Enter the command \texttt{info break} to see the two breakpoints that are currently set,
-at Line 12 ({\it main}) and Line 15. Use the \texttt{delete} command to clear these
-breakpoints. 
-
-As we are finished with this example, use \texttt{detach} to disconnect from the DE1-SoC 
-board and then \texttt{quit} from the GDB client. In the GDB Server terminal type 
-\texttt{q} to quit.
 
 \begin{figure}[h]
     \begin{center}
@@ -794,6 +786,19 @@ board and then \texttt{quit} from the GDB client. In the GDB Server terminal typ
     \end{center}
 \end{figure}
 
+Enter \texttt{break 15} to set a breakpoint, and then use \texttt{continue} to run to 
+Line 15 in the source code. On the DE1-SoC board, set the {\it SW} switches to any value of
+your choosing, for example \texttt{0x7f}. Use \texttt{step} to execute the C statement on
+Line 15, and then execute \texttt{print /x value} to examine the data that was loaded, as 
+depicted in Figure~\ref{fig:display_C2}. To see which Nios~V register is used to hold
+this data, execute the \texttt{disassemble} command. As illustrated in 
+Figure~\ref{fig:display_C3}, register {\it a5} is used to hold this {\it value}. Display
+the contents of this register by entering \texttt{info reg a5}, as seen in 
+Figure~\ref{fig:display_C4}. Use \texttt{step} to execute the next instruction, and
+observe that the \red{{\it LEDR}} lights are updated. Then, enter \texttt{continue} to run
+the program until it reaches the breakpoint again at Line 15. Observe that the 
+\red{{\it HEX0}} display is now updated.
+~\\
 \begin{figure}[H]
     \begin{center}
         \includegraphics[scale=.6]{figures/display_C2.png}
@@ -801,7 +806,15 @@ board and then \texttt{quit} from the GDB client. In the GDB Server terminal typ
         \label{fig:display_C2}
     \end{center}
 \end{figure}
-\vspace{-.5cm}
+
+Enter the command \texttt{info break} to see the two breakpoints that are currently set,
+at Line 12 ({\it main}) and Line 15. Use the \texttt{delete} command to clear these
+breakpoints. 
+
+As we are finished with this example, use \texttt{detach} to disconnect from the DE1-SoC 
+board and then \texttt{quit} from the GDB client. In the GDB Server terminal type 
+\texttt{q} to quit.
+
 \begin{figure}[H]
     \begin{center}
         \includegraphics[scale=.6]{figures/display_C3.png}
@@ -809,7 +822,17 @@ board and then \texttt{quit} from the GDB client. In the GDB Server terminal typ
         \label{fig:display_C3}
     \end{center}
 \end{figure}
-\vspace{-.5cm}
+
+\subsection{Setting up Your Own C-Code Makefile}
+\label{sec:yourownass}
+
+It is easy to customize the {\it Makefile} for the \texttt{display\_C} example so that you
+can use it with any C code of your choosing.  \texttt{Line 3} of the
+{\it Makefile} has to specify the name of the C-code file that has the \texttt{main}
+function, which designates the beginning of the program. Any \texttt{.h} header files that are
+used with the program can be listed in \texttt{Line~4}. Finally, any additional 
+C source-code files can be listed in \texttt{Line 5}. 
+
 \begin{figure}[H]
     \begin{center}
         \includegraphics[scale=.6]{figures/display_C4.png}
@@ -939,7 +962,7 @@ interrupt service routine to the interrupted program.
 Enter the \texttt{delete} command to clear all breakpoints. Then, use \texttt{continue \&}
 to run the program in the {\it background}. Observe on the DE1-SoC board that a binary
 counter is displayed on the \red{{\it LEDR}} lights, and a digit counter appears on 
-\red{{\it HEX0}}. If you press any {\it KEY} pushbutton, then the direction of counting
+\red{{\it HEX0}}. If you press any {\it KEY} push-button, then the direction of counting
 for the digit is reversed.
 
 Stop the running program by executing the \texttt{interrupt} command. 
