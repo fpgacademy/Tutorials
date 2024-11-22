@@ -1017,10 +1017,12 @@ only part of its name: for example {\bf s} executes the {\it step} command, {\bf
 \begin{tabbing}
 {\bf info address} symbol ~~~~\= ~~~~\=set a breakpoint at Line k in source code\kill
 {\bf step} \>execute a single source-code line\\
+{\texttt{<CR>}} \>simply pressing the \texttt{ENTER} key ({\it Carriage Return}) repeats the {\it last command}\\
+{\bf step} \& \>execute a single instruction, in the {\it background}\\
 {\bf step} {\it n} \>execute $n$ source-code lines\\
 {\bf stepi} \>execute a single Nios~V machine instruction (not used in the tutorial)\\
 {\bf continue} \>run the program from its current location\\
-{\bf continue \&} \>run the program in the {\it background} from its current location\\
+{\bf continue} \& \>run the program from its current location, in the {\it background}\\
 {\bf interrupt} \>stop the execution of a program that is running in the {\it background}\\
 {\bf next} \>execute the next source-code line, stepping over a subroutine call\\
 {\bf break} {\it k} \>set a breakpoint at Line k in source code\\
