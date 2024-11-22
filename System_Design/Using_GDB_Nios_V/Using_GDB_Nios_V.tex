@@ -302,7 +302,7 @@ Open a {\it PowerShell} terminal using a method of your choosing.  Then, navigat
 {\it design files} folder called \texttt{C:$\backslash$GDB\_tutorial$\backslash$largest\_s}. 
 As illustrated in Figure~\ref{fig:largest1}, this folder contains an example of a 
 Nios~V assembly-language program, {\it largest.s}, and a {\it Makefile}. 
-~\\
+
 \begin{figure}[h]
     \begin{center}
         \includegraphics[width=.9\linewidth]{figures/largest1.png}
@@ -345,7 +345,6 @@ Connect a DE1-SoC board to your computer. The board should be connected by plugg
 a cable that has a {\it Type-A USB} connector into the {\it USB Blaster} port on the board 
 and connecting the other end of this cable to any {\it USB} port on your computer. Ensure 
 that the DE1-SoC board is properly powered on.
-
 To configure your DE1-SoC board with the desired Nios~V computer system, in the terminal
 window of Figure~\ref{fig:largest1} execute the command:
 
@@ -719,7 +718,7 @@ the GDB Client and the DE1-SoC board, and then enter \texttt{quit}.
 
 \subsection{Using a Terminal to Print Text Messages from Assembly Code}
 
-As a final example using assembly language, we will show how you can ``print'' text messages 
+In this example we will show how you can use assembly code to ``print'' text messages 
 to a terminal window.  This example can be found in the design files folder 
 \texttt{JTAG\_UART\_s}. As done previously, open two PowerShell terminals and navigate to
 the proper folder. In one terminal
@@ -749,6 +748,66 @@ Again, enter the \texttt{interrupt} command to stop the program. Then, \texttt{d
 from the GDB Client and \texttt{quit}, and also quit from the GDB Server. Finally, close 
 the connection to the JTAG terminal by typing $^{\wedge}\texttt{C}$ in its window
 (while holding down the \texttt{ctrl} keyboard key, press \texttt{C}).
+
+\subsection{Using a Trap Handler to Catch Exceptions}
+
+As a final example using assembly language, we will show how you can handle certain error
+conditions that may arise in assembly code.  This example can be found in the design files folder
+\texttt{errors\_s}.  As done previously, open two PowerShell terminals and navigate to
+the proper folder. In one terminal start the GDB Server. In the other terminal, 
+execute \texttt{make} to build the program's executable file, and then start the GDB Client.
+
+In case an assembly program causes a Nios~V error condition, such as a {\it misaligned} address,
+we can include in our assembly-code program a {\it trap handler} that catches such an error. 
+In the GDB Client enter \texttt{list 1,12} as displayed in Figure~\ref{fig:errors_s1}.
+After first initializing the stack pointer {\it sp}, the program sets the Nios~V {\it mtvec}
+control register to the address of a {\it trap handler} routine. Then, in \texttt{Line 6} the
+program initializes register {\it t0} to point to a data word in memory, and then in
+\texttt{Line 7} loads that word into register {\it t1}. 
+
+Enter the step command a few times to reach \texttt{Line 8}. Enter \texttt{step} again to 
+execute this instruction, which increments the value in register {\it t0}, so that it is no 
+longer a multiple of four ({\it not} word aligned). Now, enter \texttt{step \&} to
+execute, in the {\it background}, the 
+instruction on \texttt{Line 9}. Since the address value in {\it t0} is not word-aligned, 
+this \texttt{lw} instruction causes a Nios~V exception and Nios~V transfers control to the 
+address in the {\it mtvec} register, which is ({\it handler}). The handler code is
+displayed in Figure~\ref{fig:errors_s2}. 
+
+\begin{figure}[h]
+    \begin{center}
+        \includegraphics[scale=.6]{figures/errors_s1.png}
+        \caption{A program that causes an exception.}
+        \label{fig:errors_s1}
+    \end{center}
+\end{figure}
+
+\begin{figure}[H]
+\lstinputlisting[style=defaultNiosVStyle, firstline=13]{Code/errors.s}
+	\caption{The handler routine.}
+	\label{fig:errors_s2}
+\end{figure}
+
+As a result of the exception, the program will be caught in the loop at the label \texttt{stay}. 
+Execute the \texttt{interrupt} command to return control to the GDB Client. Then, as depicted in 
+Figure~\ref{fig:errors_s3}, execute the command \texttt{info reg mcause mepc mtval}. The
+{\it mcause} register has the value \texttt{4} because this is the exception code that
+indicates an {\it address alignment} error. The {\it mepc} register has the address of the
+instruction that caused this error, which is \texttt{0x20} (\texttt{Line 9} in
+Figure~\ref{fig:errors_s1}), and the {\it mtval} register shows the value of the offending
+address, which is \texttt{0x29}. 
+
+Similar exception-handler code as demonstrated in this example can be included in any
+assembly-language program, so that inadvertent errors that cause Nios~V exceptions can be 
+caught and examined. 
+
+\begin{figure}[h]
+    \begin{center}
+        \includegraphics[scale=.6]{figures/errors_s3.png}
+        \caption{Examining the cause of the exception.}
+        \label{fig:errors_s3}
+    \end{center}
+\end{figure}
 
 \section{Developing and Debugging Nios~V C-Language Programs}
 \label{sec:c-code}
