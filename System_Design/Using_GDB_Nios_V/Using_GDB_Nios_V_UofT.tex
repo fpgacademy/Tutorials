@@ -95,7 +95,7 @@ that they have been installed into a folder named \texttt{GDB\_tutorial}.
 
 \begin{figure}[h]
     \begin{center}
-        \includegraphics[width=.9\linewidth]{figures/designfiles.png}
+        \includegraphics[width=.9\linewidth]{figures/designfiles_new.png}
         \caption{The {\it Design Files} folders.}
         \label{fig:designfiles}
     \end{center}
@@ -113,7 +113,7 @@ Nios~V assembly-language program, {\it largest.s}, an executable {\it batch} fil
 
 \begin{figure}[h]
     \begin{center}
-        \includegraphics[width=.9\linewidth]{figures/largest1.png}
+        \includegraphics[width=.9\linewidth]{figures/largest1_new.png}
         \caption{The contents of the largest\_s design files folder.}
         \label{fig:largest1}
     \end{center}
@@ -138,13 +138,14 @@ the installation folder used for the computers in the DESL lab.
 
 \begin{figure}[h]
     \begin{center}
-        \includegraphics[scale=.5]{figures/firstfew.png}
+        \includegraphics[scale=.6]{figures/firstfew_new.png}
         \caption{The first few lines of the {\it Makefile}.}
         \label{fig:firstfew}
     \end{center}
 \end{figure}
 
 \subsection{Configuring the DE1-SoC Board}
+\label{sec:conf}
 
 Connect a DE1-SoC board to your computer. The board should be connected by plugging
 a cable that has a {\it Type-A USB} connector into the {\it USB Blaster} port on the board 
@@ -172,7 +173,7 @@ Figure~\ref{fig:detect}. It shows
 two devices being detected: first an {\it SOCVHPS} device, followed by a Cyclone V {\it 5CSE} 
 {\it FPGA} device.  If the output produced from your board shows these two devices, but in the 
 opposite order, then you have to modify your {\it Makefile}.
-Change the variable \texttt{JTAG\_INDEX\_SoC} shown in Line~8 of 
+Change the variable \texttt{JTAG\_INDEX\_SoC} shown in Line~10 of 
 Figure~\ref{fig:firstfew} from the value \texttt{2} to the value \texttt{1}. You should now 
 be able to successfully configure your DE1-SoC board by executing the \texttt{./gmake DE1-SoC}
 command. 
@@ -195,9 +196,12 @@ To start the GDB Server, in the terminal window of Figure~\ref{fig:largest1} exe
 \texttt{./gmake GDB\_SERVER}
 
 The server will then remain running in this window, as indicated in Figure~\ref{fig:server}. 
-Now, open another PowerShell window (you can simply click on the \texttt{+} button near the 
-top of Figure~\ref{fig:server} to open a new PowerShell {\it tab}). In this new terminal 
-tab navigate again to the same folder as in Figure~\ref{fig:largest1}. 
+Now, open a second PowerShell window (in this tutorial we show screen captures using
+Microsoft Windows 11, in which you can click on the \texttt{+} button near the 
+top of Figure~\ref{fig:server} to open a new PowerShell {\it tab}. But in the DESL labs
+you are running Windows 10, where you have to open a new PowerShell window by using the
+start menu or some other method). In this {\it second} PowerShell terminal 
+navigate again to the same folder as in Figure~\ref{fig:largest1}. 
 
 \begin{figure}[h]
     \begin{center}
@@ -209,8 +213,9 @@ tab navigate again to the same folder as in Figure~\ref{fig:largest1}.
 
 This part of the tutorial uses an assembly-language program, {\it largest.s}, which is shown 
 in Figure~\ref{fig:largest_code}. This program searches through a list of integers that is 
-stored in memory and finds the largest number in the list. Assemble this program by 
-executing the command \texttt{./gmake COMPILE}.
+stored in memory and finds the largest number in the list. Assemble this program 
+(using the {\it second} PowerShell window that you opened) by executing the command 
+\texttt{./gmake COMPILE}.
 You could also just type \texttt{./gmake}, because \texttt{COMPILE} is the first target in the 
 {\it Makefile}. As illustrated in Figure~\ref{fig:make_largest}, this command runs the Nios~V
 assembler and linker tools to generate the Nios~V executable file {\it largest.elf}.
@@ -341,7 +346,7 @@ When starting to work on a new design example it is a good approach to power you
 board \texttt{off}, and then \texttt{on} again, so that the system is reset.   
 Open a PowerShell terminal and navigate to the folder for the \texttt{display\_s} design
 example. In this folder, execute the command \texttt{./gmake DE1-SoC} to configure your board. 
-If this programming step fails, refer to the discussion in Section~\ref{sec:doit} for
+If this programming step fails, refer to the discussion in Section~\ref{sec:conf} for
 suggestions as to how to fix any issues. Once your board is successfully configured,
 execute the command \texttt{./gmake GDB\_SERVER}. Now, open a second
 PowerShell tab (as described in Section~\ref{sec:doit}) and, as illustrated in 
@@ -682,16 +687,6 @@ board and then \texttt{quit} from the GDB client. In the GDB Server terminal typ
     \end{center}
 \end{figure}
 
-\subsection{Setting up Your Own C-Code Makefile}
-\label{sec:yourownass}
-
-It is easy to customize the {\it Makefile} for the \texttt{display\_C} example so that you
-can use it with any C code of your choosing.  \texttt{Line 3} of the
-{\it Makefile} has to specify the name of the C-code file that has the \texttt{main}
-function, which designates the beginning of the program. Any \texttt{.h} header files that are
-used with the program can be listed in \texttt{Line~4}. Finally, any additional 
-C source-code files can be listed in \texttt{Line 5}. 
-
 \begin{figure}[H]
     \begin{center}
         \includegraphics[scale=.6]{figures/display_C4.png}
@@ -699,6 +694,17 @@ C source-code files can be listed in \texttt{Line 5}.
         \label{fig:display_C4}
     \end{center}
 \end{figure}
+
+\vspace{-.5cm}
+\subsection{Setting up Your Own C-Code Makefile}
+\label{sec:yourownC}
+
+It is easy to customize the {\it Makefile} for the \texttt{display\_C} example so that you
+can use it with any C code of your choosing.  \texttt{Line 3} of the
+{\it Makefile} has to specify the name of the C-code file that has the \texttt{main}
+function, which designates the beginning of the program. Any \texttt{.h} header files that are
+used with the program can be listed in \texttt{Line~4}. Finally, any additional 
+C source-code files can be listed in \texttt{Line 5}. 
 
 \subsection{Using Interrupts with C Code}
 
@@ -866,7 +872,6 @@ Then, use \texttt{detach} to disconnect from the DE1-SoC board and then
 \texttt{quit} from the GDB client. Also, quit from the GDB Server in its terminal window.
 Finally, close the {\it nios2-terminal} by typing $^{\wedge}\texttt{C}$ in its window.
 
-\newpage
 \section*{Appendix A: GDB Command Reference}
 
 Examples of GDB commands are summarized below. You can often execute a command by typing

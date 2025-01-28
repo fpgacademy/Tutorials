@@ -73,6 +73,7 @@ We also assume that the reader is using a computer running a recent version of t
 \begin{itemize}
 \item Installing the required software and hardware
 \item Setting up the Nios~V development environment
+\item Programming your DE-series board
 \item Developing and debugging Nios~V assembly-language programs
 \item Developing and debugging C programs
 \item GDB command reference
@@ -244,7 +245,7 @@ software development tools for that system. These hardware and software componen
 obtained from {\it GitHub}, at the \texttt{URL} below:
 
 {\href{https://github.com/fpgacademy/Design\_Examples/releases/tag/v1.0} 
-{https://github.com/fpgacademy/Design\_Examples/releases/tag/v1.0}.
+{https://github.com/fpgacademy/Design\_Examples/releases/tag/v1.0}}.
 
 From the GitHub repository download to your computer the file named {\it fpgacademy.zip}, 
 which is listed under \texttt{Assets}. Next, you need to uncompress this {\it ZIP} archive 
@@ -288,7 +289,7 @@ throughout the tutorial. Figure~\ref{fig:designfiles} shows the folders included
 
 \begin{figure}[h]
     \begin{center}
-        \includegraphics[width=.9\linewidth]{figures/designfiles.png}
+        \includegraphics[width=.9\linewidth]{figures/designfiles_new.png}
         \caption{The {\it Design Files} folders.}
         \label{fig:designfiles}
     \end{center}
@@ -301,11 +302,12 @@ provided by the {\it Windows PowerShell}.
 Open a {\it PowerShell} terminal using a method of your choosing.  Then, navigate to the 
 {\it design files} folder called \texttt{C:$\backslash$GDB\_tutorial$\backslash$largest\_s}. 
 As illustrated in Figure~\ref{fig:largest1}, this folder contains an example of a 
-Nios~V assembly-language program, {\it largest.s}, and a {\it Makefile}. 
+Nios~V assembly-language program, {\it largest.s}, a {\it Makefile}, and an executable
+batch file {\it gmake.bat}. 
 
 \begin{figure}[h]
     \begin{center}
-        \includegraphics[width=.9\linewidth]{figures/largest1.png}
+        \includegraphics[width=.9\linewidth]{figures/largest1_new.png}
         \caption{The contents of the largest\_s design files folder.}
         \label{fig:largest1}
     \end{center}
@@ -317,9 +319,12 @@ the installed software discussed in Section~\ref{sec:getthem}, in the location:
 
 \texttt{C:/intelFPGA\_pro/24.1/fpgacademy/AMP/bin/make.exe}
 
-You should add the folder containing this {\it make.exe} program to your 
-\texttt{Path} {\it Windows Environment Variable}, so
-that it is easy to run the {\it make} program.  
+In the examples presented below we assume that you have added the folder containing this 
+{\it make.exe} program to your \texttt{Path} {\it Windows Environment Variable}, so that it is 
+easy to run the {\it make} program. Alternatively, you could execute the make program via 
+the {\it gmake.bat} file listed in Figure~\ref{fig:largest1}. This batch file can be set
+up to have the full path name to the required {\it make.exe} and then executed by entering 
+the command \texttt{./gmake}.
 
 In the folder of Figure~\ref{fig:largest1} open the {\it Makefile} in any text editor of your
 choice. The first few lines of this file are displayed in Figure~\ref{fig:firstfew}.
@@ -340,6 +345,7 @@ as opposed to backward slashes ($\backslash$)).
 \end{figure}
 
 \subsection{Configuring the DE1-SoC Board}
+\label{sec:config}
 
 Connect a DE1-SoC board to your computer. The board should be connected by plugging
 a cable that has a {\it Type-A USB} connector into the {\it USB Blaster} port on the board 
@@ -395,9 +401,10 @@ To start the GDB Server, in the terminal window of Figure~\ref{fig:largest1} exe
 \texttt{make GDB\_SERVER}
 
 The server will then remain running in this window, as indicated in Figure~\ref{fig:server}. 
-Now, open another PowerShell window (you can simply click on the \texttt{+} button near the 
-top of Figure~\ref{fig:server} to open a new PowerShell {\it tab}). In this new terminal 
-tab navigate again to the same folder as in Figure~\ref{fig:largest1}. 
+Now, open another PowerShell window (if you are using Microsoft Windows 11, simply 
+click on the {\bf \texttt{+}} symbol located in the title-bar area of 
+Figure~\ref{fig:server} to open a new PowerShell {\it tab}). 
+In this new terminal tab navigate again to the same folder as in Figure~\ref{fig:largest1}. 
 
 \begin{figure}[h]
     \begin{center}
@@ -541,7 +548,7 @@ When starting to work on a new design example it is a good approach to power you
 board \texttt{off}, and then \texttt{on} again, so that the system is reset.   
 Open a PowerShell terminal and navigate to the folder for the \texttt{display\_s} design
 example. In this folder, execute the command \texttt{make DE1-SoC} to configure your board. 
-If this programming step fails, refer to the discussion in Section~\ref{sec:doit} for
+If this programming step fails, refer to the discussion in Section~\ref{sec:config} for
 suggestions as to how to fix any issues. Once your board is successfully configured,
 execute the command \texttt{make GDB\_SERVER}. Now, open a second
 PowerShell tab (as described in Section~\ref{sec:doit}) and, as illustrated in 
@@ -559,11 +566,11 @@ execute the command \texttt{make COMPILE}, followed by \texttt{make GDB\_CLIENT}
 Within the GDB Client, use \texttt{list 1,14} to see the source-code of the program. As
 shown in  Figure~\ref{fig:display_s2}, the program first sets up three pointers to I/O
 devices in the {\it DE1-SoC Computer}: register {\it t0} is initialized to the address of 
-the \red{{\it LEDR}} red light port, register {\it t1} to the address of the {\it SW} slide-switch
+the \red{\it LEDR} red light port, register {\it t1} to the address of the {\it SW} slide-switch
 port, and register {\it t2} to the address of the port connected to 7-segment display 
-\red{{\it HEX3}} to \red{{\it HEX0}}. The program then executes an endless loop in 
+\red{\it HEX3} to \red{\it HEX0}. The program then executes an endless loop in 
 which it loads the current value of the {\it SW} switch port and stores this value to 
-both the \red{{\it LEDR}} and \red{\it HEX0}} display ports. 
+both the \red{\it LEDR} and \red{\it HEX0} display ports. 
 
 Enter the command \texttt{break loop}, and 
 then use \texttt{continue} to stop the program at this breakpoint.
@@ -571,13 +578,13 @@ Now, run through iterations of the loop in the program for a while by executing 
 command \texttt{continue 150}. This command runs the
 program until the breakpoint at \texttt{loop} has been encountered 150 times. While the 
 program is running, try different settings on the {\it SW}$_{6-0}$ switches on the DE1-SoC 
-board and observe the \red{{\it LEDR}} lights and \red{{\it HEX0}} display. 
+board and observe the \red{\it LEDR} lights and \red{\it HEX0} display. 
 
 Wait until the program has stopped executing and control has been returned to the GDB
 Client. Now, set a new pattern of your choice on the {\it SW} switches and then enter
 the \texttt{step} command, followed by \texttt{info reg t3} to see the value loaded from 
-the {\it SW} port. Execute \texttt{step} again and observe the \red{{\it LEDR}} lights, 
-then use \texttt{step} a third time and observe the \red{{\it HEX0}} display. 
+the {\it SW} port. Execute \texttt{step} again and observe the \red{\it LEDR} lights, 
+then use \texttt{step} a third time and observe the \red{\it HEX0} display. 
 
 \begin{figure}[h]
     \begin{center}
@@ -591,7 +598,7 @@ Use \texttt{continue} again to get to the top of the loop, and then \texttt{step
 execute the {\it load} instruction at \texttt{Line 10}. Now, use the GDB command 
 \texttt{set \$t3 = 0x3ff} to overwrite the value loaded into register {\it t3}. Use
 \texttt{step} again and then observe on the DE1-SoC board that the value you placed 
-into register {\it t3} turns on all ten \red{{\it LEDR}} lights. 
+into register {\it t3} turns on all ten \red{\it LEDR} lights. 
 
 We are now done with this design example, so use the \texttt{detach} command to disconnect
 from the DE1-SoC board. Finally, \texttt{quit} from the GDB Client, and then go to the
@@ -600,7 +607,7 @@ GDB Server PowerShell tab and type \texttt{q} to close the server.
 \subsection{Using Interrupts with Assembly Code}
 
 The assembly code example for this part of the tutorial displays a one-second binary counter on 
-the red lights \red{{\it LEDR}}. The speed of the counter is controlled by using interrupts from 
+the red lights \red{\it LEDR}. The speed of the counter is controlled by using interrupts from 
 the Nios~V Machine Timer.  
 
 Open a PowerShell terminal and navigate to the \texttt{interrupt\_s} folder.
@@ -666,7 +673,7 @@ Clear the breakpoint that was previously set by entering \texttt{clear 9}.
 Enter the command \texttt{continue \&}. The \texttt{\&} at the end of this command means
 ``run the program in the {\it background}," and immediately provide the GDB command prompt so
 that commands can still be executed. While the Nios~V program is running, observe that the 
-\red{{\it LEDR}} lights show a binary counter incrementing once per second.  Now, stop the 
+\red{\it LEDR} lights show a binary counter incrementing once per second.  Now, stop the 
 running program by executing the GDB command \texttt{interrupt}. GDB will stop the
 program, in the same manner as when a breakpoint is reached.
 
@@ -683,14 +690,14 @@ interrupt 7 corresponds to the Machine Timer.
 
 Clear the handler interrupt by entering \texttt{clear handler}, and then execute
 \texttt{continue \&} to run the program in the {\it background}. 
-Observe the \red{{\it LEDR}} lights to get an indication of the
+Observe the \red{\it LEDR} lights to get an indication of the
 value of the binary {\it counter} being displayed. Enter \texttt{interrupt} to stop the
 program and return control to the GDB Client. To see the current value of the {\it counter}
 use the command \texttt{x counter}. It is possible to change the value of this ``variable'' 
 by using the \texttt{set} command. For example, set the counter to the value \texttt{0x3f0} by
 using \texttt{set \{int\} counter = 0x3f0}. The cast to type \texttt{\{int\}} is required so that 
 GDB knows the {\it type} of the variable. Enter continue and observe the new value of
-the counter displayed on the \red{{\it LEDR}} lights. Another way to modify the value of
+the counter displayed on the \red{\it LEDR} lights. Another way to modify the value of
 the counter is to first find its address with the command \texttt{info address counter}.
 This command returns the address value \texttt{0x64}. Thus, an alternative way to set the 
 counter to the value \texttt{0x3f0} is to used the command
@@ -854,9 +861,9 @@ this data, execute the \texttt{disassemble} command. As illustrated in
 Figure~\ref{fig:display_C3}, register {\it a5} is used to hold this {\it value}. Display
 the contents of this register by entering \texttt{info reg a5}, as seen in 
 Figure~\ref{fig:display_C4}. Use \texttt{step} to execute the next instruction, and
-observe that the \red{{\it LEDR}} lights are updated. Then, enter \texttt{continue} to run
+observe that the \red{\it LEDR} lights are updated. Then, enter \texttt{continue} to run
 the program until it reaches the breakpoint again at Line 15. Observe that the 
-\red{{\it HEX0}} display is now updated.
+\red{\it HEX0} display is now updated.
 ~\\
 \begin{figure}[H]
     \begin{center}
@@ -979,8 +986,8 @@ machine timer, FPGA interval timer, and {\it KEY} push-buttons.
 Use the command \texttt{list 63, 71} to see the remainder of the {\it main} program. As shown in
 Figure~\ref{fig:interrupt_C5}, it contains a 
 loop that reads two variables from memory, called {\it counter} and {\it digit}.  The
-{\it counter} variable is displayed in binary on the \red{{\it LEDR}} lights, and a decimal 
-number is displayed on \red{{\it HEX0}} based on the value of the {\it digit} variable.
+{\it counter} variable is displayed in binary on the \red{\it LEDR} lights, and a decimal 
+number is displayed on \red{\it HEX0} based on the value of the {\it digit} variable.
 Both of these variables are updated by interrupt service routines that respond to hardware 
 timers.
 
@@ -1020,8 +1027,8 @@ interrupt service routine to the interrupted program.
 
 Enter the \texttt{delete} command to clear all breakpoints. Then, use \texttt{continue \&}
 to run the program in the {\it background}. Observe on the DE1-SoC board that a binary
-counter is displayed on the \red{{\it LEDR}} lights, and a digit counter appears on 
-\red{{\it HEX0}}. If you press any {\it KEY} push-button, then the direction of counting
+counter is displayed on the \red{\it LEDR} lights, and a digit counter appears on 
+\red{\it HEX0}. If you press any {\it KEY} push-button, then the direction of counting
 for the digit is reversed.
 
 Stop the running program by executing the \texttt{interrupt} command. 
