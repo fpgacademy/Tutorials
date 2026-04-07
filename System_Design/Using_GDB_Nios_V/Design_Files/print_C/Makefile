@@ -1,8 +1,8 @@
-INSTALL	:= C:/intelFPGA_pro/24.1
+INSTALL	:= C:/intelFPGA_lite/24.1std
 
 MAIN	:= print.c
 HDRS	:= address_map.h
-SRCS	:= $(MAIN)
+SRCS	:= $(MAIN) 
 
 SHELL	:= cmd.exe
 
@@ -12,8 +12,8 @@ JTAG_INDEX_SoC	:= 2
 # The following variables are set based on the value of the INSTALL variable
 COMPILER		:= $(INSTALL)/fpgacademy/AMP/cygwin64/home/compiler/bin
 BASH			:= $(INSTALL)/fpgacademy/AMP/cygwin64/bin/bash --noprofile -norc -c 
-HW_DE1-SoC		:= "$(INSTALL)/fpgacademy/Computer_Systems/DE1-SoC/DE1-SoC_Computer/niosVg/DE1_SoC_Computer.sof"
-HW_DE10-Lite	:= "$(INSTALL)/fpgacademy/Computer_Systems/DE10-Lite/DE10-Lite_Computer/niosVg/DE10_Lite_Computer.sof"
+HW_DE1-SoC		:= $(INSTALL)/fpgacademy/Computer_Systems/DE1-SoC/DE1-SoC_Computer/niosVg/DE1_SoC_Computer.sof
+HW_DE10-Lite	:= $(INSTALL)/fpgacademy/Computer_Systems/DE10-Lite/DE10-Lite_Computer/niosVg/DE10_Lite_Computer.sof
 
 # for Quartus programmer (two possibilities exist for the path)
 export PATH := $(INSTALL)/quartus/bin64/:$(PATH)
@@ -30,20 +30,36 @@ export PATH := $(INSTALL)/quartus/sopc_builder/bin/:$(PATH)
 CYGWIN_INSTALL := $(shell $(BASH) 'export PATH=/usr/local/bin:/usr/bin; cygpath $(INSTALL)')
 CYGWIN_PATH := export PATH=/usr/local/bin:/usr/bin:$(CYGWIN_INSTALL)/fpgacademy/AMP/bin
 
-# Programs
+# Programs used for C code
+ifeq ($(suffix $(MAIN)), .c)
 CC	:= $(COMPILER)/riscv32-unknown-elf-gcc.exe
 LD	:= $(CC)
-OD	:= $(COMPILER)/riscv32-unknown-elf-objdump.exe
-NM	:= $(COMPILER)/riscv32-unknown-elf-nm.exe
-RM	:= /usr/bin/rm -f
 
-# Flags
+# Flags used for C code
 USERCCFLAGS	:= -g -O1 -ffunction-sections -fverbose-asm -fno-inline -gdwarf-2 
 USERLDFLAGS	:= -Wl,--defsym=__stack_pointer$$=0x4000000 -Wl,--defsym  -Wl,JTAG_UART_BASE=0xff201000 -lm
 ARCHCCFLAGS	:= -march=rv32im_zicsr -mabi=ilp32
 ARCHLDFLAGS	:= -march=rv32im_zicsr -mabi=ilp32
 CCFLAGS		:= -Wall -c $(USERCCFLAGS) $(ARCHCCFLAGS)
 LDFLAGS		:= $(USERLDFLAGS) $(ARCHLDFLAGS)
+endif
+
+# Programs used for assembly code
+ifeq ($(suffix $(MAIN)), .s)
+AS	:= $(COMPILER)/riscv32-unknown-elf-as.exe
+LD	:= $(COMPILER)/riscv32-unknown-elf-ld.exe
+OC	:= $(COMPILER)/riscv32-unknown-elf-objcopy.exe
+
+# Flags used for assembly code
+ARCHASFLAGS	:= -march=rv32im_zicsr --gdwarf2
+ARCHLDFLAGS	:= --section-start .text=0x0 --no-relax
+ASFLAGS		:= $(ARCHASFLAGS)
+LDFLAGS		:= $(USERLDFLAGS) $(ARCHLDFLAGS)
+endif
+
+OD	:= $(COMPILER)/riscv32-unknown-elf-objdump.exe
+NM	:= $(COMPILER)/riscv32-unknown-elf-nm.exe
+RM	:= /usr/bin/rm -f
 
 # Files
 OBJS		:= $(patsubst %, %.o, $(SRCS))
@@ -52,8 +68,8 @@ OBJS		:= $(patsubst %, %.o, $(SRCS))
 # GDB Macros
 
 # Programs
-GDB_SERVER		:= ash-riscv-gdb-server.exe
-GDB_CLIENT		:= riscv32-unknown-elf-gdb.exe
+GDB_SERVER	:= ash-riscv-gdb-server.exe
+GDB_CLIENT	:= riscv32-unknown-elf-gdb.exe
 
 ############################################
 # System Macros
@@ -63,11 +79,9 @@ QP_PROGRAMMER	:= quartus_pgm.exe
 
 # Flags
 # DE10-Lite
-SYS_FLAG_CABLE_Lite		:= -c "USB-Blaster [USB-0]"
-# SYS_FLAG_USB_Lite		:= "USB-0"
+SYS_FLAG_CABLE_Lite	:= -c "USB-Blaster [USB-0]"
 # DE1-SoC
-SYS_FLAG_CABLE_SoC 		:= -c "DE-SoC [USB-1]"
-# SYS_FLAG_USB_SoC		:= "USB-1"
+SYS_FLAG_CABLE_SoC	:= -c "DE-SoC [USB-1]"
 
 # DE10-Lite
 JTAG_INDEX_Lite	:= 1
@@ -86,9 +100,9 @@ $(basename $(MAIN)).elf: $(OBJS)
 	@$(BASH) 'cd "$(CURDIR)"; $(RM) $@'
 	$(CYAN_TEXT)
 	@echo Linking
-	@$(BASH) 'printf "$(LD) "'
+	@$(BASH) 'printf "$(LD)"'
 	$(DEF_TEXT)
-	@echo $(LDFLAGS) $(OBJS) -o $@
+	@echo $(LDFLAGS)$(OBJS) -o $@
 	@$(BASH) 'printf "\n"'
 	@$(BASH) 'cd "$(CURDIR)"; $(CYGWIN_PATH); $(LD) $(LDFLAGS) $(OBJS) -o $@'
 
@@ -100,6 +114,16 @@ $(basename $(MAIN)).elf: $(OBJS)
 	$(DEF_TEXT)
 	@echo $(CCFLAGS) $< -o $@
 	@$(BASH) 'cd "$(CURDIR)"; $(CYGWIN_PATH); $(CC) $(CCFLAGS) $< -o $@'
+
+%.s.o: %.s $(HDRS)
+	@$(BASH) 'cd "$(CURDIR)"; $(RM) $@'
+	@$(BASH) 'pwd'
+	$(GREEN_TEXT)
+	@echo Assembling
+	@$(BASH) 'printf "$(AS) "'
+	$(DEF_TEXT)
+	@echo $(ASFLAGS) $< -o $@
+	@$(BASH) 'cd "$(CURDIR)"; $(CYGWIN_PATH); $(AS) $(ASFLAGS) $< -o $@'
 
 SYMBOLS: $(basename $(MAIN)).elf
 	@echo $(NM) -p $<
@@ -113,8 +137,9 @@ CLEAN:
 	$(RED_TEXT)
 	@$(BASH) 'printf "$(RM) "'
 	$(DEF_TEXT)
-	@echo $(basename $(MAIN)).elf $(OBJS)
-	@$(BASH) 'cd "$(CURDIR)"; $(RM) $(basename $(MAIN)).elf $(OBJS)'
+	@echo $(basename $(MAIN)).srec $(basename $(MAIN)).elf$(OBJS)
+	@$(BASH) 'cd "$(CURDIR)"; $(RM) $(basename $(MAIN)).srec $(basename $(MAIN)).elf $(OBJS)'
+	
 
 ############################################
 # System Targets

@@ -1,4 +1,4 @@
-INSTALL	:= C:/intelFPGA_pro/24.1
+INSTALL	:= C:/intelFPGA_lite/24.1std
 
 MAIN	:= errors.s
 HDRS	:= 
@@ -30,22 +30,36 @@ export PATH := $(INSTALL)/quartus/sopc_builder/bin/:$(PATH)
 CYGWIN_INSTALL := $(shell $(BASH) 'export PATH=/usr/local/bin:/usr/bin; cygpath $(INSTALL)')
 CYGWIN_PATH := export PATH=/usr/local/bin:/usr/bin:$(CYGWIN_INSTALL)/fpgacademy/AMP/bin
 
-# Programs
+# Programs used for C code
+ifeq ($(suffix $(MAIN)), .c)
+CC	:= $(COMPILER)/riscv32-unknown-elf-gcc.exe
+LD	:= $(CC)
+
+# Flags used for C code
+USERCCFLAGS	:= -g -O1 -ffunction-sections -fverbose-asm -fno-inline -gdwarf-2 
+USERLDFLAGS	:= -Wl,--defsym=__stack_pointer$$=0x4000000 -Wl,--defsym  -Wl,JTAG_UART_BASE=0xff201000 -lm
+ARCHCCFLAGS	:= -march=rv32im_zicsr -mabi=ilp32
+ARCHLDFLAGS	:= -march=rv32im_zicsr -mabi=ilp32
+CCFLAGS		:= -Wall -c $(USERCCFLAGS) $(ARCHCCFLAGS)
+LDFLAGS		:= $(USERLDFLAGS) $(ARCHLDFLAGS)
+endif
+
+# Programs used for assembly code
+ifeq ($(suffix $(MAIN)), .s)
 AS	:= $(COMPILER)/riscv32-unknown-elf-as.exe
 LD	:= $(COMPILER)/riscv32-unknown-elf-ld.exe
-CC	:= $(COMPILER)/riscv32-unknown-elf-gcc.exe
 OC	:= $(COMPILER)/riscv32-unknown-elf-objcopy.exe
-OD	:= $(COMPILER)/riscv32-unknown-elf-objdump.exe
-NM	:= $(COMPILER)/riscv32-unknown-elf-nm.exe
-RM	:= /usr/bin/rm -f
 
-# Flags
+# Flags used for assembly code
 ARCHASFLAGS	:= -march=rv32im_zicsr --gdwarf2
-ARCHCCFLAGS	:= -march=rv32im_zicsr -mabi=ilp32
 ARCHLDFLAGS	:= --section-start .text=0x0 --no-relax
 ASFLAGS		:= $(ARCHASFLAGS)
 LDFLAGS		:= $(USERLDFLAGS) $(ARCHLDFLAGS)
-OCFLAGS		:= -O srec
+endif
+
+OD	:= $(COMPILER)/riscv32-unknown-elf-objdump.exe
+NM	:= $(COMPILER)/riscv32-unknown-elf-nm.exe
+RM	:= /usr/bin/rm -f
 
 # Files
 OBJS		:= $(patsubst %, %.o, $(SRCS))
@@ -91,6 +105,15 @@ $(basename $(MAIN)).elf: $(OBJS)
 	@echo $(LDFLAGS)$(OBJS) -o $@
 	@$(BASH) 'printf "\n"'
 	@$(BASH) 'cd "$(CURDIR)"; $(CYGWIN_PATH); $(LD) $(LDFLAGS) $(OBJS) -o $@'
+
+%.c.o: %.c $(HDRS)
+	@$(BASH) 'cd "$(CURDIR)"; $(RM) $@'
+	$(GREEN_TEXT)
+	@echo Compiling
+	@$(BASH) 'printf "$(CC) "'
+	$(DEF_TEXT)
+	@echo $(CCFLAGS) $< -o $@
+	@$(BASH) 'cd "$(CURDIR)"; $(CYGWIN_PATH); $(CC) $(CCFLAGS) $< -o $@'
 
 %.s.o: %.s $(HDRS)
 	@$(BASH) 'cd "$(CURDIR)"; $(RM) $@'
