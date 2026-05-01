@@ -1,8 +1,8 @@
-INSTALL	:= C:/intelFPGA_lite/24.1std
+INSTALL := C:/altera_pro/26.1
 
 MAIN	:= errors.s
 HDRS	:= 
-SRCS	:= $(MAIN) 
+SRCS	:= $(MAIN)
 
 SHELL	:= cmd.exe
 
@@ -15,13 +15,16 @@ BASH			:= $(INSTALL)/fpgacademy/AMP/cygwin64/bin/bash --noprofile -norc -c
 HW_DE1-SoC		:= $(INSTALL)/fpgacademy/Computer_Systems/DE1-SoC/DE1-SoC_Computer/niosVg/DE1_SoC_Computer.sof
 HW_DE10-Lite	:= $(INSTALL)/fpgacademy/Computer_Systems/DE10-Lite/DE10-Lite_Computer/niosVg/DE10_Lite_Computer.sof
 
-# for Quartus programmer (two possibilities exist for the path)
+# for Quartus programmer (three possible paths)
 export PATH := $(INSTALL)/quartus/bin64/:$(PATH)
 export PATH := $(INSTALL)/qprogrammer/quartus/bin64/:$(PATH)
-# for GDB server
+export PATH := $(INSTALL)/qprogrammer/bin64/:$(PATH)
+# for GDB server (two possible paths)
 export PATH := $(INSTALL)/riscfree/debugger/gdbserver-riscv/:$(PATH)
-# for GDB client
+export PATH := $(INSTALL)/fpgacademy/GDB/debugger/gdbserver-riscv/:$(PATH)
+# for GDB client (two possible paths)
 export PATH := $(INSTALL)/riscfree/toolchain/riscv32-unknown-elf/bin/:$(PATH)
+export PATH := $(INSTALL)/fpgacademy/GDB/toolchain/riscv32-unknown-elf/bin/:$(PATH)
 # for the nios2-terminal
 export PATH := $(INSTALL)/fpgacademy/AMP/bin/:$(PATH)
 # for checking JTAG chain
@@ -117,7 +120,6 @@ $(basename $(MAIN)).elf: $(OBJS)
 
 %.s.o: %.s $(HDRS)
 	@$(BASH) 'cd "$(CURDIR)"; $(RM) $@'
-	@$(BASH) 'pwd'
 	$(GREEN_TEXT)
 	@echo Assembling
 	@$(BASH) 'printf "$(AS) "'
@@ -163,7 +165,7 @@ GDB_SERVER:
 	$(GDB_SERVER) --device 02D120DD --gdb-port 2454 --instance 1 --probe-type USB-Blaster-2 --transport-type jtag --auto-detect true
 
 GDB_CLIENT: 
-	$(GDB_CLIENT) -silent -ex "target remote:2454" -ex "set $$mstatus=0" -ex "set $$mtvec=0" -ex "load" -ex "set $$pc=_start" -ex "info reg pc" "$(basename $(MAIN)).elf"
+	$(GDB_CLIENT) -silent -ex "target remote:2454" -iex "set $$mstatus=0" -iex "set $$mtvec=0" -iex "set $$mie=0" -ex "load" -ex "set $$pc=_start" -ex "info reg pc" "$(basename $(MAIN)).elf"
 
 ############################################
 # EXTRAS

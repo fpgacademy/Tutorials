@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "address_map.h"
+#include "address_map_niosv.h"
 
 int main(void)
 {

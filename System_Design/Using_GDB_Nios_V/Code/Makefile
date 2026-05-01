@@ -1,4 +1,5 @@
 INSTALL	:= C:/intelFPGA_lite/24.1std
+# C:/intelFPGA_pro/24.1
 
 MAIN	:= largest.s
 HDRS	:= 

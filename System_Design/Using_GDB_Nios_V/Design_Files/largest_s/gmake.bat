@@ -1,1 +1,1 @@
-C:\intelFPGA_lite\24.1std\fpgacademy\AMP\bin\make.exe %1
+C:\altera_pro\26.1\fpgacademy\AMP\bin\make.exe %1
