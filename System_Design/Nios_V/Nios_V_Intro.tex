@@ -34,15 +34,8 @@
 %%% DOCUMENT START
 %\begin{document}
 \begin{document}
-\begin{table}
-    \centering
-    \begin{tabular}{p{5cm}p{4cm}}
-        \hspace{-3cm}
-        &
-        \raisebox{1\height}{\parbox[h]{0.5\textwidth}{\Large\fontfamily{phv}\selectfont{\textsf{\doctitle}}}}
-    \end{tabular}
-    \label{tab:logo}
-\end{table}
+\includegraphics[scale=0.20]{\commonPath/Figures/logo.png}\hfill
+\raisebox{8pt}{\Large\fontfamily{phv}\selectfont{\textsf{\doctitle}}}
 
 \colorbox[rgb]{0,0.384,0.816}{\parbox[h]{\textwidth}{\color{white}\textsf{\textit{\textBar}}}}
 
@@ -117,7 +110,7 @@ which is available on the
 Nios~V is based on the RISC-V processor architecture that is described in detail on
 the {\small \href{https://www.riscv.org} {riscv.org}} website. Useful information for
 programmers using RISC-V can be found on the 
-{\small \href{https://five-embeddev.com} {five-embeddev.com}} website.
+{\small \href{http://five-embeddev.com} {five-embeddev.com}} website.
 Using the terminology from the RISC-V specification, Nios~V has features in
 the {\it RV32IMZicsr} architecture. This mnemonic denotes a 32-bit processor that supports 
 integer computations ({\it 32I}) including multiply and divide ({\it M}, available in
