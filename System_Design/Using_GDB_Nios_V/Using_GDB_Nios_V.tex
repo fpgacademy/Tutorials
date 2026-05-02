@@ -119,7 +119,7 @@ Perform the following steps to download and install this application:
 \item As illustrated in Figure~\ref{fig:down1}, select a \texttt{Software Package} and 
 \texttt{Version}. This tutorial can be used with any Quartus Prime Pro, Standard, or Lite 
 package that includes the Nios V processor (version 23.1 and later). For this tutorial we have
-selected \texttt{Quartus Prime Pro}, \texttt{Version 26.1}, for the {\it Windows} 
+selected \texttt{Quartus Prime Lite}, \texttt{Version 25.1}, for the {\it Windows} 
 operating system.
 \item Scroll down on the web page to see the types of \texttt{Downloads} that are
 available, which include {\bf \texttt{Installer}}, {\bf \texttt{Individual Files}}, and 
@@ -140,7 +140,7 @@ should be similar to the one shown in Figure~\ref{fig:exe2}.
 
 \begin{figure}[H]
     \begin{center}
-        \includegraphics[width=\linewidth]{figures/down1.pdf}
+        \includegraphics[width=\linewidth]{figures/down1_25.1.png}
         \caption{The Altera Download Center.}
         \label{fig:down1}
     \end{center}
@@ -164,7 +164,7 @@ computer and an FPGA board that is connected to the computer via a USB cable.
 
 \begin{figure}[H]
     \begin{center}
-        \includegraphics[width=\linewidth]{figures/down2.pdf}
+        \includegraphics[width=\linewidth]{figures/down2_25.1.png}
         \caption{Downloading the Quartus Prime Programmer.}
         \label{fig:down2}
     \end{center}
@@ -183,7 +183,7 @@ obtained from {\it GitHub}, at the \texttt{URL}:
 
 \begin{figure}[h]
     \begin{center}
-        \includegraphics[scale=0.5]{figures/exe1.pdf}
+        \includegraphics[width=\textwidth]{figures/exe1_25.1.png}
         \caption{The {\it Programmer Tools} installation dialog.}
         \label{fig:exe1}
     \end{center}
@@ -191,7 +191,7 @@ obtained from {\it GitHub}, at the \texttt{URL}:
 
 \begin{figure}[h]
     \begin{center}
-        \includegraphics[scale=0.5]{figures/exe2.pdf}
+        \includegraphics[width=\textwidth]{figures/exe2_25.1.png}
         \caption{Choosing the installation folder.}
         \label{fig:exe2}
     \end{center}
@@ -204,7 +204,7 @@ where you installed the Quartus {\it Programmer and Tools}.
 
 \begin{figure}[h]
     \begin{center}
-        \includegraphics[scale=0.5]{figures/down2a.pdf}
+        \includegraphics[width=.9\linewidth]{figures/down2a_25.1.png}
         \caption{Post-installation selections.}
         \label{fig:down2a}
     \end{center}
@@ -216,7 +216,7 @@ Nios V hardware system and software development tools (in the {\it fpgacademy} f
 
 \begin{figure}[h]
     \begin{center}
-        \includegraphics[width=.8\linewidth]{figures/goterdone.pdf}
+        \includegraphics[width=.9\linewidth]{figures/goterdone_25.1.png}
         \caption{The contents of your installation folder.}
         \label{fig:goterdone}
     \end{center}
@@ -249,7 +249,7 @@ throughout the tutorial. Figure~\ref{fig:designfiles} shows the folders included
 
 \begin{figure}[h]
     \begin{center}
-        \includegraphics[width=.8\linewidth]{figures/designfiles_new.png}
+        \includegraphics[width=.9\linewidth]{figures/designfiles_25.1.png}
         \caption{The {\it Design Files} folders.}
         \label{fig:designfiles}
     \end{center}
@@ -299,7 +299,7 @@ as opposed to backward slashes ($\backslash$)).
 
 \begin{figure}[h]
     \begin{center}
-        \includegraphics[scale=.45]{figures/firstfew.pdf}
+        \includegraphics[scale=.40]{figures/firstfew_25.1.png}
         \caption{The first few lines of the {\it Makefile}.}
         \label{fig:firstfew}
     \end{center}
@@ -329,7 +329,8 @@ your DE1-SoC board, then try running the command:
 \texttt{make DETECT\_DEVICES}
 
 This command checks which devices are visible on the {\it USB Blaster} cable that is connected to
-your computer. Part of the expected output from this command is displayed in
+your computer (if you receive an error such as {\it Programming hardware cable not
+connected}, then refer to Appendix B). Part of the expected output from this command is displayed in
 Figure~\ref{fig:detect}. It shows 
 two devices being detected: first an {\it SOCVHPS} device, followed by a Cyclone V {\it 5CSE} 
 {\it FPGA} device.  If the output produced from your board shows these two devices, but in the 
@@ -1108,6 +1109,32 @@ name}, $\ldots$\\
 {\bf load} \>load the executable program into memory on the target board\\
 {\bf target remote} {\it :port} \>connect to debugging target via {\it port} on local computer
 \end{tabbing}
+
+\newpage
+\section*{Appendix B: Installing Device Drivers}
+
+If the command make \texttt{DETECT\_DEVICES} from Section~\ref{sec:config} produces an 
+error such as {\it Programming hardware cable not connected}, then the {\it device drivers} that
+are required for your FPGA board are not properly installed on your computer. The required
+drivers (called {\it USB Blaster}, {\it USB Blaster II}, or {\it USB Blaster III}) can be
+installed by using the MS Windows {\it Device Manager} tool, finding the \texttt{Unknown} device
+under \texttt{Other} devices and updating the driver. An example screenshot of the 
+{\it Device Manager} tool is given in Figure~\ref{fig:deviceManager}.
+
+The USB Blaster drivers can be found in the Quartus Prime installation folder, for 
+example:
+
+\texttt{C:$\backslash$altera\_lite$\backslash$25.1std$\backslash$quartus$\backslash$drivers}
+~\\
+~\\
+
+\begin{figure}[H]
+    \begin{center}
+        \includegraphics[width=\linewidth]{figures/deviceManager.png}
+        \caption{The MS Window Device Manager.}
+        \label{fig:deviceManager}
+    \end{center}
+\end{figure}
 
 % Copyright and Trademark
 
