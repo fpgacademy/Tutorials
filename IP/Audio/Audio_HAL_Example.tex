@@ -1,0 +1,48 @@
+\begin{figure}[h!]
+\begin{center}
+\begin{minipage}[t]{12.5 cm}
+\begin{tabbing}
+/\=*****\=*****\=*****\=*****\=*****\=*****\=*****\=*****\=*****\=*********************************\=\kill
+\>\#include "altera\_up\_avalon\_audio.h"\\
+\>\\
+\>{\bf int} main({\bf void})\\
+\>\{\\
+\>\>alt\_up\_audio\_dev * audio\_dev;\\
+\>\\
+\>\>/* used for audio record/playback */\\
+\>\>{\bf unsigned int} l\_buf;\\
+\>\>{\bf unsigned int} r\_buf;\\
+\>\\
+\>\>// open the Audio port\\
+\>\>audio\_dev = alt\_up\_audio\_open\_dev ("/dev/Audio");\\
+\>\>{\bf if} ( audio\_dev == NULL)\\
+\>\>\>alt\_printf ("Error: could not open audio device \textbackslash n");\\
+\>\>{\bf else}\\
+\>\>\>alt\_printf ("Opened audio device \textbackslash n");\\
+\>\\
+\>\>/* read and echo audio data */\\
+\>\>{\bf while}(1)\\
+\>\>\{\\
+\>\>\>{\bf int} fifospace = alt\_up\_audio\_read\_fifo\_avail (audio\_dev, ALT\_UP\_AUDIO\_RIGHT);\\
+\>\>\>{\bf if} ( fifospace > 0 ) 	// check if data is available \\
+\>\>\>\{\\
+\>\>\>\>// read audio buffer\\
+\>\>\>\>alt\_up\_audio\_read\_fifo (audio\_dev, \&(r\_buf), 1, ALT\_UP\_AUDIO\_RIGHT);\\
+\>\>\>\>alt\_up\_audio\_read\_fifo (audio\_dev, \&(l\_buf), 1, ALT\_UP\_AUDIO\_LEFT);\\
+\>\\
+\>\>\>\>// write audio buffer\\
+\>\>\>\>alt\_up\_audio\_write\_fifo (audio\_dev, \&(r\_buf), 1, ALT\_UP\_AUDIO\_RIGHT);\\
+\>\>\>\>alt\_up\_audio\_write\_fifo (audio\_dev, \&(l\_buf), 1, ALT\_UP\_AUDIO\_LEFT);\\
+\>\>\>\}\\
+\>\>\}\\
+\>\}\\
+\end{tabbing}
+\end{minipage}
+\end{center}
+	\vspace{-0.33in}\caption{An example of C with Device Driver Support code that uses Audio Core.}
+   \label{fig:HAL_Audio_Example}
+\end{figure}
+\pagebreak
+\clearpage
+\newpage
+

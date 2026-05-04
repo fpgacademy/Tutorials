@@ -1,0 +1,489 @@
+\subsubsection{alt\_up\_audio\_open\_dev}
+\begin{tabular}[ht]{lp{11cm}}
+	\textbf{Prototype:}
+	&
+	\texttt{alt\_up\_audio\_dev* alt\_up\_audio\_open\_dev(const char *name)} 
+	\\
+	\textbf{Include:}
+	&
+	{\tt <altera\_up\_avalon\_audio.h>}
+	\\
+	{\textbf{Parameters:}}
+	&
+	\texttt{{name}}
+	 -- the audio component name in Platform Designer. 
+	\\
+	\textbf{Returns:}
+	& The corresponding device structure, or NULL if the device is not found
+	\\
+	\textbf{Description:}
+	& Opens the audio device specified by {\it name} (default "/dev/audio/").\\
+\end{tabular}
+\vfill
+
+\subsubsection{alt\_up\_audio\_enable\_read\_interrupt}
+\begin{tabular}[ht]{lp{11cm}}
+	\textbf{Prototype:}
+	&
+	\texttt{void alt\_up\_audio\_enable\_read\_interrupt(alt\_up\_audio\_dev *audio)} 
+	\\
+	\textbf{Include:}
+	&
+	{\tt <altera\_up\_avalon\_audio.h>}
+	\\
+	{\textbf{Parameters:}}
+	&
+	\texttt{{audio}}
+	 -- the audio device structure 
+	\\
+	\textbf{Returns:}
+	& nothing
+	\\
+	\textbf{Description:}
+	& Enable read interrupts for the Audio Core.\\
+\end{tabular}
+\vfill
+
+\subsubsection{alt\_up\_audio\_disable\_read\_interrupt}
+\begin{tabular}[ht]{lp{11cm}}
+	\textbf{Prototype:}
+	&
+	\texttt{void alt\_up\_audio\_disable\_read\_interrupt(alt\_up\_audio\_dev *audio)} 
+	\\
+	\textbf{Include:}
+	&
+	{\tt <altera\_up\_avalon\_audio.h>}
+	\\
+	{\textbf{Parameters:}}
+	&
+	\texttt{{audio}}
+	 -- the audio device structure 
+	\\
+	\textbf{Returns:}
+	& nothing
+	\\
+	\textbf{Description:}
+	& Disable read interrupts for the Audio Core.\\
+\end{tabular}
+\vfill
+
+\subsubsection{alt\_up\_audio\_enable\_write\_interrupt}
+\begin{tabular}[ht]{lp{11cm}}
+	\textbf{Prototype:}
+	&
+	\texttt{void alt\_up\_audio\_enable\_write\_interrupt(alt\_up\_audio\_dev *audio)} 
+	\\
+	\textbf{Include:}
+	&
+	{\tt <altera\_up\_avalon\_audio.h>}
+	\\
+	{\textbf{Parameters:}}
+	&
+	\texttt{{audio}}
+	 -- the audio device structure 
+	\\
+	\textbf{Returns:}
+	& nothing
+	\\
+	\textbf{Description:}
+	& Enable write interrupts for the Audio Core.\\
+\end{tabular}
+\vfill
+
+\subsubsection{alt\_up\_audio\_disable\_write\_interrupt}
+\begin{tabular}[ht]{lp{11cm}}
+	\textbf{Prototype:}
+	&
+	\texttt{void alt\_up\_audio\_disable\_write\_interrupt(alt\_up\_audio\_dev *audio)} 
+	\\
+	\textbf{Include:}
+	&
+	{\tt <altera\_up\_avalon\_audio.h>}
+	\\
+	{\textbf{Parameters:}}
+	&
+	\texttt{{audio}}
+	 -- the audio device structure 
+	\\
+	\textbf{Returns:}
+	& nothing
+	\\
+	\textbf{Description:}
+	& Disable the read interrupts for the Audio Core.\\
+\end{tabular}
+\vfill
+
+\subsubsection{alt\_up\_audio\_read\_interrupt\_pending}
+\begin{tabular}[ht]{lp{11cm}}
+	\textbf{Prototype:}
+	&
+	\texttt{int alt\_up\_audio\_read\_interrupt\_pending(alt\_up\_audio\_dev *audio)} 
+	\\
+	\textbf{Include:}
+	&
+	{\tt <altera\_up\_avalon\_audio.h>}
+	\\
+	{\textbf{Parameters:}}
+	&
+	\texttt{{audio}}
+	 -- the audio device structure 
+	\\
+	\textbf{Returns:}
+	& 1 if read interrupt is pending, else 0
+	\\
+	\textbf{Description:}
+	& Check if read interrupt pending for the Audio Core.\\
+\end{tabular}
+\vfill
+
+\subsubsection{alt\_up\_audio\_write\_interrupt\_pending}
+\begin{tabular}[ht]{lp{11cm}}
+	\textbf{Prototype:}
+	&
+	\texttt{int alt\_up\_audio\_write\_interrupt\_pending(alt\_up\_audio\_dev *audio)} 
+	\\
+	\textbf{Include:}
+	&
+	{\tt <altera\_up\_avalon\_audio.h>}
+	\\
+	{\textbf{Parameters:}}
+	&
+	\texttt{{audio}}
+	 -- the audio device structure 
+	\\
+	\textbf{Returns:}
+	& 1 if write interrupt is pending, else 0
+	\\
+	\textbf{Description:}
+	& Check if write interrupt pending for the Audio Core.\\
+\end{tabular}
+\vfill
+
+\subsubsection{alt\_up\_audio\_reset\_audio\_core}
+\begin{tabular}[ht]{lp{11cm}}
+	\textbf{Prototype:}
+	&
+	\texttt{void alt\_up\_audio\_reset\_audio\_core(alt\_up\_audio\_dev *audio)} 
+	\\
+	\textbf{Include:}
+	&
+	{\tt <altera\_up\_avalon\_audio.h>}
+	\\
+	{\textbf{Parameters:}}
+	&
+	\texttt{{audio}}
+	 -- the audio device structure 
+	\\
+	\textbf{Returns:}
+	& nothing
+	\\
+	\textbf{Description:}
+	& Reset the Audio Core by clearing read and write FIFOs for left and right channels.\\
+\end{tabular}
+\vfill
+
+\subsubsection{alt\_up\_audio\_read\_fifo\_avail}
+\begin{tabular}[ht]{lp{11cm}}
+	\textbf{Prototype:}
+	&
+	\texttt{unsigned int alt\_up\_audio\_read\_fifo\_avail(alt\_up\_audio\_dev *audio, int channel)} 
+	\\
+	\textbf{Include:}
+	&
+	{\tt <altera\_up\_avalon\_audio.h>}
+	\\
+	{\textbf{Parameters:}}
+	&
+	\texttt{{audio}}
+	 -- the audio device structure 
+	\\
+	&
+	\texttt{{channel}}
+	 -- left or right channel selection 
+	\\
+	\textbf{Returns:}
+	& number of words available
+	\\
+	\textbf{Description:}
+	& provides number of words of data available in the incoming FIFO for {\it channel} \\
+\end{tabular}
+\vfill
+
+\subsubsection{alt\_up\_audio\_record\_r}
+\begin{tabular}[ht]{lp{11cm}}
+	\textbf{Prototype:}
+	&
+	\texttt{unsigned int alt\_up\_audio\_record\_r(alt\_up\_audio\_dev *audio, unsigned int *buf, int len)} 
+	\\
+	\textbf{Include:}
+	&
+	{\tt <altera\_up\_avalon\_audio.h>}
+	\\
+	{\textbf{Parameters:}}
+	&
+	\texttt{{audio}}
+	 -- the audio device structure 
+	\\
+	&
+	\texttt{{buf}}
+	 -- the pointer to the allocated memory for storing audio data. Size of buf should be no smaller than len words. 
+	\\
+	&
+	\texttt{{len}}
+	 -- the number of data in words to read from the input FIFO 
+	\\
+	\textbf{Returns:}
+	& The total number of words read.
+	\\
+	\textbf{Description:}
+	& Read len words of data from right input FIFO, if the FIFO is above a threshold, and store data to where buf points.\\
+\end{tabular}
+\vfill
+
+\subsubsection{alt\_up\_audio\_record\_l}
+\begin{tabular}[ht]{lp{11cm}}
+	\textbf{Prototype:}
+	&
+	\texttt{unsigned int alt\_up\_audio\_record\_l(alt\_up\_audio\_dev *audio, unsigned int *buf, int len)} 
+	\\
+	\textbf{Include:}
+	&
+	{\tt <altera\_up\_avalon\_audio.h>}
+	\\
+	{\textbf{Parameters:}}
+	&
+	\texttt{{audio}}
+	 -- the audio device structure 
+	\\
+	&
+	\texttt{{buf}}
+	 -- the pointer to the allocated memory for storing audio data. Size of buf should be no smaller than len words. 
+	\\
+	&
+	\texttt{{len}}
+	 -- the number of data in words to read from the input FIFO 
+	\\
+	\textbf{Returns:}
+	& The total number of words read.
+	\\
+	\textbf{Description:}
+	& Read len words of data from left input FIFO, if the FIFO is above a threshold, and store data to where buf points.\\
+\end{tabular}
+\vfill
+\subsubsection{alt\_up\_audio\_write\_fifo\_space}
+\begin{tabular}[ht]{lp{11cm}}
+	\textbf{Prototype:}
+	&
+	\texttt{unsigned int alt\_up\_audio\_write\_fifo\_space(alt\_up\_audio\_dev *audio, int channel)} 
+	\\
+	\textbf{Include:}
+	&
+	{\tt <altera\_up\_avalon\_audio.h>}
+	\\
+	{\textbf{Parameters:}}
+	&
+	\texttt{{audio}}
+	 -- the audio device structure 
+	\\
+	&
+	\texttt{{channel}}
+	 -- left or right channel enum 
+	\\
+	\textbf{Returns:}
+	& number of words available
+	\\
+	\textbf{Description:}
+	& provides the amount of empty space in the outgoing FIFO for {\it channel} \\
+\end{tabular}
+\vfill
+
+\subsubsection{alt\_up\_audio\_play\_r}
+\begin{tabular}[ht]{lp{11cm}}
+	\textbf{Prototype:}
+	&
+	\texttt{unsigned int alt\_up\_audio\_play\_r(alt\_up\_audio\_dev *audio, unsigned int *buf, int len)} 
+	\\
+	\textbf{Include:}
+	&
+	{\tt <altera\_up\_avalon\_audio.h>}
+	\\
+	{\textbf{Parameters:}}
+	&
+	\texttt{{audio}}
+	 -- the audio device structure 
+	\\
+	&
+	\texttt{{buf}}
+	 -- the pointer to the data to be written. Size of buf should be no smaller than len words. 
+	\\
+	&
+	\texttt{{len}}
+	 -- the number of data in words to be written into the output FIFO 
+	\\
+	\textbf{Returns:}
+	& The total number of data written.
+	\\
+	\textbf{Description:}
+	& Write len words of data into right output FIFO, if space available in FIFO is above a threshold.\\
+\end{tabular}
+\vfill
+
+\subsubsection{alt\_up\_audio\_play\_l}
+\begin{tabular}[ht]{lp{11cm}}
+	\textbf{Prototype:}
+	&
+	\texttt{unsigned int alt\_up\_audio\_play\_l(alt\_up\_audio\_dev *audio, unsigned int *buf, int len)} 
+	\\
+	\textbf{Include:}
+	&
+	{\tt <altera\_up\_avalon\_audio.h>}
+	\\
+	{\textbf{Parameters:}}
+	&
+	\texttt{{audio}}
+	 -- the audio device structure 
+	\\
+	&
+	\texttt{{buf}}
+	 -- the pointer to the data to be written. Size of buf should be no smaller than len words. 
+	\\
+	&
+	\texttt{{len}}
+	 -- the number of data in words to be written into the output FIFO 
+	\\
+	\textbf{Returns:}
+	& The total number of data written.
+	\\
+	\textbf{Description:}
+	& Write len words of data into left output FIFO, if space available in FIFO is above a threshold.\\
+\end{tabular}
+\vfill
+
+\subsubsection{alt\_up\_audio\_read\_fifo}
+\begin{tabular}[ht]{lp{11cm}}
+	\textbf{Prototype:}
+	&
+	\texttt{int alt\_up\_audio\_read\_fifo(alt\_up\_audio\_dev *audio, unsigned int *buf, int len, int channel)} 
+	\\
+	\textbf{Include:}
+	&
+	{\tt <altera\_up\_avalon\_audio.h>}
+	\\
+	{\textbf{Parameters:}}
+	&
+	\texttt{{audio}}
+	 -- the audio device structure 
+	\\
+	&
+	\texttt{{buf}}
+	 -- the pointer to the allocated memory for storing audio data. Size of {\it buf} should be no smaller than {\it len} words. 
+	\\
+	&
+	\texttt{{len}}
+	 -- the number of data in words to read from each input FIFO 
+	\\
+	&
+	\texttt{{channel}}
+	 -- left or right channel selection 
+	\\
+	\textbf{Returns:}
+	& The total number of words read.
+	\\
+	\textbf{Description:}
+	& Read {\it len} words of data from left input FIFO or right input FIFO, and store data to where {\it buf} points.\\
+\end{tabular}
+\vfill
+
+\subsubsection{alt\_up\_audio\_write\_fifo}
+\begin{tabular}[ht]{lp{11cm}}
+	\textbf{Prototype:}
+	&
+	\texttt{int alt\_up\_audio\_write\_fifo(alt\_up\_audio\_dev *audio, unsigned int *buf, int len, int channel)} 
+	\\
+	\textbf{Include:}
+	&
+	{\tt <altera\_up\_avalon\_audio.h>}
+	\\
+	{\textbf{Parameters:}}
+	&
+	\texttt{{audio}}
+	 -- the audio device structure 
+	\\
+	&
+	\texttt{{buf}}
+	 -- the pointer to the data to be written. Size of {\it buf} should be no smaller than {\it len} words. 
+	\\
+	&
+	\texttt{{len}}
+	 -- the number of data in words to be written into each output FIFO 
+	\\
+	&
+	\texttt{{channel}}
+	 -- left or right channel selector 
+	\\
+	\textbf{Returns:}
+	& The total number of data written.
+	\\
+	\textbf{Description:}
+	& Write {\it len} words of data from {\it buf} to the left or right output FIFOs.\\
+\end{tabular}
+\vfill
+
+\subsubsection{alt\_up\_audio\_read\_fifo\_head}
+\begin{tabular}[ht]{lp{11cm}}
+	\textbf{Prototype:}
+	&
+	\texttt{unsigned int alt\_up\_audio\_read\_fifo\_head(alt\_up\_audio\_dev *audio, int channel)} 
+	\\
+	\textbf{Include:}
+	&
+	{\tt <altera\_up\_avalon\_audio.h>}
+	\\
+	{\textbf{Parameters:}}
+	&
+	\texttt{{audio}}
+	 -- the audio device structure 
+	\\
+	&
+	\texttt{{channel}}
+	 -- left or right channel selection 
+	\\
+	\textbf{Returns:}
+	& the word read
+	\\
+	\textbf{Description:}
+	& Read one data word from left input FIFO or right input FIFO.\\
+\end{tabular}
+\vfill
+
+\subsubsection{alt\_up\_audio\_write\_fifo\_head}
+\begin{tabular}[ht]{lp{11cm}}
+	\textbf{Prototype:}
+	&
+	\texttt{void alt\_up\_audio\_write\_fifo\_head(alt\_up\_audio\_dev *audio, unsigned int data, int channel)} 
+	\\
+	\textbf{Include:}
+	&
+	{\tt <altera\_up\_avalon\_audio.h>}
+	\\
+	{\textbf{Parameters:}}
+	&
+	\texttt{{audio}}
+	 -- the audio device structure 
+	\\
+	&
+	\texttt{{data}}
+	 -- the data word to be written 
+	\\
+	&
+	\texttt{{channel}}
+	 -- left or right channel selector 
+	\\
+	\textbf{Returns:}
+	& nothing
+	\\
+	\textbf{Description:}
+	& Write one data word to the left or right output FIFOs.\\
+\end{tabular}
+\vfill
+
