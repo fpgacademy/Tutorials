@@ -319,8 +319,7 @@ window of Figure~\ref{fig:largest1} execute the command:
 
 This command runs the Quartus {\it Programmer} and configures the board with the 
 {\it DE23-Lite Computer with Nios~V} system. If the command completes without errors, then you 
-can skip ahead to Section~\ref{sec:doit} and begin working with Nios~V programs. Note that in
-some cases it can take up to a minute to configure the board. 
+can skip ahead to Section~\ref{sec:doit} and begin working with Nios~V programs. 
 
 If the Quartus {\it Programmer} fails to start, then make sure that you have installed the
 required software, and that you have properly set up the \texttt{INSTALL} variable shown
@@ -331,19 +330,24 @@ your DE23-Lite board, then try running the command:
 
 This command checks which devices are visible on the {\it USB Blaster} cable that is connected to
 your computer (if you receive an error such as {\it Programming hardware cable not
-connected}, then refer to Appendix B). Part of the expected output from this command is displayed in
-Figure~\ref{fig:detect}. It shows 
-two devices being detected: first an {\it SOCVHPS} device, followed by a Cyclone V {\it 5CSE} 
-{\it FPGA} device.  If the output produced from your board shows these two devices, but in the 
-opposite order, then you have to modify your {\it Makefile}.
-Change the variable \texttt{JTAG\_INDEX\_SoC} shown in Line~10 of 
-Figure~\ref{fig:firstfew} from the value \texttt{2} to the value \texttt{1}. You should now 
+connected}, then refer to Appendix B). Part of the expected output from this command is 
+displayed in Figure~\ref{fig:detect}. It shows that an Agilex 3 FPGA device has been
+detected.  If the output produced from your JTAG cable shows additional devices, then you 
+may have to modify your {\it Makefile}.
+Change the variable \texttt{JTAG\_INDEX} in the Makefile
+from its default value \texttt{1} to whatever value matches the position of the Agilex 3
+device on your JTAG cable. You should now 
 be able to successfully configure your DE23-Lite board by executing the \texttt{make DE23-Lite}
 command. Another possible scenario is that you are using a board other 
-than the DE23-Lite board. If using the DE10-Lite board, then run the 
-command \texttt{make DE10-Lite} to configure your board. If you are using some other board, 
-then you will need to read carefully through the {\it Makefile} to determine how its
-commands have to be modified to suit your board. 
+than the DE23-Lite board. If using the DE25-Standard board, for example, then run the 
+command \texttt{make DE25-Standard} to configure your board. You can examine the
+{\it Makefile} to determine what other boards are supported. Finally, if you are using a
+supported board but the Quartus {\it Programmer} detects an unexpected FPGA device, then
+you have to modify the corresponding computer system so that it is compiled for the FPGA 
+device that is present in your revision of the board---see the instructions in the 
+\texttt{Computer System} 
+\href{https://github.com/fpgacademy/Design_Examples/tree/main/Computer_Systems} {GitHub
+repository}.
 
 \begin{figure}[h]
     \begin{center}
