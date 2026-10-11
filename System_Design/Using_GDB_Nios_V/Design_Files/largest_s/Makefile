@@ -1,19 +1,13 @@
 INSTALL := C:/altera_pro/26.1
-
 MAIN	:= largest.s
 HDRS	:= 
 SRCS	:= $(MAIN)
 
 SHELL	:= cmd.exe
 
-# DE1-SoC
-JTAG_INDEX_SoC	:= 2
-
 # The following variables are set based on the value of the INSTALL variable
 COMPILER		:= $(INSTALL)/fpgacademy/AMP/cygwin64/home/compiler/bin
 BASH			:= $(INSTALL)/fpgacademy/AMP/cygwin64/bin/bash --noprofile -norc -c 
-HW_DE1-SoC		:= $(INSTALL)/fpgacademy/Computer_Systems/DE1-SoC/DE1-SoC_Computer/niosVg/DE1_SoC_Computer.sof
-HW_DE10-Lite	:= $(INSTALL)/fpgacademy/Computer_Systems/DE10-Lite/DE10-Lite_Computer/niosVg/DE10_Lite_Computer.sof
 
 # for Quartus programmer (three possible paths)
 export PATH := $(INSTALL)/quartus/bin64/:$(PATH)
@@ -80,14 +74,6 @@ GDB_CLIENT	:= riscv32-unknown-elf-gdb.exe
 # Programs
 QP_PROGRAMMER	:= quartus_pgm.exe
 
-# Flags
-# DE10-Lite
-SYS_FLAG_CABLE_Lite	:= -c "USB-Blaster [USB-0]"
-# DE1-SoC
-SYS_FLAG_CABLE_SoC	:= -c "DE-SoC [USB-1]"
-
-# DE10-Lite
-JTAG_INDEX_Lite	:= 1
 RED_TEXT		:= @$(BASH) 'printf "\033[31m"'
 GREEN_TEXT		:= @$(BASH) 'printf "\033[32m"'
 CYAN_TEXT		:= @$(BASH) 'printf "\033[36m"'
@@ -145,15 +131,41 @@ CLEAN:
 
 ############################################
 # System Targets
+#
+CABLE_NAME := -c "$(shell $(BASH) '$(QP_PROGRAMMER) --auto | /usr/bin/grep "Using programming cable" | /usr/bin/sed -n "s/.*\x22\(.*\)\x22.*/\1/p"')"
 
-DETECT_DEVICES:
-	$(QP_PROGRAMMER) $(SYS_FLAG_CABLE) --auto
+JTAG_INDEX := 1		# for most boards
+JTAG_INDEX_SoC := 2 # for most SoC boards
+SOF_FILES := $(INSTALL)/fpgacademy/Computer_Systems
+
+DE23-Lite := $(SOF_FILES)/DE23_Lite_NiosVg_Computer.sof
+DE25-Standard := $(SOF_FILES)/DE25_Standard_NiosVg_Computer.sof
+DE25-Nano := $(SOF_FILES)/DE25_Nano_NiosVg_Computer.sof
+DE1-SoC := $(SOF_FILES)/DE1_SoC_NiosVg_Computer.sof
+DE10-Lite := $(SOF_FILES)/DE10_Lite_NiosVg_Computer.sof
+DE10-Standard := $(SOF_FILES)/DE10_Standard_NiosVg_Computer.sof
+DE10-Nano := $(SOF_FILES)/DE10_Nano_NiosVg_Computer.sof
+
+DETECT:
+	$(QP_PROGRAMMER) --auto
+
+DE23-Lite:
+	$(QP_PROGRAMMER) $(CABLE_NAME) -m jtag -o "P;$(DE23-Lite)@$(JTAG_INDEX)"
+	
+DE25-Standard:
+	$(QP_PROGRAMMER) $(CABLE_NAME) -m jtag -o "P;$(DE25-Standard)@$(JTAG_INDEX)"
 
 DE1-SoC:
-	$(QP_PROGRAMMER) $(SYS_FLAG_CABLE_SoC) -m jtag -o "P;$(HW_DE1-SoC)@$(JTAG_INDEX_SoC)"
+	$(QP_PROGRAMMER) $(CABLE_NAME) -m jtag -o "P;$(DE1-SoC)@$(JTAG_INDEX_SoC)"
 
 DE10-Lite:
-	$(QP_PROGRAMMER) $(SYS_FLAG_CABLE_Lite) -m jtag -o "P;$(HW_DE10-Lite)@$(JTAG_INDEX_Lite)"
+	$(QP_PROGRAMMER) $(CABLE_NAME) -m jtag -o "P;$(DE10-Lite)@$(JTAG_INDEX)"
+	
+DE10-Standard:
+	$(QP_PROGRAMMER) $(CABLE_NAME) -m jtag -o "P;$(DE10-Standard)@$(JTAG_INDEX_SoC)"
+
+DE10-Nano:
+	$(QP_PROGRAMMER) $(CABLE_NAME) -m jtag -o "P;$(DE10-Nano)@$(JTAG_INDEX_SoC)"
 
 TERMINAL:
 	nios2-terminal.exe --instance 0

@@ -91,15 +91,15 @@ Section~\ref{sec:assembly}.
 \label{sec:programmer}
 
 The Nios~V processor is implemented as part of a computer system in an Altera FPGA device. 
-In this tutorial we assume that the reader is using the {\it DE1-SoC Computer with Nios~V}.
+In this tutorial we assume that the reader is using the {\it DE23-Lite Computer with Nios~V}.
 Documentation for this system, describing all of the peripherals that are
 connected to Nios~V, is available as part of the \texttt{Computer Organization Course} 
 on {\small \href{https://www.fpgacademy.org/courses.html} {FPGAcademy.org}}. If a
 different computer system is being used, then some features of the hardware may not match
 those described in this tutorial.
 
-We assume that the user has access to a {\it DE1-SoC} board, and that this board has {\it not} 
-already been programmed with the {\it DE1-SoC Computer with Nios~V}. Hence, programming of 
+We assume that the user has access to a {\it DE23-Lite} board, and that this board has {\it not} 
+already been programmed with the {\it DE23-Lite Computer with Nios~V}. Hence, programming of 
 the board has to be performed by using the {\it Quartus Prime Programmer} tools. This 
 software can be obtained from the {\it Internet}, as discussed below. 
 
@@ -257,8 +257,8 @@ throughout the tutorial. Figure~\ref{fig:designfiles} shows the folders included
 
 \subsection{Using the GNU Make Program}
 
-Throughout this tutorial, all tools are run within {\it Windows Terminal} 
-using {\it PowerShell} as the underlying command-line shell.
+Throughout this tutorial, all tools are run within {\it Microsoft Windows Terminal} 
+as the underlying command-line shell.
 Open a {\it Terminal} window using a method of your choice.  Then, navigate to the 
 {\it design files} folder called \texttt{C:$\backslash$GDB\_tutorial$\backslash$largest\_s}. 
 As illustrated in Figure~\ref{fig:largest1}, this folder contains an example of a 
@@ -299,34 +299,35 @@ as opposed to backward slashes ($\backslash$)).
 
 \begin{figure}[h]
     \begin{center}
-        \includegraphics[scale=.45]{figures/firstfew.pdf}
+        \includegraphics[scale=.5]{figures/firstfew_26.pdf}
         \caption{The first few lines of the {\it Makefile}.}
         \label{fig:firstfew}
     \end{center}
 \end{figure}
 
-\subsection{Configuring the DE1-SoC Board}
+\subsection{Configuring the DE23-Lite Board}
 \label{sec:config}
 
-Connect a DE1-SoC board to your computer. The board should be connected by plugging
-a cable that has a {\it Type-A USB} connector into the {\it USB Blaster} port on the board 
-and connecting the other end of this cable to any {\it USB} port on your computer. Ensure 
-that the DE1-SoC board is properly powered on.  To configure your DE1-SoC board with the desired Nios~V computer system, in the terminal
+Connect a DE23-Lite board to your computer. The board should be connected by plugging
+a cable that has a {\it USB C} connector into the {\it USB Blaster III} port on the board 
+and connecting the other end of this cable to any {\it USB C} port on your computer. Ensure 
+that the DE23-Lite board is properly powered on.  To configure your DE23-Lite board with the 
+desired Nios~V computer system, in the terminal
 window of Figure~\ref{fig:largest1} execute the command:
 
-\texttt{make DE1-SoC} 
+\texttt{make DE23-Lite} 
 
 This command runs the Quartus {\it Programmer} and configures the board with the 
-{\it DE1-SoC Computer with Nios~V} system. If the command completes without errors, then you 
+{\it DE23-Lite Computer with Nios~V} system. If the command completes without errors, then you 
 can skip ahead to Section~\ref{sec:doit} and begin working with Nios~V programs. Note that in
 some cases it can take up to a minute to configure the board. 
 
 If the Quartus {\it Programmer} fails to start, then make sure that you have installed the
 required software, and that you have properly set up the \texttt{INSTALL} variable shown
 in Figure~\ref{fig:firstfew}. If the Quartus {\it Programmer} runs, but fails to configure 
-your DE1-SoC board, then try running the command:
+your DE23-Lite board, then try running the command:
 
-\texttt{make DETECT\_DEVICES}
+\texttt{make DETECT}
 
 This command checks which devices are visible on the {\it USB Blaster} cable that is connected to
 your computer (if you receive an error such as {\it Programming hardware cable not
@@ -337,16 +338,16 @@ two devices being detected: first an {\it SOCVHPS} device, followed by a Cyclone
 opposite order, then you have to modify your {\it Makefile}.
 Change the variable \texttt{JTAG\_INDEX\_SoC} shown in Line~10 of 
 Figure~\ref{fig:firstfew} from the value \texttt{2} to the value \texttt{1}. You should now 
-be able to successfully configure your DE1-SoC board by executing the \texttt{make DE1-SoC}
+be able to successfully configure your DE23-Lite board by executing the \texttt{make DE23-Lite}
 command. Another possible scenario is that you are using a board other 
-than the DE1-SoC board. If using the DE10-Lite board, then run the 
+than the DE23-Lite board. If using the DE10-Lite board, then run the 
 command \texttt{make DE10-Lite} to configure your board. If you are using some other board, 
 then you will need to read carefully through the {\it Makefile} to determine how its
 commands have to be modified to suit your board. 
 
 \begin{figure}[h]
     \begin{center}
-        \includegraphics[width=\textwidth]{figures/detect.png}
+        \includegraphics[width=\textwidth]{figures/detect.pdf}
         \caption{The output from \texttt{make DETECT\_DEVICES}.}
         \label{fig:detect}
     \end{center}
@@ -402,7 +403,7 @@ Now you can run the {\it GDB Client} by executing the command:
 
 \texttt{make GDB\_CLIENT}
 
-The GDB Client will connect to your DE1-SoC board, load the executable file {\it largest.elf},
+The GDB Client will connect to your DE23-Lite board, load the executable file {\it largest.elf},
 initialize some Nios~V control registers, and set the Nios~V program counter register, {\it pc},
 to the start of the program. The output produced by this command is displayed in 
 Figure~\ref{fig:gdb_client}.
@@ -455,12 +456,12 @@ found the largest number in the list, which is \texttt{8}, and enter \texttt{x/4
 to see that this result has been stored into memory.
 
 We are now finished with the {\it largest\_s} example. As demonstrated in Figure~\ref{fig:gdb4},
-disconnect from your DE1-SoC board by executing the \texttt{detach} command. 
+disconnect from your DE23-Lite board by executing the \texttt{detach} command. 
 
 In the GDB Server terminal of Figure~\ref{fig:server}, type \texttt{q} to quit. While
 it is not absolutely necessary to exit the server before starting to work on another
 Nios~V program, it is a good idea to do so. The server occasionally experiences
-communications failures with the DE1-SoC board and then has to be restarted---hence, leaving 
+communications failures with the DE23-Lite board and then has to be restarted---hence, leaving 
 the server running for long periods of time may not be a good approach.
         
 \begin{figure}[h]
@@ -504,10 +505,10 @@ additional GDB capabilities.
 \subsection{Using Simple I/O Devices with Assembly Code}
 \label{sec:simpleIO}
 
-When starting to work on a new design example it is a good approach to power your DE1-SoC
+When starting to work on a new design example it is a good approach to power your DE23-Lite
 board \texttt{off}, and then \texttt{on} again, so that the system is reset.   
 Open a Terminal window and navigate to the folder for the \texttt{display\_s} design
-example. In this folder, execute the command \texttt{make DE1-SoC} to configure your board. 
+example. In this folder, execute the command \texttt{make DE23-Lite} to configure your board. 
 If this programming step fails, refer to the discussion in Section~\ref{sec:config} for
 suggestions as to how to fix any issues. Once your board is successfully configured,
 execute the command \texttt{make GDB\_SERVER}. Now, open a second
@@ -525,7 +526,7 @@ execute the command \texttt{make COMPILE}, followed by \texttt{make GDB\_CLIENT}
 
 Within the GDB Client, use \texttt{list 1,14} to see the source-code of the program. As
 shown in  Figure~\ref{fig:display_s2}, the program first sets up three pointers to I/O
-devices in the {\it DE1-SoC Computer}: register {\it t0} is initialized to the address of 
+devices in the {\it DE23-Lite Computer}: register {\it t0} is initialized to the address of 
 the \red{\it LEDR} red light port, register {\it t1} to the address of the {\it SW} slide-switch
 port, and register {\it t2} to the address of the port connected to 7-segment displays 
 \red{\it HEX3} to \red{\it HEX0}. The program then executes an endless loop in 
@@ -537,7 +538,7 @@ then use \texttt{continue} to run the program up to this breakpoint.
 Now, run through iterations of the loop in the program for a while by executing the 
 command \texttt{continue 150}. This command runs the
 program until the breakpoint at \texttt{loop} has been encountered 150 times. While the 
-program is running, try different settings on the {\it SW}$_{6-0}$ switches on the DE1-SoC 
+program is running, try different settings on the {\it SW}$_{6-0}$ switches on the DE23-Lite 
 board and observe the \red{\it LEDR} lights and \red{\it HEX0} display. 
 
 Wait until the program has stopped executing and control has been returned to the GDB
@@ -557,11 +558,11 @@ then use \texttt{step} a third time and observe the \red{\it HEX0} display.
 Use \texttt{continue} again to get to the top of the loop, and then \texttt{step} to
 execute the {\it load} instruction at \texttt{Line 10}. Now, use the GDB command 
 \texttt{set \$t3 = 0x3ff} to overwrite the value loaded into register {\it t3}. Use
-\texttt{step} again and then observe on the DE1-SoC board that the value you placed 
+\texttt{step} again and then observe on the DE23-Lite board that the value you placed 
 into register {\it t3} turns on all ten \red{\it LEDR} lights. 
 
 We are now done with this design example, so use the \texttt{detach} command to disconnect
-from the DE1-SoC board. Finally, \texttt{quit} from the GDB Client, and then go to the
+from the DE23-Lite board. Finally, \texttt{quit} from the GDB Client, and then go to the
 GDB Server Terminal tab and type \texttt{q} to close the server.
 
 \subsection{Using Interrupts with Assembly Code}
@@ -571,7 +572,7 @@ the red lights \red{\it LEDR}. The speed of the counter is controlled by using i
 the Nios~V Machine Timer.  
 
 In a Terminal window navigate to the \texttt{interrupt\_s} folder.
-If not already done, configure your DE1-SoC board by running \texttt{make DE1-SoC}. Execute 
+If not already done, configure your DE23-Lite board by running \texttt{make DE23-Lite}. Execute 
 \texttt{make GDB\_SERVER}. In a second Terminal tab navigate again to the 
 \texttt{interrupt\_s} folder and run \texttt{make COMPILE} and \texttt{make GDB\_CLIENT}.
 
@@ -690,7 +691,7 @@ computer literature, sends a {\it signal} to the running program. This signal {\
 Nios~V program and returns control to the GDB prompt.
 
 We are now finished with this example, so enter \texttt{detach} to close the connection between 
-the GDB Client and the DE1-SoC board, and then enter \texttt{quit}.
+the GDB Client and the DE23-Lite board, and then enter \texttt{quit}.
 
 If your Terminal produces the prompt \texttt{Terminate batch job (Y/N)?}
 then you can respond with \texttt{n}. This prompt might appear if you have used the 
@@ -706,7 +707,7 @@ start the GDB Server. In the other terminal, execute \texttt{make} to build the 
 executable file, and then start the GDB Client. Now, open a {\it third} Terminal
 tab and navigate again to the \texttt{JTAG\_UART\_s} folder. Execute the command 
 \texttt{make TERMINAL}. This command creates a communications link between this 
-Terminal and the JTAG UART on the DE1-SoC board, which can be used to display text
+Terminal and the JTAG UART on the DE23-Lite board, which can be used to display text
 messages. 
 
 In the GDB Client run the assembly program by entering \texttt{continue}.
@@ -828,7 +829,7 @@ as displayed in Figure~\ref{fig:display_C1}.
 \end{figure}
 
 Enter \texttt{break 15} to set a breakpoint, and then use \texttt{continue} to run to 
-Line 15 in the source code. On the DE1-SoC board, set the {\it SW} switches to any value of
+Line 15 in the source code. On the DE23-Lite board, set the {\it SW} switches to any value of
 your choosing, for example \texttt{0x7f}. Use \texttt{step} to execute the C statement on
 Line 15, and then execute \texttt{print /x value} to examine the data that was loaded, as 
 depicted in Figure~\ref{fig:display_C2}. To see which Nios~V register is used to hold
@@ -853,7 +854,7 @@ Enter the command \texttt{info break} to see the two breakpoints that are curren
 at Line 12 ({\it main}) and Line 15. Use the \texttt{delete} command to clear these
 breakpoints. 
 
-As we are finished with this example, use \texttt{detach} to disconnect from the DE1-SoC 
+As we are finished with this example, use \texttt{detach} to disconnect from the DE23-Lite 
 board and then \texttt{quit} from the GDB client. In the GDB Server terminal type 
 \texttt{q} to quit.
 
@@ -1004,13 +1005,13 @@ Figure~\ref{fig:interrupt_C7}.
 \end{figure}
 
 Enter the \texttt{delete} command to clear all breakpoints. Then, use \texttt{continue \&}
-to run the program in the {\it background}. Observe on the DE1-SoC board that a binary
+to run the program in the {\it background}. Observe on the DE23-Lite board that a binary
 counter is displayed on the \red{\it LEDR} lights, and a digit counter appears on 
 \red{\it HEX0}. If you press any {\it KEY} push-button, then the direction of counting
 for the digit is reversed.
 
 Stop the running program by executing the \texttt{interrupt} command. 
-We are now finished with this example, so use \texttt{detach} to disconnect from the DE1-SoC 
+We are now finished with this example, so use \texttt{detach} to disconnect from the DE23-Lite 
 board and then \texttt{quit} from the GDB client. Also, quit from the GDB Server in its 
 terminal window. 
 
@@ -1025,7 +1026,7 @@ build the executable program, and then start the GDB Client.
 Now, open a {\it third} Terminal tab and navigate again to the \texttt{print\_C} folder.
 Execute the command \texttt{make TERMINAL}. This command opens a program called the
 {\it nios2-terminal}, which allows for text-based communication between the GDB Client and 
-the DE1-SoC board via its {\it JTAG UART}.
+the DE23-Lite board via its {\it JTAG UART}.
 
 Within the GDB Client enter \texttt{break main}, and then run the program using \texttt{continue}.
 Enter \texttt{list 4,20}, as displayed in Figure~\ref{fig:print_C1}. The program uses an
@@ -1047,7 +1048,7 @@ the {\it SW} switches and press any {\it KEY} push-button to see the correspondi
 displayed on the {\it nios2-terminal}.
 
 In the GDB Client enter the \texttt{interrupt} command to stop the running program.
-Then, use \texttt{detach} to disconnect from the DE1-SoC board and then
+Then, use \texttt{detach} to disconnect from the DE23-Lite board and then
 \texttt{quit} from the GDB client. Also, quit from the GDB Server in its terminal window.
 Finally, close the {\it nios2-terminal} by typing \texttt{\textasciicircum C} in its window.
 
@@ -1063,7 +1064,7 @@ that is connected the {\it JTAG UART}. Follow the prompts to input two floating 
 numbers, $x$ and $y$, and observe that the program prints various calculations to the
 Terminal window using these variables. 
 When finished with the {\it float} program, use \texttt{detach} to disconnect from the 
-DE1-SoC board and then \texttt{quit} from the GDB client. Also, quit from the GDB Server in 
+DE23-Lite board and then \texttt{quit} from the GDB client. Also, quit from the GDB Server in 
 its terminal window. Finally, close the {\it nios2-terminal} by 
 typing \texttt{\textasciicircum C} in its window.
 

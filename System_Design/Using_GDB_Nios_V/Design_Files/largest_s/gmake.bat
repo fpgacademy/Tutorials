@@ -1,1 +1,1 @@
-C:\altera_pro\26.1\fpgacademy\AMP\bin\make.exe %1
+C:\altera_lite\25.1std\fpgacademy\AMP\bin\make.exe %1
